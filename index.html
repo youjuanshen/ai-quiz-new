@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 智能测验</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: #f4f4f4;
+        }
+        #quizForm {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .option-label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .option-label:hover {
+            background-color: #eee;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        #submitBtn, #startBtn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        #submitBtn:disabled, #startBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #007bff;
+            border-radius: 6px;
+            background-color: #e6f0ff;
+        }
+        .ai-response {
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AI 智能周答题记录</h1>
+    <p>总题目数: <span id="qCount">0</span> 题</p>
+    <button id="startBtn">开始练习</button>
+
+    <form id="quizForm">
+        </form>
+
+    <div id="results" style="display: none;">
+        <h2>得分结果</h2>
+        <p>您的得分: <span id="finalScore">0</span> 分</p>
+        <p>AI 简答/评语 (AI 评语的依据):</p>
+        <div id="aiComment" class="ai-response"></div>
+    </div>
+
+    <script>
+        // 全局变量用于存储加载的题目数据和正确答案
+        let QUIZ_DATA = [];
+        let CORRECT_ANSWERS = {};
+
+        // 步骤 1：定义常量 - 改为加载本地的 quiz_data.csv 文件
+        const GOOGLE_SHEET_URL = 'quiz_data.csv'; 
+        
+        // **请在这里替换您的 Make.com Webhook URL**
+        // 这是一个占位符，题目加载成功后我们再进行配置
+        const WEBHOOK_URL = 'https://hook.eu1.make.com/YOUR_WEBHOOK_URL_HERE';
+        
+        const SCORE_PER_QUESTION = 5; // 根据您的测验结构，每题 5 分
+
+
+        // ----------------------------------------------------
+        // 核心函数 - 加载并解析 CSV 数据 (增强容错版) 
+        // ----------------------------------------------------
+        async function loadQuizData() {
+            const quizForm = document.getElementById('quizForm');
+            const startBtn = document.getElementById('startBtn');
+            
+            startBtn.disabled = true;
+            startBtn.textContent = '加载题库中...';
+            quizForm.innerHTML = ''; 
+
+            try {
+                // 使用本地链接加载文件
+                const response = await fetch(GOOGLE_SHEET_URL); 
+                
+                if (!response.ok) {
+                    // 如果文件加载失败 (例如 404)，抛出错误
+                    throw new Error(`Failed to load ${GOOGLE_SHEET_URL}. Status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                
+                // 核心优化：使用更健壮的解析逻辑
+                // 1. .trim() 移除首尾空白
+                // 2. .split('\n') 分割行
+                // 3. .filter(line => line.trim().length > 0) 彻底移除空行
+                const lines = csvText.trim().split('\n').filter(line => line.trim().length > 0); 
+                
+                // 1. 清理并标准化 Headers (列名)
+                const headers = lines[0].split(',')
+                    .map(h => h.replace(/"/g, '').trim()) // 移除引号和空格
+                    .filter(h => h.length > 0); 
+
+                // 检查数据完整性
+                if (lines.length <= 1 || headers.length < 5) {
+                    throw new Error('CSV data is empty or malformed.');
+                }
+
+                // 清空旧数据
+                QUIZ_DATA = []; 
+                CORRECT_ANSWERS = {};
+                
+                for (let i = 1; i < lines.length; i++) {
+                    // 注意：这里仍然使用简单的 split(',')，依赖于用户已修正 CSV 文件中题干的逗号问题
+                    const values = lines[i].split(','); 
+                    const question = {};
+                    
+                    for (let j = 0; j < headers.length; j++) {
+                        // 2. 清理并映射 Values
+                        question[headers[j]] = (values[j] || '').replace(/"/g, '').trim(); 
+                    }
+                    
+                    // 只有包含 Question_ID 的有效行才被视为题目
+                    if (question.Question_ID && question.Question_ID.length > 0) {
+                        QUIZ_DATA.push(question);
+                        CORRECT_ANSWERS[question.Question_ID] = question.Correct_Answer;
+                    }
+                }
+                
+                // 如果没有加载到任何有效题目，也视为失败
+                if (QUIZ_DATA.length === 0) {
+                    throw new Error('No valid questions found in the sheet data.');
+                }
+
+                // 渲染题目并更新 UI
+                renderQuiz();
+                document.getElementById('qCount').textContent = QUIZ_DATA.length;
+                startBtn.textContent = '开始练习';
+                startBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('Error loading quiz data:', error);
+                // 显示明确的错误信息
+                quizForm.innerHTML = `<p style="color: red;">❌ 无法加载题库，请确认 'quiz_data.csv' 文件已上传且格式正确。</p>`;
+                startBtn.textContent = '加载失败';
+            }
+        }
+
+        // 渲染题目到 HTML 页面
+        function renderQuiz() {
+            const quizForm = document.getElementById('quizForm');
+            let htmlContent = '';
+            let currentPart = '';
+            
+            // 确保清空了所有元素
+            quizForm.innerHTML = ''; 
+
+            const partMap = { 
+                'L': '听力 (Listening)', 
+                'R': '阅读 (Reading)', 
+                'W': '写作 (Writing)', 
+                'S': '口语 (Speaking)' 
+            };
+
+            QUIZ_DATA.forEach((q, index) => {
+                // 如果 Part 字段改变，添加新的模块标题
+                if (q.Part && q.Part !== currentPart) {
+                    currentPart = q.Part;
+                    htmlContent += `<h2>Part ${q.Part}: ${partMap[q.Part] || q.Part} 模块 (每题 $${SCORE_PER_QUESTION} 分)</h2>`;
+                }
+                
+                // 题目 HTML
+                htmlContent += `<div class="question-block" id="q_${q.Question_ID}">`;
+                htmlContent += `<p class="question-text">// 题目 (${q.Question_Text} HTML)</p>`;
+                htmlContent += `<p class="question-text">${index + 1}. ${q.Question_Text}</p>`;
+                
+                // 渲染选项 (Option 1 到 Option 5)
+                for (let i = 1; i <= 5; i++) {
+                    const optionKey = `Option_${i}`;
+                    const optionValue = q[optionKey];
+                    
+                    // 只有当选项值存在且不为空时才渲染
+                    if (optionValue && optionValue.trim() !== "") {
+                         htmlContent += `<label class="option-label">`;
+                         // 确保 name 属性是唯一的 (使用 Question_ID)
+                         htmlContent += `<input type="radio" name="answer_${q.Question_ID}" value="${i}">`; 
+                         htmlContent += ` ${optionValue}`;
+                         htmlContent += `</label>`;
+                    }
+                }
+
+                // 学生 ID 和答案文本输入框 (隐藏)
+                if (q.Q_Type_Code && q.Q_Type_Code.toUpperCase() === 'MC') {
+                    // 选择题不需要额外文本框
+                } else {
+                    // 主观题或简答题，添加文本输入框
+                     htmlContent += `<textarea name="answer_raw_${q.Question_ID}" rows="3" placeholder="请输入您的答案或简答内容..." style="width: 100%; margin-top: 10px;"></textarea>`;
+                }
+                
+                htmlContent += `</div>`;
+            });
+
+            // 添加输入框和提交按钮
+            htmlContent += `<div style="margin-top: 30px;">`;
+            htmlContent += `<label for="lesson_id_input">Lesson ID (U1L1/U1L2):</label>`;
+            htmlContent += `<input type="text" id="lesson_id_input" name="Lesson_ID" value="" required style="margin-left: 10px;">`;
+            htmlContent += `</div>`;
+            
+            htmlContent += `<div style="margin-top: 10px; margin-bottom: 20px;">`;
+            htmlContent += `<label for="student_id_input">Student ID:</label>`;
+            htmlContent += `<input type="text" id="student_id_input" name="Student_ID" value="" required style="margin-left: 10px;">`;
+            htmlContent += `</div>`;
+            
+            htmlContent += `<button id="submitBtn" type="submit">提交并获取 AI 评语</button>`;
+            
+            quizForm.innerHTML = htmlContent;
+
+            // 重新绑定提交事件
+            document.getElementById('quizForm').addEventListener('submit', submitHandler);
+        }
+
+        // 提交处理函数
+        async function submitHandler(event) {
+            event.preventDefault(); // 阻止表单默认提交
+            
+            // 禁用按钮并显示状态
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...请稍候';
+            document.getElementById('results').style.display = 'none';
+
+            let finalScore = 0;
+            const answers = [];
+            const form = event.target;
+            
+            // 获取 Lesson_ID 和 Student_ID
+            const lessonId = form.elements['Lesson_ID'].value.trim();
+            const studentId = form.elements['Student_ID'].value.trim();
+
+            if (!lessonId || !studentId) {
+                 alert("请输入 Lesson ID 和 Student ID!");
+                 submitBtn.disabled = false;
+                 submitBtn.textContent = '提交并获取 AI 评语';
+                 return;
+            }
+
+            // 遍历题目并收集答案
+            QUIZ_DATA.forEach(q => {
+                const questionId = q.Question_ID;
+                const correctAnswer = CORRECT_ANSWERS[questionId];
+                
+                let studentAnswer = '';
+                let isCorrect = false;
+
+                if (q.Q_Type_Code && q.Q_Type_Code.toUpperCase() === 'MC') {
+                    // 处理选择题 (Radio Button)
+                    const radio = form.elements[`answer_${questionId}`];
+                    if (radio && radio.value) {
+                         studentAnswer = radio.value;
+                         if (studentAnswer === correctAnswer) {
+                             isCorrect = true;
+                             finalScore += SCORE_PER_QUESTION;
+                         }
+                    }
+                } else {
+                    // 处理简答/写作题 (Textarea)
+                    const rawAnswer = form.elements[`answer_raw_${questionId}`];
+                    if (rawAnswer && rawAnswer.value) {
+                         studentAnswer = rawAnswer.value.trim();
+                         isCorrect = false; // 主观题先设为不正确，等待 AI 评分
+                    }
+                }
+
+                // 准备发送到 Make.com 的数据结构
+                answers.push({
+                    Question_ID: questionId,
+                    Correct_Answer: correctAnswer,
+                    Student_Answer: studentAnswer,
+                    Q_Type_Code: q.Q_Type_Code,
+                    Is_Correct: isCorrect ? 'Yes' : 'No',
+                    Score: isCorrect ? SCORE_PER_QUESTION : 0
+                });
+            });
+
+            const submitTime = new Date().toISOString();
+
+            // 准备发送给 Webhook 的完整数据包
+            const payload = {
+                Student_ID: studentId,
+                Lesson_ID: lessonId,
+                Submit_Time: submitTime,
+                Total_Score: finalScore,
+                Answers: answers 
+            };
+            
+            // 步骤 2：发送数据到 Make.com Webhook
+            try {
+                const webhookResponse = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!webhookResponse.ok) {
+                     throw new Error(`Webhook failed with status: ${webhookResponse.status}`);
+                }
+                
+                const webhookData = await webhookResponse.json();
+                
+                // 步骤 3：显示最终结果和 AI 评论
+                document.getElementById('finalScore').textContent = finalScore;
+                
+                // 假设 Make.com 返回的数据中包含一个 AI_Comment 字段
+                const aiCommentText = webhookData.AI_Comment || "AI 尚未返回评论。请检查 Make.com 场景配置。";
+                document.getElementById('aiComment').textContent = aiCommentText;
+                
+                document.getElementById('results').style.display = 'block';
+
+            } catch (error) {
+                console.error("提交失败:", error);
+                document.getElementById('aiComment').textContent = "提交到后端服务器失败或网络错误。请检查您的 Webhook URL 和网络连接。";
+                document.getElementById('results').style.display = 'block';
+            } finally {
+                // 恢复按钮状态
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交并获取 AI 评语';
+            }
+        }
+        
+        // 启动时加载题库
+        document.getElementById('startBtn').addEventListener('click', loadQuizData);
+        loadQuizData(); // 尝试首次加载
+    </script>
+</body>
+</html>
