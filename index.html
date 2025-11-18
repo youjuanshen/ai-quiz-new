@@ -1,201 +1,152 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<title>Have a good day! – Listening + Reading + Writing</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Have a good day! – Quiz</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        line-height: 1.6;
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .box {
-        border: 2px solid #ddd;
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 20px;
-    }
-    button {
-        padding: 8px 16px;
-        font-size: 16px;
-        cursor: pointer;
-        margin-bottom: 8px;
-    }
-    .play-btn {
-        background: #444;
-        color: white;
-        border: none;
-        border-radius: 6px;
-    }
-    .question {
-        margin-top: 15px;
-        margin-bottom: 10px;
-    }
-    select {
-        padding: 6px 12px;
-        font-size: 16px;
-    }
-</style>
+/* ======== 全局美化 ======== */
+body {
+    margin: 0;
+    font-family: "Arial Rounded MT Bold", "微软雅黑", sans-serif;
+    background: #f4f9ff;
+    overflow-x: hidden;
+}
 
+/* 封面插画背景（淡淡） */
+#home-screen {
+    background: url('https://raw.githubusercontent.com/youjuanshen/assets/main/cute-bg-light.svg') no-repeat center top;
+    background-size: 90%;
+    padding-top: 80px;
+    text-align: center;
+}
+
+/* 标题 */
+h1 {
+    font-size: 2.2rem;
+    color: #2a6bd4;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.3rem;
+    color: #555;
+}
+
+/* 下拉菜单 */
+select {
+    width: 260px;
+    height: 42px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #7ab8ff;
+    padding-left: 10px;
+}
+
+/* 开始答题按钮 */
+.start-btn {
+    margin-top: 25px;
+    width: 260px;
+    height: 50px;
+    background: #ffcf4a;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    box-shadow: 0 4px 0 #e2b93b;
+}
+.start-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #e2b93b;
+}
+
+/* ======== 考试页面 ======== */
+#exam-screen {
+    display: none;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.timer-box {
+    font-size: 1.5rem;
+    color: #d9534f;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 听力播放按钮 */
+.play-btn {
+    margin: 10px 0;
+    padding: 8px 18px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    background: #7ab8ff;
+    color: white;
+}
+
+/* 单选题 */
+.question-block {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 450px) {
+    h1 { font-size: 1.8rem; }
+    select, .start-btn { width: 90%; }
+    .timer-box { font-size: 1.3rem; }
+}
+</style>
 </head>
+
 <body>
 
-<h1>Have a good day! – Listening + Reading + Writing</h1>
+<!-- =========================
+        封面首页 HOME SCREEN
+========================= -->
+<div id="home-screen">
+    <h1>Have a good day!</h1>
+    <h2>听力 + 阅读 + 写作 | 总分 75 分 | 用时 9 分钟</h2>
 
-<!-- 学生下拉菜单 -->
-<label>学生姓名：</label>
-<select id="studentSelect">
-    <option>请选择学生</option>
-    <option>01 张宇豪</option>
-    <option>02 张宇豪</option>
-    <option>03 张佳寒</option>
-    <option>04 张睿渊</option>
-    <option>05 张羽韬</option>
-    <option>06 张美茹</option>
-    <option>07 张嘉钦</option>
-    <option>08 卢梦婷</option>
-</select>
+    <p style="font-size:1.1rem; margin-top:30px;">请选择你的学号 + 姓名：</p>
 
-<br><br>
+    <select id="studentSelect">
+        <option value="">请选择学生</option>
+        <option>01 张宇豪</option>
+        <option>02 张宇豪</option>
+        <option>03 张佳寒</option>
+        <option>04 张睿渊</option>
+        <option>05 张羽韬</option>
+        <option>06 张美茹</option>
+        <option>07 张嘉钦</option>
+        <option>08 卢梦婷</option>
+    </select>
 
-<!-- 计时器 -->
-<label>剩余时间：</label>
-<span id="time">09:00</span>
-<button id="startBtn">开始计时</button>
+    <br />
 
-<hr>
-
-<!-- Part 1 Listening -->
-<div class="box">
-<h2>Part 1 – Listening 听力（25 分）</h2>
-
-<div class="question">
-<strong>听力第 1 题（5 分）：听音选图</strong><br>
-<button class="play-btn" onclick="playTwice('Good afternoon.')">▶ Play</button><br>
-<input type="radio"> A. 早晨，两人见面说话。<br>
-<input type="radio"> B. 下午，LiLi 在路上遇到老师。<br>
-<input type="radio"> C. 晚上睡觉前说话。<br>
+    <button class="start-btn" onclick="startExam()">开始答题</button>
 </div>
 
-<div class="question">
-<strong>听力第 2 题（5 分）：听问候选句子</strong><br>
-<button class="play-btn" onclick="playTwice('How are you?')">▶ Play</button><br>
-<input type="radio"> A. How are you?<br>
-<input type="radio"> B. Thank you, you too!<br>
-<input type="radio"> C. Goodbye!<br>
-</div>
+<!-- =========================
+        考试页面 EXAM SCREEN
+========================= -->
+<div id="exam-screen">
 
-<div class="question">
-<strong>听力第 3 题（5 分）：情景判断 T/F</strong><br>
-<button class="play-btn" onclick="playTwice('This is a bag.')">▶ Play</button><br>
-<input type="radio"> T. 相符<br>
-<input type="radio"> F. 不相符<br>
-</div>
+    <div class="timer-box">
+        剩余时间：<span id="timer">09:00</span>
+    </div>
 
-</div>
+    <h2>Part 1 – Listening 听力（25 分）</h2>
 
-<!-- Part 2 Reading -->
-<div class="box">
-<h2>Part 2 – Reading 阅读（25 分）</h2>
-
-<div class="question">
-<strong>阅读 1：（连线拖拽题）</strong><br>
-<p>将句子拖拽到正确的图片下。</p>
-<ul>
-<li>This is a bag.</li>
-<li>This is a pen.</li>
-<li>This is a ruler.</li>
-</ul>
-<p>（老师请在正式版加入对应图片）</p>
-</div>
-
-<div class="question">
-<strong>阅读 2：判断正误 (✓✗)</strong><br>
-<img src="https://via.placeholder.com/150"><br>
-This is a bag.<br>
-<input type="radio"> ✓<br>
-<input type="radio"> ✗<br>
-</div>
-
-</div>
-
-<!-- Part 3 Writing -->
-<div class="box">
-<h2>Part 3 – Writing 写作（25 分）</h2>
-
-<div class="question">
-<strong>写作 1：拖拽成句</strong><br>
-This / is / my / bag.<br>
-</div>
-
-<div class="question">
-<strong>写作 2：补全句子</strong><br>
-This is a ___ (bag).<br>
-</div>
-
-</div>
-
-<script>
-// ======================
-//   高稳定版 TTS 播放
-// ======================
-
-// 播放一次语音（基础版）
-function playAudio(text) {
-    if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-    }
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1;
-    u.pitch = 1;
-    setTimeout(() => speechSynthesis.speak(u), 0);
-}
-
-// 播放两遍（听力题使用）
-function playTwice(text) {
-    if (speechSynthesis.speaking) speechSynthesis.cancel();
-
-    const combined = text + " " + text;
-    const u = new SpeechSynthesisUtterance(combined);
-    u.rate = 1;
-    u.pitch = 1;
-
-    setTimeout(() => speechSynthesis.speak(u), 0);
-}
-
-
-// ======================
-//       计时器系统
-// ======================
-let totalSeconds = 9 * 60;
-let timer = null;
-
-function updateDisplay() {
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    document.getElementById("time").textContent =
-        (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-}
-
-document.getElementById("startBtn").onclick = function () {
-    if (timer) return;
-    timer = setInterval(() => {
-        if (totalSeconds > 0) {
-            totalSeconds--;
-            updateDisplay();
-        } else {
-            clearInterval(timer);
-            alert("时间到！");
-        }
-    }, 1000);
-};
-
-</script>
-
-</body>
-</html>
+    <!-- 听力第1题 -->
+    <div class="question-block">
+        <p><strong>听力第 1 题（5 分）：听音选图</strong></p>
+        <button class="play-btn" onclick="playAudio('Good afternoon. Good afternoon.')">▶ Play</button>
+        <br><br>
+        <input type="radio" name="q1"> A. 早晨，两人见面说话。<br>
+        <input type="radio" name="q1"> B. 下午，LiLi 在路上遇到老师。<br>
