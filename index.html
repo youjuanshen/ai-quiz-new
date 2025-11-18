@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ===== 全局缓存禁用（确保加载最新版本） ===== -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <title>Have a good day! – Quiz</title>
 
 <style>
@@ -14,7 +21,7 @@ body {
     overflow-x: hidden;
 }
 
-/* 封面插画背景（淡淡） */
+/* 封面背景插画（超淡） */
 #home-screen {
     background: url('https://raw.githubusercontent.com/youjuanshen/assets/main/cute-bg-light.svg') no-repeat center top;
     background-size: 90%;
@@ -28,23 +35,22 @@ h1 {
     color: #2a6bd4;
     margin-bottom: 10px;
 }
-
 h2 {
     font-size: 1.3rem;
-    color: #555;
+    color: #444;
 }
 
 /* 下拉菜单 */
 select {
     width: 260px;
-    height: 42px;
+    height: 45px;
     font-size: 1rem;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 2px solid #7ab8ff;
     padding-left: 10px;
 }
 
-/* 开始答题按钮 */
+/* 开始按钮 */
 .start-btn {
     margin-top: 25px;
     width: 260px;
@@ -62,7 +68,7 @@ select {
     box-shadow: 0 2px 0 #e2b93b;
 }
 
-/* ======== 考试页面 ======== */
+/* ======= 考试页面 ======= */
 #exam-screen {
     display: none;
     padding: 20px;
@@ -78,7 +84,7 @@ select {
     margin-bottom: 20px;
 }
 
-/* 听力播放按钮 */
+/* 播放按钮 */
 .play-btn {
     margin: 10px 0;
     padding: 8px 18px;
@@ -89,29 +95,39 @@ select {
     color: white;
 }
 
-/* 单选题 */
+/* 每题块 */
 .question-block {
     margin-bottom: 25px;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
 }
 
-/* 移动端适配 */
+/* 手机适配 */
 @media (max-width: 450px) {
     h1 { font-size: 1.8rem; }
     select, .start-btn { width: 90%; }
     .timer-box { font-size: 1.3rem; }
 }
 </style>
+
 </head>
 
 <body>
 
-<!-- =========================
-        封面首页 HOME SCREEN
-========================= -->
+<!-- 自动绕过缓存（强制 URL 加时间戳） -->
+<script>
+(function () {
+    if (!window.location.href.includes("v=")) {
+        window.location.href = window.location.href + (window.location.href.includes("?") ? "&" : "?") + "v=" + Date.now();
+    }
+})();
+</script>
+
+<!-- ======================
+      封面 Screen
+====================== -->
 <div id="home-screen">
     <h1>Have a good day!</h1>
-    <h2>听力 + 阅读 + 写作 | 总分 75 分 | 用时 9 分钟</h2>
+    <h2>听力 + 阅读 + 写作｜总分 75 分｜用时 9 分钟</h2>
 
     <p style="font-size:1.1rem; margin-top:30px;">请选择你的学号 + 姓名：</p>
 
@@ -127,14 +143,14 @@ select {
         <option>08 卢梦婷</option>
     </select>
 
-    <br />
+    <br>
 
     <button class="start-btn" onclick="startExam()">开始答题</button>
 </div>
 
-<!-- =========================
-        考试页面 EXAM SCREEN
-========================= -->
+<!-- ======================
+      考试页面
+====================== -->
 <div id="exam-screen">
 
     <div class="timer-box">
@@ -143,10 +159,74 @@ select {
 
     <h2>Part 1 – Listening 听力（25 分）</h2>
 
-    <!-- 听力第1题 -->
     <div class="question-block">
         <p><strong>听力第 1 题（5 分）：听音选图</strong></p>
-        <button class="play-btn" onclick="playAudio('Good afternoon. Good afternoon.')">▶ Play</button>
-        <br><br>
+        <button class="play-btn" onclick="playAudio('Good afternoon. Good afternoon.')">▶ Play</button><br>
         <input type="radio" name="q1"> A. 早晨，两人见面说话。<br>
         <input type="radio" name="q1"> B. 下午，LiLi 在路上遇到老师。<br>
+        <input type="radio" name="q1"> C. 晚上睡觉前说话。<br>
+    </div>
+
+    <div class="question-block">
+        <p><strong>听力第 2 题（5 分）：听问候选答案</strong></p>
+        <button class="play-btn" onclick="playAudio('How are you? How are you?')">▶ Play</button><br>
+        <input type="radio" name="q2"> A. How are you?<br>
+        <input type="radio" name="q2"> B. Thank you, you too!<br>
+        <input type="radio" name="q2"> C. Goodbye!<br>
+    </div>
+
+</div>
+
+<!-- ======================
+      JS：计时器 + TTS
+====================== -->
+<script>
+let totalSeconds = 9 * 60;
+
+// 点击开始考试
+function startExam() {
+    const student = document.getElementById("studentSelect").value;
+    if (!student) { alert("请先选择学生姓名！"); return; }
+
+    document.getElementById("home-screen").style.display = "none";
+    document.getElementById("exam-screen").style.display = "block";
+
+    startTimer();
+}
+
+// 计时器
+function startTimer() {
+    const timerObj = document.getElementById("timer");
+
+    const countdown = setInterval(() => {
+        let m = Math.floor(totalSeconds / 60);
+        let s = totalSeconds % 60;
+
+        timerObj.textContent = 
+            (m < 10 ? "0" + m : m) + ":" + 
+            (s < 10 ? "0" + s : s);
+
+        if (totalSeconds <= 0) {
+            clearInterval(countdown);
+            alert("时间到！考试结束。");
+        }
+
+        totalSeconds--;
+    }, 1000);
+}
+
+// TTS 自动两遍播放
+function playAudio(text) {
+    let u1 = new SpeechSynthesisUtterance(text);
+    let u2 = new SpeechSynthesisUtterance(text);
+
+    u1.rate = 0.95;
+    u2.rate = 0.95;
+
+    speechSynthesis.speak(u1);
+    u1.onend = () => speechSynthesis.speak(u2);
+}
+</script>
+
+</body>
+</html>
