@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>TTS Test</h2>
+<button onclick="play()">▶ Play Test</button>
+
+<script>
+function play() {
+  const u = new SpeechSynthesisUtterance("Hello teacher, this is a test.");
+  speechSynthesis.speak(u);
+}
+</script>
+
+</body>
+</html>
