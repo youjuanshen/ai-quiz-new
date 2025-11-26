@@ -2,75 +2,116 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>三年级上 U1 L4 Quiz - Listening & Reading & Writing</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 900px;
+      max-width: 600px;
       margin: 0 auto;
-      padding: 16px;
-      line-height: 1.6;
+      padding: 12px;
+      line-height: 1.5;
     }
-    h1, h2, h3 {
-      margin-top: 1.2em;
-      margin-bottom: 0.4em;
+    h1 {
+      font-size: 1.6rem;
+      margin: 0.8em 0 0.4em;
     }
     .top-bar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+      justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding: 8px 12px;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 6px 10px;
       border: 1px solid #ddd;
       border-radius: 6px;
+      font-size: 0.9rem;
     }
     label {
       margin-right: 4px;
     }
     select {
       padding: 4px 8px;
+      font-size: 0.9rem;
     }
     button {
-      padding: 6px 12px;
+      padding: 8px 12px;
       cursor: pointer;
+      font-size: 0.95rem;
     }
     #timer {
       font-weight: bold;
-      font-size: 1.1em;
     }
-    fieldset {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 16px;
-      padding: 10px 14px;
+    .note {
+      font-size: 0.85rem;
+      color: #555;
     }
-    legend {
-      font-weight: bold;
-      padding: 0 6px;
+
+    /* 封面页布局 */
+    #cover-page {
+      margin-top: 16px;
     }
-    .question {
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px dashed #eee;
+    #cover-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 10px;
     }
-    .question:last-child {
-      border-bottom: none;
+    #enterBtn {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    /* 一题一屏：题卡 */
+    #quiz-page {
+      margin-top: 8px;
+    }
+    #question-container {
+      margin-top: 10px;
+    }
+    .question-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px 12px;
+      margin-bottom: 8px;
+      display: none;
+      font-size: 0.95rem;
+    }
+    .question-card.active {
+      display: block;
+    }
+    .q-header {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .q-part {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 4px;
+    }
+    .q-body p {
+      margin: 4px 0;
     }
     .play-btn {
-      margin-right: 8px;
+      margin: 4px 0 6px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+    }
+    .options label {
+      display: block;
+      margin: 3px 0;
     }
 
     /* 拖拽题样式：词块 + 方格 */
-    .drag-question {
-      margin-bottom: 12px;
+    .drag-question .q-body {
+      margin-bottom: 6px;
     }
     .word-bank {
-      min-height: 36px;
+      min-height: 32px;
       border: 1px dashed #ccc;
       border-radius: 6px;
-      padding: 6px;
-      margin-top: 6px;
+      padding: 4px;
+      margin-top: 4px;
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
@@ -82,25 +123,38 @@
       background: #f7f7f7;
       cursor: move;
       user-select: none;
+      font-size: 0.9rem;
     }
     .drop-row {
-      margin-top: 6px;
+      margin-top: 4px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
     .drop-slot {
-      width: 80px;
-      min-height: 36px;
+      width: 70px;
+      min-height: 30px;
       border: 1px dashed #ccc;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #fafafa;
+      font-size: 0.9rem;
     }
     .drop-slot.over {
       border-color: #666;
+    }
+
+    /* 底部导航按钮 */
+    .q-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .q-nav button {
+      flex: 1;
     }
 
     #result-box {
@@ -109,24 +163,11 @@
       border-radius: 6px;
       border: 1px solid #ddd;
       display: none;
+      font-size: 0.9rem;
     }
     #result-text {
       font-weight: bold;
-    }
-    .note {
-      font-size: 0.9em;
-      color: #555;
-    }
-
-    /* 封面页布局 */
-    #cover-page {
-      margin-top: 24px;
-    }
-    #cover-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 12px;
+      margin-bottom: 4px;
     }
   </style>
 </head>
@@ -140,7 +181,7 @@
     </p>
 
     <div id="cover-card">
-      <div style="margin-bottom: 12px;">
+      <div style="margin-bottom: 10px;">
         <label for="studentSelect">学生姓名：</label>
         <select id="studentSelect">
           <option value="" selected disabled>请选择姓名</option>
@@ -176,7 +217,7 @@
       </div>
 
       <p class="note">
-        提示：点击“开始答题（9 分钟）”后会进入答题界面，并启动 9 分钟倒计时。<br>
+        点击下方“开始答题（9 分钟）”后进入答题界面，并启动 9 分钟倒计时。<br>
         时间一旦开始，无法暂停或重置；时间到系统会自动提交答卷。
       </p>
 
@@ -184,193 +225,294 @@
     </div>
   </div>
 
-  <!-- 答题页 -->
+  <!-- 答题页：一题一屏 -->
   <div id="quiz-page" style="display:none;">
     <div class="top-bar">
       <div>学生：<span id="studentNameDisplay"></span></div>
       <div>剩余时间：<span id="timer">09:00</span></div>
     </div>
 
-    <!-- Listening 模块 -->
-    <fieldset id="listeningSection" disabled>
-      <legend>Part A Listening 听力（每题 5 分）</legend>
-
-      <div class="question">
-        <p>1. 听句子，选出你听到的问候语。</p>
-        <button type="button" class="play-btn" data-tts="Good morning.">▶ 播放</button>
-        <div>
-          <label><input type="radio" name="L1" value="A"> Good morning.</label><br>
-          <label><input type="radio" name="L1" value="B"> Good afternoon.</label><br>
-          <label><input type="radio" name="L1" value="C"> Goodbye.</label>
+    <div id="question-container">
+      <!-- Q1 -->
+      <div class="question-card" data-qindex="1">
+        <div class="q-part">Part A · Listening · Q1/5</div>
+        <div class="q-header">1. 听句子，选出你听到的问候语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good morning.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L1" value="A"> Good morning.</label>
+            <label><input type="radio" name="L1" value="B"> Good afternoon.</label>
+            <label><input type="radio" name="L1" value="C"> Goodbye.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button disabled>上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>2. 听句子，选出你听到的句子。</p>
-        <button type="button" class="play-btn" data-tts="Good afternoon, Mom.">▶ 播放</button>
-        <div>
-          <label><input type="radio" name="L2" value="A"> Good morning, Mom.</label><br>
-          <label><input type="radio" name="L2" value="B"> Goodbye, Mom.</label><br>
-          <label><input type="radio" name="L2" value="C"> Good afternoon, Mom.</label>
+      <!-- Q2 -->
+      <div class="question-card" data-qindex="2">
+        <div class="q-part">Part A · Listening · Q2/5</div>
+        <div class="q-header">2. 听句子，选出你听到的句子。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good afternoon, Mom.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L2" value="A"> Good morning, Mom.</label>
+            <label><input type="radio" name="L2" value="B"> Goodbye, Mom.</label>
+            <label><input type="radio" name="L2" value="C"> Good afternoon, Mom.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>3. 听句子，选出你听到的告别语。</p>
-        <button type="button" class="play-btn" data-tts="Goodbye, Li Li.">▶ 播放</button>
-        <div>
-          <label><input type="radio" name="L3" value="A"> Good morning, Li Li.</label><br>
-          <label><input type="radio" name="L3" value="B"> Goodbye, Li Li.</label><br>
-          <label><input type="radio" name="L3" value="C"> Good afternoon, Li Li.</label>
+      <!-- Q3 -->
+      <div class="question-card" data-qindex="3">
+        <div class="q-part">Part A · Listening · Q3/5</div>
+        <div class="q-header">3. 听句子，选出你听到的告别语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Goodbye, Li Li.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L3" value="A"> Good morning, Li Li.</label>
+            <label><input type="radio" name="L3" value="B"> Goodbye, Li Li.</label>
+            <label><input type="radio" name="L3" value="C"> Good afternoon, Li Li.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>4. 听句子，选出你听到的句子。</p>
-        <button type="button" class="play-btn" data-tts="Have a good day!">▶ 播放</button>
-        <div>
-          <label><input type="radio" name="L4" value="A"> Good morning!</label><br>
-          <label><input type="radio" name="L4" value="B"> How are you?</label><br>
-          <label><input type="radio" name="L4" value="C"> Have a good day!</label>
+      <!-- Q4 -->
+      <div class="question-card" data-qindex="4">
+        <div class="q-part">Part A · Listening · Q4/5</div>
+        <div class="q-header">4. 听句子，选出你听到的句子。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Have a good day!">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L4" value="A"> Good morning!</label>
+            <label><input type="radio" name="L4" value="B"> How are you?</label>
+            <label><input type="radio" name="L4" value="C"> Have a good day!</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>5. 听一听，对话选答语。</p>
-        <button type="button" class="play-btn" data-tts="Good afternoon, Li Li. How are you?">▶ 播放</button>
-        <div>
-          <label><input type="radio" name="L5" value="A"> I’m fine. Thank you.</label><br>
-          <label><input type="radio" name="L5" value="B"> Goodbye.</label><br>
-          <label><input type="radio" name="L5" value="C"> Have a good day.</label>
+      <!-- Q5 -->
+      <div class="question-card" data-qindex="5">
+        <div class="q-part">Part A · Listening · Q5/5</div>
+        <div class="q-header">5. 听一听，对话选答语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good afternoon, Li Li. How are you?">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L5" value="A"> I’m fine. Thank you.</label>
+            <label><input type="radio" name="L5" value="B"> Goodbye.</label>
+            <label><input type="radio" name="L5" value="C"> Have a good day.</label>
+          </div>
         </div>
-      </div>
-    </fieldset>
-
-    <!-- Reading 模块 -->
-    <fieldset id="readingSection" disabled>
-      <legend>Part B Reading 阅读（每题 5 分）</legend>
-
-      <div class="question">
-        <p>6. 读一读，选出最佳答语。</p>
-        <p>— Good morning, Mom.</p>
-        <div>
-          <label><input type="radio" name="R1" value="A"> Goodbye.</label><br>
-          <label><input type="radio" name="R1" value="B"> Good morning.</label><br>
-          <label><input type="radio" name="R1" value="C"> Good afternoon.</label>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>7. 读一读，选出最佳答语。</p>
-        <p>— Goodbye, Li Li.</p>
-        <div>
-          <label><input type="radio" name="R2" value="A"> Goodbye.</label><br>
-          <label><input type="radio" name="R2" value="B"> Good morning.</label><br>
-          <label><input type="radio" name="R2" value="C"> Have a good day.</label>
+      <!-- Q6 -->
+      <div class="question-card" data-qindex="6">
+        <div class="q-part">Part B · Reading · Q1/5</div>
+        <div class="q-header">6. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Good morning, Mom.</p>
+          <div class="options">
+            <label><input type="radio" name="R1" value="A"> Goodbye.</label>
+            <label><input type="radio" name="R1" value="B"> Good morning.</label>
+            <label><input type="radio" name="R1" value="C"> Good afternoon.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>8. 读一读，选出最佳答语。</p>
-        <p>— Have a good day, Li Li!</p>
-        <div>
-          <label><input type="radio" name="R3" value="A"> Thank you, you too!</label><br>
-          <label><input type="radio" name="R3" value="B"> I’m fine.</label><br>
-          <label><input type="radio" name="R3" value="C"> Good morning.</label>
+      <!-- Q7 -->
+      <div class="question-card" data-qindex="7">
+        <div class="q-part">Part B · Reading · Q2/5</div>
+        <div class="q-header">7. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Goodbye, Li Li.</p>
+          <div class="options">
+            <label><input type="radio" name="R2" value="A"> Goodbye.</label>
+            <label><input type="radio" name="R2" value="B"> Good morning.</label>
+            <label><input type="radio" name="R2" value="C"> Have a good day.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <div class="question">
-        <p>9. 判断正误，正确写 T，错误写 F。</p>
-        <p>“Goodbye.” 的意思是“再见”。</p>
-        <label><input type="radio" name="R4" value="T"> T</label>
-        <label><input type="radio" name="R4" value="F"> F</label>
-      </div>
-
-      <div class="question">
-        <p>10. 判断正误，正确写 T，错误写 F。</p>
-        <p>“Good afternoon.” 一般在下午说。</p>
-        <label><input type="radio" name="R5" value="T"> T</label>
-        <label><input type="radio" name="R5" value="F"> F</label>
-      </div>
-    </fieldset>
-
-    <!-- Writing 模块 -->
-    <fieldset id="writingSection" disabled>
-      <legend>Part C Writing 写（拖拽 + 选字母填空，每题 5 分）</legend>
-
-      <!-- 11：大小写识别 1 -->
-      <div class="question drag-question" data-id="W1" data-answer="Good">
-        <p>11. 看一看，把合适的单词拖到方块里。（句子开头要用大写字母。）</p>
-        <p class="note">句子：______ morning.</p>
-        <div class="drop-row" data-role="answer">
-          <div class="drop-slot"></div>
+      <!-- Q8 -->
+      <div class="question-card" data-qindex="8">
+        <div class="q-part">Part B · Reading · Q3/5</div>
+        <div class="q-header">8. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Have a good day, Li Li!</p>
+          <div class="options">
+            <label><input type="radio" name="R3" value="A"> Thank you, you too!</label>
+            <label><input type="radio" name="R3" value="B"> I’m fine.</label>
+            <label><input type="radio" name="R3" value="C"> Good morning.</label>
+          </div>
         </div>
-        <div class="word-bank">
-          <span class="word" draggable="true">Good</span>
-          <span class="word" draggable="true">good</span>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <!-- 12：大小写识别 2 -->
-      <div class="question drag-question" data-id="W2" data-answer="Good">
-        <p>12. 看一看，把合适的单词拖到方块里。（句子开头要用大写字母。）</p>
-        <p class="note">句子：______ afternoon.</p>
-        <div class="drop-row" data-role="answer">
-          <div class="drop-slot"></div>
+      <!-- Q9 -->
+      <div class="question-card" data-qindex="9">
+        <div class="q-part">Part B · Reading · Q4/5</div>
+        <div class="q-header">9. 判断正误，正确写 T，错误写 F。</div>
+        <div class="q-body">
+          <p>“Goodbye.” 的意思是“再见”。</p>
+          <div class="options">
+            <label><input type="radio" name="R4" value="T"> T</label>
+            <label><input type="radio" name="R4" value="F"> F</label>
+          </div>
         </div>
-        <div class="word-bank">
-          <span class="word" draggable="true">Good</span>
-          <span class="word" draggable="true">good</span>
-        </div>
-      </div>
-
-      <!-- 13 连词成句：Have a good day. -->
-      <div class="question drag-question" data-id="W3" data-answer="Have a good day .">
-        <p>13. 连词成句，把单词拖到上面方块里，排出正确顺序。</p>
-        <div class="drop-row" data-role="answer">
-          <div class="drop-slot"></div>
-          <div class="drop-slot"></div>
-          <div class="drop-slot"></div>
-          <div class="drop-slot"></div>
-          <div class="drop-slot"></div>
-        </div>
-        <div class="word-bank">
-          <span class="word" draggable="true">good</span>
-          <span class="word" draggable="true">Have</span>
-          <span class="word" draggable="true">day</span>
-          <span class="word" draggable="true">a</span>
-          <span class="word" draggable="true">.</span>
-        </div>
-        <p class="note">（系统只检查顺序，不再额外扣大小写和标点。）</p>
-      </div>
-
-      <!-- 14 选字母填空：good -->
-      <div class="question" data-id="W4">
-        <p>14. 选字母填空，补全单词。</p>
-        <p>g__d morning.</p>
-        <div>
-          <label><input type="radio" name="W4" value="A"> a a</label><br>
-          <label><input type="radio" name="W4" value="B"> o o</label><br>
-          <label><input type="radio" name="W4" value="C"> e e</label>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
 
-      <!-- 15 选字母填空：afternoon -->
-      <div class="question" data-id="W5">
-        <p>15. 选字母填空，补全单词。</p>
-        <p>Good aftern___n.</p>
-        <div>
-          <label><input type="radio" name="W5" value="A"> o o</label><br>
-          <label><input type="radio" name="W5" value="B"> e e</label><br>
-          <label><input type="radio" name="W5" value="C"> a a</label>
+      <!-- Q10 -->
+      <div class="question-card" data-qindex="10">
+        <div class="q-part">Part B · Reading · Q5/5</div>
+        <div class="q-header">10. 判断正误，正确写 T，错误写 F。</div>
+        <div class="q-body">
+          <p>“Good afternoon.” 一般在下午说。</p>
+          <div class="options">
+            <label><input type="radio" name="R5" value="T"> T</label>
+            <label><input type="radio" name="R5" value="F"> F</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
         </div>
       </div>
-    </fieldset>
 
-    <!-- 提交按钮 -->
-    <div style="margin-top: 16px;">
-      <button id="submitBtn" disabled>提交答卷</button>
+      <!-- Q11 -->
+      <div class="question-card drag-question" data-qindex="11" data-id="W1" data-answer="Good">
+        <div class="q-part">Part C · Writing · Q1/5</div>
+        <div class="q-header">11. 看一看，把合适的单词拖到方块里。（句子开头要用大写字母。）</div>
+        <div class="q-body">
+          <p class="note">句子：______ morning.</p>
+          <div class="drop-row" data-role="answer">
+            <div class="drop-slot"></div>
+          </div>
+          <div class="word-bank">
+            <span class="word" draggable="true">Good</span>
+            <span class="word" draggable="true">good</span>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="question-card drag-question" data-qindex="12" data-id="W2" data-answer="Good">
+        <div class="q-part">Part C · Writing · Q2/5</div>
+        <div class="q-header">12. 看一看，把合适的单词拖到方块里。（句子开头要用大写字母。）</div>
+        <div class="q-body">
+          <p class="note">句子：______ afternoon.</p>
+          <div class="drop-row" data-role="answer">
+            <div class="drop-slot"></div>
+          </div>
+          <div class="word-bank">
+            <span class="word" draggable="true">Good</span>
+            <span class="word" draggable="true">good</span>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Q13 -->
+      <div class="question-card drag-question" data-qindex="13" data-id="W3" data-answer="Have a good day .">
+        <div class="q-part">Part C · Writing · Q3/5</div>
+        <div class="q-header">13. 连词成句，把单词拖到方块里，排出正确顺序。</div>
+        <div class="q-body">
+          <div class="drop-row" data-role="answer">
+            <div class="drop-slot"></div>
+            <div class="drop-slot"></div>
+            <div class="drop-slot"></div>
+            <div class="drop-slot"></div>
+            <div class="drop-slot"></div>
+          </div>
+          <div class="word-bank">
+            <span class="word" draggable="true">good</span>
+            <span class="word" draggable="true">Have</span>
+            <span class="word" draggable="true">day</span>
+            <span class="word" draggable="true">a</span>
+            <span class="word" draggable="true">.</span>
+          </div>
+          <p class="note">（系统只检查顺序，不再额外扣大小写和标点。）</p>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Q14 -->
+      <div class="question-card" data-qindex="14">
+        <div class="q-part">Part C · Writing · Q4/5</div>
+        <div class="q-header">14. 选字母填空，补全单词。</div>
+        <div class="q-body">
+          <p>g__d morning.</p>
+          <div class="options">
+            <label><input type="radio" name="W4" value="A"> a a</label>
+            <label><input type="radio" name="W4" value="B"> o o</label>
+            <label><input type="radio" name="W4" value="C"> e e</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Q15 -->
+      <div class="question-card" data-qindex="15">
+        <div class="q-part">Part C · Writing · Q5/5</div>
+        <div class="q-header">15. 选字母填空，补全单词。</div>
+        <div class="q-body">
+          <p>Good aftern___n.</p>
+          <div class="options">
+            <label><input type="radio" name="W5" value="A"> o o</label>
+            <label><input type="radio" name="W5" value="B"> e e</label>
+            <label><input type="radio" name="W5" value="C"> a a</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="manualSubmit()">提交答卷</button>
+        </div>
+      </div>
     </div>
 
     <!-- 结果区域 -->
@@ -386,37 +528,40 @@
     let timeLeft = 540; // 9 分钟
     let quizStarted = false;
     let quizFinished = false;
+    let currentQ = 1;
+    const totalQ = 15;
 
     // 正确答案（每题 5 分）
-    const listeningAnswers = {
-      L1: "A",
-      L2: "C",
-      L3: "B",
-      L4: "C",
-      L5: "A"
-    };
+    const listeningAnswers = { L1: "A", L2: "C", L3: "B", L4: "C", L5: "A" };
+    const readingAnswers   = { R1: "B", R2: "A", R3: "A", R4: "T", R5: "T" };
+    const writingChoiceAnswers = { W4: "B", W5: "A" };
 
-    const readingAnswers = {
-      R1: "B",
-      R2: "A",
-      R3: "A",
-      R4: "T",
-      R5: "T"
-    };
+    // ========= 一题一屏：显示题目 =========
+    function showQuestion(index) {
+      const cards = document.querySelectorAll(".question-card");
+      cards.forEach(card => {
+        const i = parseInt(card.getAttribute("data-qindex"), 10);
+        card.classList.toggle("active", i === index);
+      });
+      currentQ = index;
+      // 每次切题停掉语音
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      window.scrollTo(0, 0);
+    }
 
-    const writingChoiceAnswers = {
-      W4: "B", // g oo d
-      W5: "A"  // aftern oo n
-    };
+    function goNext() {
+      if (currentQ < totalQ) showQuestion(currentQ + 1);
+    }
+    function goPrev() {
+      if (currentQ > 1) showQuestion(currentQ - 1);
+    }
 
-    // ========= 倒计时相关 =========
+    // ========= 倒计时 =========
     function updateTimerDisplay() {
       const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
       const seconds = String(timeLeft % 60).padStart(2, "0");
       const timerSpan = document.getElementById("timer");
-      if (timerSpan) {
-        timerSpan.textContent = `${minutes}:${seconds}`;
-      }
+      if (timerSpan) timerSpan.textContent = `${minutes}:${seconds}`;
     }
 
     function startCountdown() {
@@ -437,7 +582,7 @@
       }, 1000);
     }
 
-    // ========= 语音朗读（互斥播放） =========
+    // ========= 语音朗读 =========
     function playTTS(text) {
       if (!window.speechSynthesis) {
         alert("当前浏览器不支持朗读功能。");
@@ -449,11 +594,11 @@
       window.speechSynthesis.speak(utter);
     }
 
-    // ========= 拖拽题相关（单词 ↔ 方格） =========
+    // ========= 拖拽题 =========
     function initDragAndDrop() {
       const words = document.querySelectorAll(".word");
       words.forEach(word => {
-        word.addEventListener("dragstart", (e) => {
+        word.addEventListener("dragstart", e => {
           e.dataTransfer.setData("text/plain", "drag-word");
           e.dataTransfer.effectAllowed = "move";
           word.classList.add("dragging");
@@ -463,40 +608,30 @@
         });
       });
 
-      // 方格：只允许放一个单词
       const slots = document.querySelectorAll(".drop-slot");
       slots.forEach(slot => {
-        slot.addEventListener("dragover", (e) => {
+        slot.addEventListener("dragover", e => {
           e.preventDefault();
           slot.classList.add("over");
         });
-        slot.addEventListener("dragleave", () => {
-          slot.classList.remove("over");
-        });
-        slot.addEventListener("drop", (e) => {
+        slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+        slot.addEventListener("drop", e => {
           e.preventDefault();
           slot.classList.remove("over");
           const dragging = document.querySelector(".word.dragging");
           if (!dragging) return;
-
           const question = slot.closest(".drag-question");
           const bank = question.querySelector(".word-bank");
-
           const existing = slot.querySelector(".word");
-          if (existing && bank) {
-            bank.appendChild(existing);
-          }
+          if (existing && bank) bank.appendChild(existing);
           slot.appendChild(dragging);
         });
       });
 
-      // 允许拖回单词库
       const wordBanks = document.querySelectorAll(".word-bank");
       wordBanks.forEach(bank => {
-        bank.addEventListener("dragover", (e) => {
-          e.preventDefault();
-        });
-        bank.addEventListener("drop", (e) => {
+        bank.addEventListener("dragover", e => e.preventDefault());
+        bank.addEventListener("drop", e => {
           e.preventDefault();
           const dragging = document.querySelector(".word.dragging");
           if (!dragging) return;
@@ -505,12 +640,11 @@
       });
     }
 
-    // 计算 3 道拖拽题得分
     function getDragSentenceScore() {
       let score = 0;
       const dragQuestions = document.querySelectorAll(".drag-question");
       dragQuestions.forEach(q => {
-        const answerAttr = q.getAttribute("data-answer"); // 正确序列或单词
+        const answerAttr = q.getAttribute("data-answer");
         const row = q.querySelector(".drop-row[data-role='answer']");
         const slots = Array.from(row.querySelectorAll(".drop-slot"));
         const chosenWords = slots.map(slot => {
@@ -518,9 +652,7 @@
           return w ? w.textContent.trim() : "";
         });
         const chosenStr = chosenWords.join(" ");
-        if (chosenStr === answerAttr) {
-          score += 5;
-        }
+        if (chosenStr === answerAttr) score += 5;
       });
       return score;
     }
@@ -528,83 +660,69 @@
     // ========= 提交与评分 =========
     function submitAnswers() {
       quizFinished = true;
-      const submitBtn = document.getElementById("submitBtn");
-      if (submitBtn) submitBtn.disabled = true;
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
+      if (timer) clearInterval(timer);
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
 
       let totalScore = 0;
 
-      // Listening 5 题
+      // Listening
       let listeningScore = 0;
       Object.keys(listeningAnswers).forEach(id => {
-        const selected = document.querySelector(`input[name="${id}"]:checked`);
-        if (selected && selected.value === listeningAnswers[id]) {
-          listeningScore += 5;
-        }
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === listeningAnswers[id]) listeningScore += 5;
       });
       totalScore += listeningScore;
 
-      // Reading 5 题
+      // Reading
       let readingScore = 0;
       Object.keys(readingAnswers).forEach(id => {
-        const selected = document.querySelector(`input[name="${id}"]:checked`);
-        if (selected && selected.value === readingAnswers[id]) {
-          readingScore += 5;
-        }
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === readingAnswers[id]) readingScore += 5;
       });
       totalScore += readingScore;
 
-      // Writing 拖拽题 3 题
+      // Writing 拖拽
       const dragScore = getDragSentenceScore();
       totalScore += dragScore;
 
-      // Writing 选字母填空 2 题
+      // Writing 选择
       let writingChoiceScore = 0;
       Object.keys(writingChoiceAnswers).forEach(id => {
-        const selected = document.querySelector(`input[name="${id}"]:checked`);
-        if (selected && selected.value === writingChoiceAnswers[id]) {
-          writingChoiceScore += 5;
-        }
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === writingChoiceAnswers[id]) writingChoiceScore += 5;
       });
       totalScore += writingChoiceScore;
 
       const percent = Math.round(totalScore / 75 * 100);
-
       let levelText = "";
-      if (percent >= 90) {
-        levelText = "表现非常棒，可以自信使用这些问候和告别语了！";
-      } else if (percent >= 75) {
-        levelText = "整体很好，再多练几次就更熟练啦。";
-      } else if (percent >= 60) {
-        levelText = "基本达标，可以重点复习没把握的题目。";
-      } else {
-        levelText = "建议再做一遍题目，多听多读，会越来越好。";
-      }
+      if (percent >= 90) levelText = "表现非常棒，可以自信使用这些问候和告别语了！";
+      else if (percent >= 75) levelText = "整体很好，再多练几次就更熟练啦。";
+      else if (percent >= 60) levelText = "基本达标，可以重点复习没把握的题目。";
+      else levelText = "建议再做一遍题目，多听多读，会越来越好。";
 
       const studentSelect = document.getElementById("studentSelect");
       const studentLabel = studentSelect && studentSelect.value
         ? studentSelect.options[studentSelect.selectedIndex].text
         : "(未选择学生)";
 
-      const resultBox = document.getElementById("result-box");
-      const resultText = document.getElementById("result-text");
-      const resultDetail = document.getElementById("result-detail");
-
-      resultText.textContent = `学生：${studentLabel} ｜ 总分：${totalScore} / 75 （${percent}%）`;
-      resultDetail.innerHTML =
+      document.getElementById("result-text").textContent =
+        `学生：${studentLabel} ｜ 总分：${totalScore} / 75（${percent}%）`;
+      document.getElementById("result-detail").innerHTML =
         `Listening：${listeningScore} 分；Reading：${readingScore} 分；Writing：${dragScore + writingChoiceScore} 分。<br>` +
         levelText;
+      document.getElementById("result-box").style.display = "block";
+    }
 
-      resultBox.style.display = "block";
+    function manualSubmit() {
+      if (!quizFinished && confirm("确认提交答卷吗？")) {
+        submitAnswers();
+      }
     }
 
     // ========= 事件绑定 =========
     window.addEventListener("DOMContentLoaded", () => {
       initDragAndDrop();
 
-      // TTS
       document.querySelectorAll(".play-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const text = btn.getAttribute("data-tts");
@@ -612,42 +730,24 @@
         });
       });
 
-      // 封面页「开始答题」
+      // 封面页开始按钮
       document.getElementById("enterBtn").addEventListener("click", () => {
         if (quizStarted) return;
-
         const studentSelect = document.getElementById("studentSelect");
         if (!studentSelect.value) {
           alert("请先选择学生姓名，再开始答题。");
           return;
         }
-
         quizStarted = true;
 
-        // 显示学生姓名到答题页顶部
         const label = studentSelect.options[studentSelect.selectedIndex].text;
         document.getElementById("studentNameDisplay").textContent = label;
 
-        // 切换到答题页
         document.getElementById("cover-page").style.display = "none";
         document.getElementById("quiz-page").style.display = "block";
 
-        // 启用题目和提交按钮
-        document.getElementById("listeningSection").disabled = false;
-        document.getElementById("readingSection").disabled = false;
-        document.getElementById("writingSection").disabled = false;
-        document.getElementById("submitBtn").disabled = false;
-
-        // 开始倒计时
+        showQuestion(1);
         startCountdown();
-      });
-
-      // 提交按钮
-      document.getElementById("submitBtn").addEventListener("click", () => {
-        if (!quizFinished) {
-          if (timer) clearInterval(timer);
-          submitAnswers();
-        }
       });
     });
   </script>
