@@ -125,6 +125,9 @@
       user-select: none;
       font-size: 0.9rem;
     }
+    .word.selected {
+      outline: 2px solid #555;
+    }
     .drop-row {
       margin-top: 4px;
       display: flex;
@@ -515,10 +518,11 @@
       </div>
     </div>
 
-    <!-- 结果区域 -->
+    <!-- 结果区域 + 导出按钮 -->
     <div id="result-box">
       <div id="result-text"></div>
       <div id="result-detail" class="note"></div>
+      <button id="exportBtn" style="margin-top:8px; display:none;">导出结果（CSV）</button>
     </div>
   </div>
 
@@ -530,6 +534,9 @@
     let quizFinished = false;
     let currentQ = 1;
     const totalQ = 15;
+
+    // 记录最后一次成绩，用于导出
+    let lastResult = null;
 
     // 正确答案（每题 5 分）
     const listeningAnswers = { L1: "A", L2: "C", L3: "B", L4: "C", L5: "A" };
@@ -544,7 +551,6 @@
         card.classList.toggle("active", i === index);
       });
       currentQ = index;
-      // 每次切题停掉语音
       if (window.speechSynthesis) window.speechSynthesis.cancel();
       window.scrollTo(0, 0);
     }
@@ -594,10 +600,13 @@
       window.speechSynthesis.speak(utter);
     }
 
-    // ========= 拖拽题 =========
+    // ========= 拖拽/点击题 =========
+    let selectedWord = null;
+
     function initDragAndDrop() {
       const words = document.querySelectorAll(".word");
       words.forEach(word => {
+        // 桌面：拖拽
         word.addEventListener("dragstart", e => {
           e.dataTransfer.setData("text/plain", "drag-word");
           e.dataTransfer.effectAllowed = "move";
@@ -606,10 +615,24 @@
         word.addEventListener("dragend", () => {
           word.classList.remove("dragging");
         });
+
+        // 移动端：点击选中
+        word.addEventListener("click", e => {
+          if (selectedWord === word) {
+            word.classList.remove("selected");
+            selectedWord = null;
+          } else {
+            if (selectedWord) selectedWord.classList.remove("selected");
+            selectedWord = word;
+            word.classList.add("selected");
+          }
+          e.stopPropagation();
+        });
       });
 
       const slots = document.querySelectorAll(".drop-slot");
       slots.forEach(slot => {
+        // 拖拽放入
         slot.addEventListener("dragover", e => {
           e.preventDefault();
           slot.classList.add("over");
@@ -626,16 +649,39 @@
           if (existing && bank) bank.appendChild(existing);
           slot.appendChild(dragging);
         });
+
+        // 点击放入（移动端用）
+        slot.addEventListener("click", () => {
+          if (!selectedWord) return;
+          const question = slot.closest(".drag-question");
+          const bank = question.querySelector(".word-bank");
+          const existing = slot.querySelector(".word");
+          if (existing && bank) bank.appendChild(existing);
+          slot.appendChild(selectedWord);
+          selectedWord.classList.remove("selected");
+          selectedWord = null;
+        });
       });
 
       const wordBanks = document.querySelectorAll(".word-bank");
       wordBanks.forEach(bank => {
+        // 拖回词库
         bank.addEventListener("dragover", e => e.preventDefault());
         bank.addEventListener("drop", e => {
           e.preventDefault();
           const dragging = document.querySelector(".word.dragging");
           if (!dragging) return;
           bank.appendChild(dragging);
+        });
+
+        // 点击词库空白处：把已选单词放回这个词库
+        bank.addEventListener("click", e => {
+          if (!selectedWord) return;
+          // 只在点到空白区域时触发，避免和点击单词冲突
+          if (e.target !== bank) return;
+          bank.appendChild(selectedWord);
+          selectedWord.classList.remove("selected");
+          selectedWord = null;
         });
       });
     }
@@ -657,7 +703,7 @@
       return score;
     }
 
-    // ========= 提交与评分 =========
+    // ========= 提交与导出 =========
     function submitAnswers() {
       quizFinished = true;
       if (timer) clearInterval(timer);
@@ -694,6 +740,8 @@
       totalScore += writingChoiceScore;
 
       const percent = Math.round(totalScore / 75 * 100);
+      const writingTotal = dragScore + writingChoiceScore;
+
       let levelText = "";
       if (percent >= 90) levelText = "表现非常棒，可以自信使用这些问候和告别语了！";
       else if (percent >= 75) levelText = "整体很好，再多练几次就更熟练啦。";
@@ -701,6 +749,7 @@
       else levelText = "建议再做一遍题目，多听多读，会越来越好。";
 
       const studentSelect = document.getElementById("studentSelect");
+      const studentId = studentSelect && studentSelect.value ? studentSelect.value : "";
       const studentLabel = studentSelect && studentSelect.value
         ? studentSelect.options[studentSelect.selectedIndex].text
         : "(未选择学生)";
@@ -708,15 +757,66 @@
       document.getElementById("result-text").textContent =
         `学生：${studentLabel} ｜ 总分：${totalScore} / 75（${percent}%）`;
       document.getElementById("result-detail").innerHTML =
-        `Listening：${listeningScore} 分；Reading：${readingScore} 分；Writing：${dragScore + writingChoiceScore} 分。<br>` +
+        `Listening：${listeningScore} 分；Reading：${readingScore} 分；Writing：${writingTotal} 分。<br>` +
         levelText;
       document.getElementById("result-box").style.display = "block";
+
+      // 记录到全局，给导出用
+      lastResult = {
+        studentId,
+        studentName: studentLabel,
+        listeningScore,
+        readingScore,
+        writingScore: writingTotal,
+        totalScore,
+        percent
+      };
+
+      // 显示导出按钮
+      const exportBtn = document.getElementById("exportBtn");
+      if (exportBtn) exportBtn.style.display = "inline-block";
     }
 
     function manualSubmit() {
       if (!quizFinished && confirm("确认提交答卷吗？")) {
         submitAnswers();
       }
+    }
+
+    function exportCSV() {
+      if (!lastResult) {
+        alert("还没有成绩可以导出。");
+        return;
+      }
+      const header = [
+        "student_id",
+        "student_name",
+        "total",
+        "percent",
+        "listening",
+        "reading",
+        "writing"
+      ];
+      const row = [
+        lastResult.studentId || "",
+        lastResult.studentName || "",
+        lastResult.totalScore,
+        lastResult.percent,
+        lastResult.listeningScore,
+        lastResult.readingScore,
+        lastResult.writingScore
+      ];
+      const csvContent = header.join(",") + "\n" + row.join(",");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const filename = `U1L4_${lastResult.studentId || "NA"}.csv`;
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     // ========= 事件绑定 =========
@@ -739,7 +839,6 @@
           return;
         }
         quizStarted = true;
-
         const label = studentSelect.options[studentSelect.selectedIndex].text;
         document.getElementById("studentNameDisplay").textContent = label;
 
@@ -749,6 +848,9 @@
         showQuestion(1);
         startCountdown();
       });
+
+      // 导出按钮
+      document.getElementById("exportBtn").addEventListener("click", exportCSV);
     });
   </script>
 </body>
