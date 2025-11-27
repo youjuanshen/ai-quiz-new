@@ -1,842 +1,862 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>三年级上 U1 L4 Quiz - Listening & Reading & Writing</title>
-  <style>
-    /* 整体背景：柔和渐变，适合小朋友 */
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 12px;
-      line-height: 1.5;
-      background: linear-gradient(180deg, #f5fbff 0%, #fff8e6 100%);
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>三年级上 U1 L4 Quiz - Listening & Reading & Writing</title>
+  <style>
+    /* 整体背景：柔和渐变，适合小朋友 */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 12px;
+      line-height: 1.5;
+      background: linear-gradient(180deg, #f5fbff 0%, #fff8e6 100%);
+    }
 
-    h1 {
-      font-size: 1.6rem;
-      margin: 0.8em 0 0.4em;
-    }
+    h1 {
+      font-size: 1.6rem;
+      margin: 0.8em 0 0.4em;
+    }
 
-    .note {
-      font-size: 0.85rem;
-      color: #555;
-    }
+    .note {
+      font-size: 0.85rem;
+      color: #555;
+    }
 
-    /* 封面整体布局 */
-    .cover {
-      text-align: center;
-      margin-top: 12px;
-      padding: 4px 4px 16px;
-    }
+    /* 封面整体布局 */
+    .cover {
+      text-align: center;
+      margin-top: 12px;
+      padding: 4px 4px 16px;
+    }
 
-    .cover-emoji {
-      font-size: 2.4rem;
-      margin-bottom: 4px;
-    }
+    .cover-emoji {
+      font-size: 2.4rem;
+      margin-bottom: 4px;
+    }
 
-    .cover-title {
-      font-size: 1.5rem;
-      margin: 4px 0 2px;
-    }
+    .cover-title {
+      font-size: 1.5rem;
+      margin: 4px 0 2px;
+    }
 
-    .cover-subtitle {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 10px;
-    }
+    .cover-subtitle {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
 
-    /* 封面中间卡片 */
-    .cover-card {
-      background: #fffdf4;
-      border-radius: 16px;
-      padding: 16px 14px 18px;
-      margin-top: 4px;
-      border: 1px solid #f3e1a4;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-    }
+    /* 封面中间卡片 */
+    .cover-card {
+      background: #fffdf4;
+      border-radius: 16px;
+      padding: 16px 14px 18px;
+      margin-top: 4px;
+      border: 1px solid #f3e1a4;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
 
-    .cover-text {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
+    .cover-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
 
-    .cover-field {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin: 8px 0 10px;
-      flex-wrap: wrap;
-    }
+    .cover-field {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 8px 0 10px;
+      flex-wrap: wrap;
+    }
 
-    .cover-label {
-      font-size: 0.95rem;
-    }
+    .cover-label {
+      font-size: 0.95rem;
+    }
 
-    .cover-select {
-      min-width: 210px;
-      padding: 6px 8px;
-      font-size: 0.95rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
+    .cover-select {
+      min-width: 210px;
+      padding: 6px 8px;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
 
-    .cover-tip {
-      font-size: 0.9rem;
-      color: #555;
-      line-height: 1.6;
-      margin: 6px 0 10px;
-    }
+    .cover-tip {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.6;
+      margin: 6px 0 10px;
+    }
 
-    .cover-start-btn {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: none;
-      background: #ff9f4a;
-      color: #ffffff;
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      box-shadow: 0 3px 6px rgba(255, 159, 74, 0.4);
-    }
+    .cover-start-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      background: #ff9f4a;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 3px 6px rgba(255, 159, 74, 0.4);
+    }
 
-    .cover-start-btn:active {
-      transform: scale(0.97);
-      box-shadow: 0 1px 3px rgba(255, 159, 74, 0.3);
-    }
+    .cover-start-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 1px 3px rgba(255, 159, 74, 0.3);
+    }
 
-    /* 答题页顶部条 */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      padding: 6px 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      background-color: #ffffffcc;
-    }
+    /* 答题页顶部条 */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background-color: #ffffffcc;
+    }
 
-    #timer {
-      font-weight: bold;
-    }
+    #timer {
+      font-weight: bold;
+    }
 
-    /* 一题一屏：题卡 */
-    #quiz-page {
-      margin-top: 8px;
-    }
+    /* 一题一屏：题卡 */
+    #quiz-page {
+      margin-top: 8px;
+    }
 
-    #question-container {
-      margin-top: 10px;
-    }
+    #question-container {
+      margin-top: 10px;
+    }
 
-    .question-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px 12px 12px;
-      margin-bottom: 8px;
-      display: none;
-      font-size: 0.95rem;
-      background: #ffffff;
-    }
+    .question-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px 12px;
+      margin-bottom: 8px;
+      display: none;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
 
-    .question-card.active {
-      display: block;
-    }
+    .question-card.active {
+      display: block;
+    }
 
-    .q-header {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
+    .q-header {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
 
-    .q-part {
-      font-size: 0.8rem;
-      color: #777;
-      margin-bottom: 4px;
-    }
+    .q-part {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 4px;
+    }
 
-    .q-body p {
-      margin: 4px 0;
-    }
+    .q-body p {
+      margin: 4px 0;
+    }
 
-    .play-btn {
-      margin: 4px 0 6px;
-      padding: 4px 8px;
-      font-size: 0.85rem;
-    }
+    .play-btn {
+      margin: 4px 0 6px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+    }
 
-    .options label {
-      display: block;
-      margin: 3px 0;
-    }
+    .options label {
+      display: block;
+      margin: 3px 0;
+    }
 
-    /* 底部导航按钮 */
-    .q-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 10px;
-    }
+    /* 底部导航按钮 */
+    .q-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-    .q-nav button {
-      flex: 1;
-      padding: 8px 10px;
-      font-size: 0.9rem;
-    }
+    .q-nav button {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 0.9rem;
+    }
 
-    /* 结果与老师工具 */
-    #result-box {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      display: none;
-      font-size: 0.9rem;
-      background-color: #ffffff;
-    }
+    /* 结果与老师工具 */
+    #result-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      display: none;
+      font-size: 0.9rem;
+      background-color: #ffffff;
+    }
 
-    #result-text {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
+    #result-text {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
 
-    #teacher-tools {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      display: none;
-    }
+    #teacher-tools {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      display: none;
+    }
 
-    #teacher-tools button {
-      margin-top: 6px;
-      padding: 6px 10px;
-      font-size: 0.9rem;
-    }
-  </style>
+    #teacher-tools button {
+      margin-top: 6px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <!-- 封面区域 -->
-  <div id="cover-page" class="cover">
-    <div class="cover-emoji">📚✨</div>
-    <h1 class="cover-title">三年级 U1 L4 英语小测验</h1>
-    <p class="cover-subtitle">Welcome! 欢迎参加我们的英语小测验～</p>
+    <div id="cover-page" class="cover">
+    <div class="cover-emoji">📚✨</div>
+    <h1 class="cover-title">三年级 U1 L4 英语小测验</h1>
+    <p class="cover-subtitle">Welcome! 欢迎参加我们的英语小测验～</p>
 
-    <div id="cover-card" class="cover-card">
-      <p class="cover-text">
-        😊 请先在下面找到并选中<strong>你的名字</strong>。<br>
-        🌟 准备好了，就点击下面的大按钮开始吧～
-      </p>
+    <div id="cover-card" class="cover-card">
+      <p class="cover-text">
+        😊 请先在下面找到并选中<strong>你的名字</strong>。<br>
+        🌟 准备好了，就点击下面的大按钮开始吧～
+      </p>
 
-      <div class="cover-field">
-        <label for="studentSelect" class="cover-label">我的名字：</label>
-        <select id="studentSelect" class="cover-select">
-          <option value="" selected disabled>点这里选择姓名</option>
-          <!-- 学生名单 -->
-          <option value="01">01张宇豪</option>
-          <option value="02">02张佳寒</option>
-          <option value="03">03张睿渊</option>
-          <option value="04">04张羽韬</option>
-          <option value="05">05张美茹</option>
-          <option value="06">06张嘉钦</option>
-          <option value="07">07卢梦婷</option>
-          <option value="08">08张悦萱</option>
-          <option value="09">09张语涵</option>
-          <option value="10">10张英豪</option>
-          <option value="11">11张志鹏</option>
-          <option value="12">12张智杰</option>
-          <option value="13">13张梓婷</option>
-          <option value="14">14张品琪</option>
-          <option value="15">15张诺依</option>
-          <option value="16">16张雨泽</option>
-          <option value="17">17张依彤</option>
-          <option value="18">18张艺楠</option>
-          <option value="19">19张思彤</option>
-          <option value="20">20张子豪</option>
-          <option value="21">21张梓亦</option>
-          <option value="22">22张皓鑫</option>
-          <option value="23">23张雨欣</option>
-          <option value="24">24张如欣</option>
-          <option value="25">25张柏涵</option>
-          <option value="26">26张梓纯</option>
-          <option value="27">27张泽鑫</option>
-        </select>
-      </div>
+      <div class="cover-field">
+        <label for="studentSelect" class="cover-label">我的名字：</label>
+        <select id="studentSelect" class="cover-select">
+          <option value="" selected disabled>点这里选择姓名</option>
+                    <option value="01">01张宇豪</option>
+          <option value="02">02张佳寒</option>
+          <option value="03">03张睿渊</option>
+          <option value="04">04张羽韬</option>
+          <option value="05">05张美茹</option>
+          <option value="06">06张嘉钦</option>
+          <option value="07">07卢梦婷</option>
+          <option value="08">08张悦萱</option>
+          <option value="09">09张语涵</option>
+          <option value="10">10张英豪</option>
+          <option value="11">11张志鹏</option>
+          <option value="12">12张智杰</option>
+          <option value="13">13张梓婷</option>
+          <option value="14">14张品琪</option>
+          <option value="15">15张诺依</option>
+          <option value="16">16张雨泽</option>
+          <option value="17">17张依彤</option>
+          <option value="18">18张艺楠</option>
+          <option value="19">19张思彤</option>
+          <option value="20">20张子豪</option>
+          <option value="21">21张梓亦</option>
+          <option value="22">22张皓鑫</option>
+          <option value="23">23张雨欣</option>
+          <option value="24">24张如欣</option>
+          <option value="25">25张柏涵</option>
+          <option value="26">26张梓纯</option>
+          <option value="27">27张泽鑫</option>
+        </select>
+      </div>
 
-      <p class="cover-tip">
-        ⏱ 每位同学有 <strong>9 分钟</strong> 完成这份小测验，<br>
-        计时会在你点击“开始答题”之后才慢慢走动。<br>
-        放轻松，一题一题来，就能做得很棒哦！💪
-      </p>
+      <p class="cover-tip">
+        ⏱ 每位同学有 <strong>9 分钟</strong> 完成这份小测验，<br>
+        计时会在你点击“开始答题”之后才慢慢走动。<br>
+        放轻松，一题一题来，就能做得很棒哦！💪
+      </p>
 
-      <button id="enterBtn" class="cover-start-btn">
-        ✨ 开始答题（我准备好了！）
-      </button>
-    </div>
-  </div>
+      <button id="enterBtn" class="cover-start-btn">
+        ✨ 开始答题（我准备好了！）
+      </button>
+    </div>
+  </div>
 
-  <!-- 答题页：一题一屏 -->
-  <div id="quiz-page" style="display:none;">
-    <div class="top-bar">
-      <div>学生：<span id="studentNameDisplay"></span></div>
-      <div>剩余时间：<span id="timer">09:00</span></div>
-    </div>
+    <div id="quiz-page" style="display:none;">
+    <div class="top-bar">
+      <div>学生：<span id="studentNameDisplay"></span></div>
+      <div>剩余时间：<span id="timer">09:00</span></div>
+      <div id="tempResult" style="display:none;"></div>
+    </div>
 
-    <div id="question-container">
-      <!-- Listening Q1 -->
-      <div class="question-card" data-qindex="1">
-        <div class="q-part">Part A · Listening · Q1/5</div>
-        <div class="q-header">1. 听句子，选出你听到的问候语。</div>
-        <div class="q-body">
-          <button type="button" class="play-btn" data-tts="Good morning.">▶ 播放</button>
-          <div class="options">
-            <label><input type="radio" name="L1" value="A"> Good morning.</label>
-            <label><input type="radio" name="L1" value="B"> Good afternoon.</label>
-            <label><input type="radio" name="L1" value="C"> Goodbye.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button disabled>上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+    <div id="question-container">
+            <div class="question-card" data-qindex="1">
+        <div class="q-part">Part A · Listening · Q1/5</div>
+        <div class="q-header">1. 听句子，选出你听到的问候语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good morning.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L1" value="A"> Good morning.</label>
+            <label><input type="radio" name="L1" value="B"> Good afternoon.</label>
+            <label><input type="radio" name="L1" value="C"> Goodbye.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button disabled>上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Listening Q2 -->
-      <div class="question-card" data-qindex="2">
-        <div class="q-part">Part A · Listening · Q2/5</div>
-        <div class="q-header">2. 听句子，选出你听到的句子。</div>
-        <div class="q-body">
-          <button type="button" class="play-btn" data-tts="Good afternoon, Mom.">▶ 播放</button>
-          <div class="options">
-            <label><input type="radio" name="L2" value="A"> Good morning, Mom.</label>
-            <label><input type="radio" name="L2" value="B"> Goodbye, Mom.</label>
-            <label><input type="radio" name="L2" value="C"> Good afternoon, Mom.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="2">
+        <div class="q-part">Part A · Listening · Q2/5</div>
+        <div class="q-header">2. 听句子，选出你听到的句子。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good afternoon, Mom.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L2" value="A"> Good morning, Mom.</label>
+            <label><input type="radio" name="L2" value="B"> Goodbye, Mom.</label>
+            <label><input type="radio" name="L2" value="C"> Good afternoon, Mom.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Listening Q3 -->
-      <div class="question-card" data-qindex="3">
-        <div class="q-part">Part A · Listening · Q3/5</div>
-        <div class="q-header">3. 听句子，选出你听到的告别语。</div>
-        <div class="q-body">
-          <button type="button" class="play-btn" data-tts="Goodbye, Li Li.">▶ 播放</button>
-          <div class="options">
-            <label><input type="radio" name="L3" value="A"> Good morning, Li Li.</label>
-            <label><input type="radio" name="L3" value="B"> Goodbye, Li Li.</label>
-            <label><input type="radio" name="L3" value="C"> Good afternoon, Li Li.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="3">
+        <div class="q-part">Part A · Listening · Q3/5</div>
+        <div class="q-header">3. 听句子，选出你听到的告别语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Goodbye, Li Li.">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L3" value="A"> Good morning, Li Li.</label>
+            <label><input type="radio" name="L3" value="B"> Goodbye, Li Li.</label>
+            <label><input type="radio" name="L3" value="C"> Good afternoon, Li Li.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Listening Q4 -->
-      <div class="question-card" data-qindex="4">
-        <div class="q-part">Part A · Listening · Q4/5</div>
-        <div class="q-header">4. 听句子，选出你听到的句子。</div>
-        <div class="q-body">
-          <button type="button" class="play-btn" data-tts="Have a good day!">▶ 播放</button>
-          <div class="options">
-            <label><input type="radio" name="L4" value="A"> Good morning!</label>
-            <label><input type="radio" name="L4" value="B"> How are you?</label>
-            <label><input type="radio" name="L4" value="C"> Have a good day!</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="4">
+        <div class="q-part">Part A · Listening · Q4/5</div>
+        <div class="q-header">4. 听句子，选出你听到的句子。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Have a good day!">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L4" value="A"> Good morning!</label>
+            <label><input type="radio" name="L4" value="B"> How are you?</label>
+            <label><input type="radio" name="L4" value="C"> Have a good day!</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Listening Q5 -->
-      <div class="question-card" data-qindex="5">
-        <div class="q-part">Part A · Listening · Q5/5</div>
-        <div class="q-header">5. 听一听，对话选答语。</div>
-        <div class="q-body">
-          <button type="button" class="play-btn" data-tts="Good afternoon, Li Li. How are you?">▶ 播放</button>
-          <div class="options">
-            <label><input type="radio" name="L5" value="A"> I’m fine. Thank you.</label>
-            <label><input type="radio" name="L5" value="B"> Goodbye.</label>
-            <label><input type="radio" name="L5" value="C"> Have a good day.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="5">
+        <div class="q-part">Part A · Listening · Q5/5</div>
+        <div class="q-header">5. 听一听，对话选答语。</div>
+        <div class="q-body">
+          <button type="button" class="play-btn" data-tts="Good afternoon, Li Li. How are you?">▶ 播放</button>
+          <div class="options">
+            <label><input type="radio" name="L5" value="A"> I’m fine. Thank you.</label>
+            <label><input type="radio" name="L5" value="B"> Goodbye.</label>
+            <label><input type="radio" name="L5" value="C"> Have a good day.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Reading Q1 -->
-      <div class="question-card" data-qindex="6">
-        <div class="q-part">Part B · Reading · Q1/5</div>
-        <div class="q-header">6. 读一读，选出最佳答语。</div>
-        <div class="q-body">
-          <p>— Good morning, Mom.</p>
-          <div class="options">
-            <label><input type="radio" name="R1" value="A"> Goodbye.</label>
-            <label><input type="radio" name="R1" value="B"> Good morning.</label>
-            <label><input type="radio" name="R1" value="C"> Good afternoon.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="6">
+        <div class="q-part">Part B · Reading · Q1/5</div>
+        <div class="q-header">6. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Good morning, Mom.</p>
+          <div class="options">
+            <label><input type="radio" name="R1" value="A"> Goodbye.</label>
+            <label><input type="radio" name="R1" value="B"> Good morning.</label>
+            <label><input type="radio" name="R1" value="C"> Good afternoon.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Reading Q2 -->
-      <div class="question-card" data-qindex="7">
-        <div class="q-part">Part B · Reading · Q2/5</div>
-        <div class="q-header">7. 读一读，选出最佳答语。</div>
-        <div class="q-body">
-          <p>— Goodbye, Li Li.</p>
-          <div class="options">
-            <label><input type="radio" name="R2" value="A"> Goodbye.</label>
-            <label><input type="radio" name="R2" value="B"> Good morning.</label>
-            <label><input type="radio" name="R2" value="C"> Have a good day.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="7">
+        <div class="q-part">Part B · Reading · Q2/5</div>
+        <div class="q-header">7. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Goodbye, Li Li.</p>
+          <div class="options">
+            <label><input type="radio" name="R2" value="A"> Goodbye.</label>
+            <label><input type="radio" name="R2" value="B"> Good morning.</label>
+            <label><input type="radio" name="R2" value="C"> Have a good day.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Reading Q3 -->
-      <div class="question-card" data-qindex="8">
-        <div class="q-part">Part B · Reading · Q3/5</div>
-        <div class="q-header">8. 读一读，选出最佳答语。</div>
-        <div class="q-body">
-          <p>— Have a good day, Li Li!</p>
-          <div class="options">
-            <label><input type="radio" name="R3" value="A"> Thank you, you too!</label>
-            <label><input type="radio" name="R3" value="B"> I’m fine.</label>
-            <label><input type="radio" name="R3" value="C"> Good morning.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="8">
+        <div class="q-part">Part B · Reading · Q3/5</div>
+        <div class="q-header">8. 读一读，选出最佳答语。</div>
+        <div class="q-body">
+          <p>— Have a good day, Li Li!</p>
+          <div class="options">
+            <label><input type="radio" name="R3" value="A"> Thank you, you too!</label>
+            <label><input type="radio" name="R3" value="B"> I’m fine.</label>
+            <label><input type="radio" name="R3" value="C"> Good morning.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+        </div>
 
-      <!-- Reading Q4 -->
-      <div class="question-card" data-qindex="9">
-        <div class="q-part">Part B · Reading · Q4/5</div>
-        <div class="q-header">9. 判断正误，正确写 T，错误写 F。</div>
-        <div class="q-body">
-          <p>“Goodbye.” 的意思是“再见”。</p>
-          <div class="options">
-            <label><input type="radio" name="R4" value="T"> T</label>
-            <label><input type="radio" name="R4" value="F"> F</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="9">
+        <div class="q-part">Part B · Reading · Q4/5</div>
+        <div class="q-header">9. 判断正误，正确写 T，错误写 F。</div>
+        <div class="q-body">
+          <p>“Goodbye.” 的意思是“再见”。</p>
+          <div class="options">
+            <label><input type="radio" name="R4" value="T"> T</label>
+            <label><input type="radio" name="R4" value="F"> F</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Reading Q5 -->
-      <div class="question-card" data-qindex="10">
-        <div class="q-part">Part B · Reading · Q5/5</div>
-        <div class="q-header">10. 判断正误，正确写 T，错误写 F。</div>
-        <div class="q-body">
-          <p>“Good afternoon.” 一般在下午说。</p>
-          <div class="options">
-            <label><input type="radio" name="R5" value="T"> T</label>
-            <label><input type="radio" name="R5" value="F"> F</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="10">
+        <div class="q-part">Part B · Reading · Q5/5</div>
+        <div class="q-header">10. 判断正误，正确写 T，错误写 F。</div>
+        <div class="q-body">
+          <p>“Good afternoon.” 一般在下午说。</p>
+          <div class="options">
+            <label><input type="radio" name="R5" value="T"> T</label>
+            <label><input type="radio" name="R5" value="F"> F</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Writing Q1 -->
-      <div class="question-card" data-qindex="11">
-        <div class="q-part">Part C · Writing · Q1/5</div>
-        <div class="q-header">11. 选出写得最正确的一句。（注意大写和点号）</div>
-        <div class="q-body">
-          <div class="options">
-            <label><input type="radio" name="W1" value="A"> Good morning.</label>
-            <label><input type="radio" name="W1" value="B"> good morning.</label>
-            <label><input type="radio" name="W1" value="C"> Good morning</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="11">
+        <div class="q-part">Part C · Writing · Q1/5</div>
+        <div class="q-header">11. 选出写得最正确的一句。（注意大写和点号）</div>
+        <div class="q-body">
+          <div class="options">
+            <label><input type="radio" name="W1" value="A"> Good morning.</label>
+            <label><input type="radio" name="W1" value="B"> good morning.</label>
+            <label><input type="radio" name="W1" value="C"> Good morning</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Writing Q2 -->
-      <div class="question-card" data-qindex="12">
-        <div class="q-part">Part C · Writing · Q2/5</div>
-        <div class="q-header">12. 选出写得最正确的一句。（注意逗号和感叹号）</div>
-        <div class="q-body">
-          <div class="options">
-            <label><input type="radio" name="W2" value="A"> Thank you, you too!</label>
-            <label><input type="radio" name="W2" value="B"> thank you, you too!</label>
-            <label><input type="radio" name="W2" value="C"> Thank you you too.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="12">
+        <div class="q-part">Part C · Writing · Q2/5</div>
+        <div class="q-header">12. 选出写得最正确的一句。（注意逗号和感叹号）</div>
+        <div class="q-body">
+          <div class="options">
+            <label><input type="radio" name="W2" value="A"> Thank you, you too!</label>
+            <label><input type="radio" name="W2" value="B"> thank you, you too!</label>
+            <label><input type="radio" name="W2" value="C"> Thank you you too.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Writing Q3 -->
-      <div class="question-card" data-qindex="13">
-        <div class="q-part">Part C · Writing · Q3/5</div>
-        <div class="q-header">13. 选出词序正确的一句。</div>
-        <div class="q-body">
-          <div class="options">
-            <label><input type="radio" name="W3" value="A"> Have a good day.</label>
-            <label><input type="radio" name="W3" value="B"> Have good a day.</label>
-            <label><input type="radio" name="W3" value="C"> a Have good day.</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="13">
+        <div class="q-part">Part C · Writing · Q3/5</div>
+        <div class="q-header">13. 选出词序正确的一句。</div>
+        <div class="q-body">
+          <div class="options">
+            <label><input type="radio" name="W3" value="A"> Have a good day.</label>
+            <label><input type="radio" name="W3" value="B"> Have good a day.</label>
+            <label><input type="radio" name="W3" value="C"> a Have good day.</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Writing Q4 -->
-      <div class="question-card" data-qindex="14">
-        <div class="q-part">Part C · Writing · Q4/5</div>
-        <div class="q-header">14. 选字母填空，补全单词。</div>
-        <div class="q-body">
-          <p>g__d morning.</p>
-          <div class="options">
-            <label><input type="radio" name="W4" value="A"> a a</label>
-            <label><input type="radio" name="W4" value="B"> o o</label>
-            <label><input type="radio" name="W4" value="C"> e e</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="goNext()">下一题</button>
-        </div>
-      </div>
+            <div class="question-card" data-qindex="14">
+        <div class="q-part">Part C · Writing · Q4/5</div>
+        <div class="q-header">14. 选字母填空，补全单词。</div>
+        <div class="q-body">
+          <p>g__d morning.</p>
+          <div class="options">
+            <label><input type="radio" name="W4" value="A"> a a</label>
+            <label><input type="radio" name="W4" value="B"> o o</label>
+            <label><input type="radio" name="W4" value="C"> e e</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="goNext()">下一题</button>
+        </div>
+      </div>
 
-      <!-- Writing Q5 -->
-      <div class="question-card" data-qindex="15">
-        <div class="q-part">Part C · Writing · Q5/5</div>
-        <div class="q-header">15. 选字母填空，补全单词。</div>
-        <div class="q-body">
-          <p>Good aftern___n.</p>
-          <div class="options">
-            <label><input type="radio" name="W5" value="A"> o o</label>
-            <label><input type="radio" name="W5" value="B"> e e</label>
-            <label><input type="radio" name="W5" value="C"> a a</label>
-          </div>
-        </div>
-        <div class="q-nav">
-          <button type="button" onclick="goPrev()">上一题</button>
-          <button type="button" onclick="manualSubmit()">提交答卷</button>
-        </div>
-      </div>
-    </div>
+            <div class="question-card" data-qindex="15">
+        <div class="q-part">Part C · Writing · Q5/5</div>
+        <div class="q-header">15. 选字母填空，补全单词。</div>
+        <div class="q-body">
+          <p>Good aftern___n.</p>
+          <div class="options">
+            <label><input type="radio" name="W5" value="A"> o o</label>
+            <label><input type="radio" name="W5" value="B"> e e</label>
+            <label><input type="radio" name="W5" value="C"> a a</label>
+          </div>
+        </div>
+        <div class="q-nav">
+          <button type="button" onclick="goPrev()">上一题</button>
+          <button type="button" onclick="manualSubmit()">提交答卷</button>
+        </div>
+      </div>
+    </div>
 
-    <!-- 结果区域 -->
-    <div id="result-box">
-      <div id="result-text"></div>
-      <div id="result-detail" class="note"></div>
-      <button id="nextStudentBtn" style="margin-top:6px;">下一位同学作答</button>
-    </div>
+        <div id="result-box">
+      <div id="result-text"></div>
+      <div id="result-detail" class="note"></div>
+      <button id="nextStudentBtn" style="margin-top:6px;">下一位同学作答</button>
+    </div>
 
-    <!-- 老师工具：导出全部成绩 -->
-    <div id="teacher-tools">
-      <p>👩‍🏫 老师工具：本设备上所有已完成的小测成绩可以一起导出。</p>
-      <button id="exportAllBtn">导出全部成绩（CSV）</button>
-    </div>
-  </div>
+        <div id="teacher-tools">
+      <p>👩‍🏫 老师工具：本设备上所有已完成的小测成绩可以一起导出。</p>
+      <button id="exportAllBtn">导出全部成绩（CSV）</button>
+    </div>
+  </div>
 
-  <script>
-    // ========= 全局变量 =========
-    let timer = null;
-    let timeLeft = 540; // 9 分钟
-    let quizStarted = false;
-    let quizFinished = false;
-    let currentQ = 1;
-    const totalQ = 15;
+  <script>
+    // ========= 全局变量 =========
+    let timer = null;
+    let timeLeft = 540; // 9 分钟
+    let quizStarted = false;
+    let quizFinished = false;
+    let currentQ = 1;
+    const totalQ = 15;
 
-    let lastResult = null;
-    let allResults = []; // 存放本设备上所有学生的成绩记录
+    let lastResult = null;
+    let allResults = []; // 存放本设备上所有学生的成绩记录
 
-    // 正确答案（每题 5 分）
-    const listeningAnswers = { L1: "A", L2: "C", L3: "B", L4: "C", L5: "A" };
-    const readingAnswers   = { R1: "B", R2: "A", R3: "A", R4: "T", R5: "T" };
-    const writingAnswers   = {
-      W1: "A", // Good morning.
-      W2: "A", // Thank you, you too!
-      W3: "A", // Have a good day.
-      W4: "B", // g__d -> oo
-      W5: "A"  // aftern__n -> oo
-    };
+    // 正确答案（每题 5 分）
+    const listeningAnswers = { L1: "A", L2: "C", L3: "B", L4: "C", L5: "A" };
+    const readingAnswers   = { R1: "B", R2: "A", R3: "A", R4: "T", R5: "T" };
+    const writingAnswers   = {
+      W1: "A", // Good morning.
+      W2: "A", // Thank you, you too!
+      W3: "A", // Have a good day.
+      W4: "B", // g__d -> oo
+      W5: "A"  // aftern__n -> oo
+    };
 
-    // ========= 一题一屏：显示题目 =========
-    function showQuestion(index) {
-      const cards = document.querySelectorAll(".question-card");
-      cards.forEach(card => {
-        const i = parseInt(card.getAttribute("data-qindex"), 10);
-        card.classList.toggle("active", i === index);
-      });
-      currentQ = index;
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
-      window.scrollTo(0, 0);
-    }
+    // ========= 一题一屏：显示题目 =========
+    function showQuestion(index) {
+      const cards = document.querySelectorAll(".question-card");
+      cards.forEach(card => {
+        const i = parseInt(card.getAttribute("data-qindex"), 10);
+        card.classList.toggle("active", i === index);
+      });
+      currentQ = index;
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      window.scrollTo(0, 0);
+    }
 
-    function goNext() {
-      if (currentQ < totalQ) showQuestion(currentQ + 1);
-    }
-    function goPrev() {
-      if (currentQ > 1) showQuestion(currentQ - 1);
-    }
+    function goNext() {
+      if (currentQ < totalQ) showQuestion(currentQ + 1);
+    }
+    function goPrev() {
+      if (currentQ > 1) showQuestion(currentQ - 1);
+    }
 
-    // ========= 倒计时 =========
-    function updateTimerDisplay() {
-      const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-      const seconds = String(timeLeft % 60).padStart(2, "0");
-      const timerSpan = document.getElementById("timer");
-      if (timerSpan) timerSpan.textContent = `${minutes}:${seconds}`;
-    }
+    // ========= 倒计时 =========
+    function updateTimerDisplay() {
+      const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+      const seconds = String(timeLeft % 60).padStart(2, "0");
+      const timerSpan = document.getElementById("timer");
+      if (timerSpan) timerSpan.textContent = `${minutes}:${seconds}`;
+    }
 
-    function startCountdown() {
-      updateTimerDisplay();
-      timer = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-          timeLeft = 0;
-          updateTimerDisplay();
-          clearInterval(timer);
-          if (!quizFinished) {
-            alert("时间到了，这次小测验结束啦～老师会帮你看一看结果。");
-            submitAnswers();
-          }
-        } else {
-          updateTimerDisplay();
-        }
-      }, 1000);
-    }
+    function startCountdown() {
+      updateTimerDisplay();
+      timer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          updateTimerDisplay();
+          clearInterval(timer);
+          if (!quizFinished) {
+            alert("时间到了，这次小测验结束啦～老师会帮你看一看结果。");
+            submitAnswers();
+          }
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    }
 
-    // ========= 语音朗读 =========
-    function playTTS(text) {
-      if (!window.speechSynthesis) {
-        alert("当前浏览器不支持朗读功能。");
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "en-US";
-      window.speechSynthesis.speak(utter);
-    }
+    // ========= 语音朗读 =========
+    function playTTS(text) {
+      if (!window.speechSynthesis) {
+        alert("当前浏览器不支持朗读功能。");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      window.speechSynthesis.speak(utter);
+    }
 
-    // ========= 工具函数 =========
-    function clearAnswers() {
-      document.querySelectorAll('input[type="radio"]').forEach(input => {
-        input.checked = false;
-      });
-    }
+    // ========= 工具函数 =========
+    function clearAnswers() {
+      document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.checked = false;
+      });
+    }
 
-    function resetStateForNextStudent() {
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-      timeLeft = 540;
-      updateTimerDisplay();
-      quizStarted = false;
-      quizFinished = false;
-      clearAnswers();
-      document.getElementById("result-box").style.display = "none";
-      document.getElementById("quiz-page").style.display = "none";
-      document.getElementById("cover-page").style.display = "block";
-      const select = document.getElementById("studentSelect");
-      if (select) select.value = "";
-      document.getElementById("studentNameDisplay").textContent = "";
-      currentQ = 1;
-    }
+    function resetStateForNextStudent() {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      timeLeft = 540;
+      updateTimerDisplay();
+      quizStarted = false;
+      quizFinished = false;
+      clearAnswers();
+      document.getElementById("result-box").style.display = "none";
+      document.getElementById("quiz-page").style.display = "none";
+      document.getElementById("cover-page").style.display = "block";
+      const select = document.getElementById("studentSelect");
+      if (select) select.value = "";
+      document.getElementById("studentNameDisplay").textContent = "";
+      currentQ = 1;
+    }
 
-    // ========= 提交与导出 =========
-    function submitAnswers() {
-      quizFinished = true;
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    // ========= 提交与导出 =========
+    function submitAnswers() {
+      quizFinished = true;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
 
-      let totalScore = 0;
+      let totalScore = 0;
 
-      // Listening
-      let listeningScore = 0;
-      Object.keys(listeningAnswers).forEach(id => {
-        const sel = document.querySelector(`input[name="${id}"]:checked`);
-        if (sel && sel.value === listeningAnswers[id]) listeningScore += 5;
-      });
-      totalScore += listeningScore;
+      // Listening
+      let listeningScore = 0;
+      Object.keys(listeningAnswers).forEach(id => {
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === listeningAnswers[id]) listeningScore += 5;
+      });
+      totalScore += listeningScore;
 
-      // Reading
-      let readingScore = 0;
-      Object.keys(readingAnswers).forEach(id => {
-        const sel = document.querySelector(`input[name="${id}"]:checked`);
-        if (sel && sel.value === readingAnswers[id]) readingScore += 5;
-      });
-      totalScore += readingScore;
+      // Reading
+      let readingScore = 0;
+      Object.keys(readingAnswers).forEach(id => {
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === readingAnswers[id]) readingScore += 5;
+      });
+      totalScore += readingScore;
 
-      // Writing
-      let writingScore = 0;
-      Object.keys(writingAnswers).forEach(id => {
-        const sel = document.querySelector(`input[name="${id}"]:checked`);
-        if (sel && sel.value === writingAnswers[id]) writingScore += 5;
-      });
-      totalScore += writingScore;
+      // Writing
+      let writingScore = 0;
+      Object.keys(writingAnswers).forEach(id => {
+        const sel = document.querySelector(`input[name="${id}"]:checked`);
+        if (sel && sel.value === writingAnswers[id]) writingScore += 5;
+      });
+      totalScore += writingScore;
 
-      const percent = Math.round(totalScore / 75 * 100);
+      const percent = Math.round(totalScore / 75 * 100);
 
-      let levelText = "";
-      if (percent >= 90) levelText = "表现非常棒，可以自信使用这些问候和告别语了！";
-      else if (percent >= 75) levelText = "整体很好，再多练几次就更熟练啦。";
-      else if (percent >= 60) levelText = "基本达标，可以重点复习没把握的题目。";
-      else levelText = "建议再做一遍题目，多听多读，会越来越好。";
+      let levelText = "";
+      if (percent >= 90) levelText = "表现非常棒，可以自信使用这些问候和告别语了！";
+      else if (percent >= 75) levelText = "整体很好，再多练几次就更熟练啦。";
+      else if (percent >= 60) levelText = "基本达标，可以重点复习没把握的题目。";
+      else levelText = "建议再做一遍题目，多听多读，会越来越好。";
 
-      const studentSelect = document.getElementById("studentSelect");
-      const studentId = studentSelect && studentSelect.value ? studentSelect.value : "";
-      const studentLabel = studentSelect && studentSelect.value
-        ? studentSelect.options[studentSelect.selectedIndex].text
-        : "(未选择学生)";
+      const studentSelect = document.getElementById("studentSelect");
+      const studentId = studentSelect && studentSelect.value ? studentSelect.value : "";
+      const studentLabel = studentSelect && studentSelect.value
+        ? studentSelect.options[studentSelect.selectedIndex].text
+        : "(未选择学生)";
 
-      // 显示到页面
-      const resultBox = document.getElementById("result-box");
-      document.getElementById("result-text").textContent =
-        `学生：${studentLabel} ｜ 总分：${totalScore} / 75（${percent}%）`;
-      document.getElementById("result-detail").innerHTML =
-        `Listening：${listeningScore} 分；Reading：${readingScore} 分；Writing：${writingScore} 分。<br>` +
-        levelText;
-      resultBox.style.display = "block";
+      // 显示到页面
+      const resultBox = document.getElementById("result-box");
+      document.getElementById("result-text").textContent =
+        `学生：${studentLabel} ｜ 总分：${totalScore} / 75（${percent}%）`;
+      document.getElementById("result-detail").innerHTML =
+        `Listening：${listeningScore} 分；Reading：${readingScore} 分；Writing：${writingScore} 分。<br>` +
+        levelText;
+      resultBox.style.display = "block";
 
-      // 保存到 allResults
-      const resultObj = {
-        studentId,
-        studentName: studentLabel,
-        listeningScore,
-        readingScore,
-        writingScore,
-        totalScore,
-        percent,
-        finishedAt: new Date().toISOString()
-      };
-      lastResult = resultObj;
-      allResults.push(resultObj);
+      // 保存到 allResults
+      const resultObj = {
+        studentId,
+        studentName: studentLabel,
+        listeningScore,
+        readingScore,
+        writingScore,
+        totalScore,
+        percent,
+        finishedAt: new Date().toISOString()
+      };
+      lastResult = resultObj;
+      allResults.push(resultObj);
 
-      // 显示老师工具
-      const teacherTools = document.getElementById("teacher-tools");
-      if (teacherTools) teacherTools.style.display = "block";
-    }
+      // 显示老师工具
+      const teacherTools = document.getElementById("teacher-tools");
+      if (teacherTools) teacherTools.style.display = "block";
 
-    function manualSubmit() {
-      if (!quizFinished && confirm("确认要提交这次答卷吗？")) {
-        submitAnswers();
-      }
-    }
+      // **【新增调用】** 测验结束，自动发送数据到 Google Sheets
+      sendResultToSheets(lastResult);
+    }
 
-    function exportAllCSV() {
-      if (!allResults.length) {
-        alert("还没有任何答题记录哦。");
-        return;
-      }
-      const header = [
-        "student_id","student_name","total","percent",
-        "listening","reading","writing","finished_at"
-      ];
-      const lines = [header.join(",")];
+    function manualSubmit() {
+      if (!quizFinished && confirm("确认要提交这次答卷吗？")) {
+        submitAnswers();
+      }
+    }
 
-      allResults.forEach(r => {
-        lines.push([
-          r.studentId || "",
-          `"${r.studentName || ""}"`,
-          r.totalScore,
-          r.percent,
-          r.listeningScore,
-          r.readingScore,
-          r.writingScore,
-          r.finishedAt
-        ].join(","));
-      });
+    // **【新增函数：发送数据到 Google Sheets】**
+    function sendResultToSheets(resultObj) {
+      // 🚨 您的 Apps Script Web App URL
+      const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyaw5ooQdBTpcD0io6zDzWEzxhw9v7y1cr0cMkIqydaqXEtoIQrvuwJizKkzYkjEPI/exec'; 
 
-      const csvContent = lines.join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "U1L4_all_results.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
+      // 检查是否有结果对象
+      if (!resultObj || resultObj.studentName === '(未选择学生)') {
+        console.warn('未提交成绩：未选择学生姓名或结果对象为空。');
+        return;
+      }
 
-    // ========= 事件绑定 =========
-    window.addEventListener("DOMContentLoaded", () => {
-      // 朗读按钮
-      document.querySelectorAll(".play-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const text = btn.getAttribute("data-tts");
-          playTTS(text);
-        });
-      });
+      // 使用 fetch API 发送数据
+      fetch(GOOGLE_SHEETS_URL, { 
+          method: 'POST',
+          headers: { 
+              'Content-Type': 'text/plain;charset=utf-8' // 确保兼容性
+          },
+          body: JSON.stringify(resultObj) // 发送整个结果对象
+      })
+      .then(response => {
+          if (!response.ok) throw new Error('网络请求失败');
+          return response.json();
+      })
+      .then(result => {
+          if (result.success) {
+              console.log('✅ 成绩已成功提交到 Google 表格！');
+          } else {
+              console.error('❌ 提交到 Google 表格失败:', result.error || 'Unknown error.');
+          }
+      })
+      .catch(error => {
+          console.error('❌ 提交时发生网络错误:', error);
+      });
+    }
+    // **【新增函数结束】**
 
-      // 封面页开始按钮
-      document.getElementById("enterBtn").addEventListener("click", () => {
-        const studentSelect = document.getElementById("studentSelect");
-        if (!studentSelect.value) {
-          alert("请先选择你的名字，再开始答题哦～");
-          return;
-        }
+    function exportAllCSV() {
+      if (!allResults.length) {
+        alert("还没有任何答题记录哦。");
+        return;
+      }
+      const header = [
+        "student_id","student_name","total","percent",
+        "listening","reading","writing","finished_at"
+      ];
+      const lines = [header.join(",")];
 
-        // 每次开始前先清空上一次答题痕迹（给下一位同学准备）
-        clearAnswers();
-        quizStarted = true;
-        quizFinished = false;
-        timeLeft = 540;
-        updateTimerDisplay();
+      allResults.forEach(r => {
+        lines.push([
+          r.studentId || "",
+          `"${r.studentName || ""}"`,
+          r.totalScore,
+          r.percent,
+          r.listeningScore,
+          r.readingScore,
+          r.writingScore,
+          r.finishedAt
+        ].join(","));
+      });
 
-        const label = studentSelect.options[studentSelect.selectedIndex].text;
-        document.getElementById("studentNameDisplay").textContent = label;
+      const csvContent = lines.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "U1L4_all_results.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
 
-        document.getElementById("cover-page").style.display = "none";
-        document.getElementById("quiz-page").style.display = "block";
+    // ========= 事件绑定 =========
+    window.addEventListener("DOMContentLoaded", () => {
+      // 朗读按钮
+      document.querySelectorAll(".play-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const text = btn.getAttribute("data-tts");
+          playTTS(text);
+        });
+      });
 
-        showQuestion(1);
-        startCountdown();
-      });
+      // 封面页开始按钮
+      document.getElementById("enterBtn").addEventListener("click", () => {
+        const studentSelect = document.getElementById("studentSelect");
+        if (!studentSelect.value) {
+          alert("请先选择你的名字，再开始答题哦～");
+          return;
+        }
 
-      // 下一位同学
-      document.getElementById("nextStudentBtn").addEventListener("click", () => {
-        resetStateForNextStudent();
-      });
+        // 每次开始前先清空上一次答题痕迹（给下一位同学准备）
+        clearAnswers();
+        quizStarted = true;
+        quizFinished = false;
+        timeLeft = 540;
+        updateTimerDisplay();
 
-      // 导出全部成绩
-      document.getElementById("exportAllBtn").addEventListener("click", exportAllCSV);
-    });
-  </script>
+        const label = studentSelect.options[studentSelect.selectedIndex].text;
+        document.getElementById("studentNameDisplay").textContent = label;
+
+        document.getElementById("cover-page").style.display = "none";
+        document.getElementById("quiz-page").style.display = "block";
+
+        showQuestion(1);
+        startCountdown();
+      });
+
+      // 下一位同学
+      document.getElementById("nextStudentBtn").addEventListener("click", () => {
+        resetStateForNextStudent();
+      });
+
+      // 导出全部成绩
+      document.getElementById("exportAllBtn").addEventListener("click", exportAllCSV);
+    });
+  </script>
 </body>
 </html>
