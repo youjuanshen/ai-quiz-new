@@ -1,17 +1,781 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>测试页面 · ai-quiz-new</title>
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; padding: 40px;">
-  <h1>✅ GitHub Pages 正常工作啦</h1>
-  <p>如果你看到这一行文字，说明 <code>index.html</code> 已经成功加载。</p>
-  <p>接下来我们只要把之前的测验页面代码一点点加回来就行了。</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 3 English Quiz (Unit 1-2)</title>
+    <style>
+        /* ---------------- CSS 样式部分 ---------------- */
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
 
-  <p>
-    试试看这张图片能不能显示（来自 <code>img/num_05.png</code>）：<br>
-    <img src="img/num_05.png" alt="test image" style="width: 200px; margin-top: 16px;">
-  </p>
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        /* 封面页样式 */
+        #coverPage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        h1, h2, h3 { color: #333; }
+        
+        select, input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 80%;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 顶部固定条 */
+        #fixedHeader {
+            display: none; /* 开始后显示 */
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e3f2fd;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border: 1px solid #b3e5fc;
+        }
+
+        #timerDisplay {
+            font-weight: bold;
+            color: #d32f2f;
+            font-size: 1.2em;
+        }
+
+        /* 题目样式 */
+        .question-page {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .question-image-style {
+            max-width: 100%;
+            max-height: 250px;
+            display: block;
+            margin: 10px auto;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .option-image-style {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        /* 选项样式 */
+        .answer-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .answer-option:hover { background-color: #f9f9f9; border-color: #bbb; }
+        .selected-option {
+            border-color: #007bff;
+            background-color: #e7f1ff;
+            font-weight: bold;
+        }
+
+        /* 拖拽题样式 */
+        .drag-target {
+            min-height: 60px;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .drag-item {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            user-select: none;
+            margin: 5px;
+        }
+
+        /* 底部导航 */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .prev-button { background-color: #6c757d; }
+        .submit-button { background-color: #28a745; }
+
+        /* 成绩单 */
+        #scoreCard {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="coverPage">
+        <h1>Grade 3 English Quiz (Unit 1-2)</h1>
+        <p>Before we start, please tell me who you are:</p>
+        
+        <select id="studentSelector" onchange="enableStartButton()">
+            <option value="" disabled selected>-- Select Your Name --</option>
+            </select>
+
+        <div style="margin-top: 20px;">
+            <button id="startButton" disabled onclick="startQuiz()">Start Quiz (开始测验)</button>
+        </div>
+        
+        <button id="exportButton" onclick="exportToCSV()" style="display:none; margin-top:30px; background-color: #17a2b8;">
+            📥 导出所有成绩 (老师用)
+        </button>
+    </div>
+
+    <div id="fixedHeader">
+        <span id="studentDisplay">同学：未选择</span>
+        <span>剩余时间: <span id="timerDisplay">09:00</span></span>
+    </div>
+
+    <div id="quizContainer" style="display: none;">
+        </div>
+
+    <div id="scoreCard">
+        <h2>Quiz Completed!</h2>
+        <div id="finalScore" style="font-size: 1.2em; margin: 20px 0;"></div>
+        <p id="gradeFeedback" style="color: #666;"></p>
+        <button onclick="resetForNextStudent()" style="margin-top: 20px;">Next Student (下一位)</button>
+    </div>
+</div>
+
+<script>
+    // ------------------------- 0. Google Sheet 配置 -------------------------
+
+    // *** 已经替换为你提供的最新链接 ***
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaw5ooQdBTpcD0io6zDzWEzxhw9v7y1cr0cMkIqydaqXEtoIQrvuwJizKkzYkjEPI/exec';
+
+    // ------------------------- 1. 数据定义 -------------------------
+
+    // 示例学生名单（按需修改）
+    const studentList = [
+        { id: '01', name: '李明' },
+        { id: '02', name: '王芳' },
+        { id: '03', name: '张小华' },
+        { id: '04', name: '刘洋' },
+        { id: '05', name: '陈思思' },
+        { id: '06', name: '赵俊' },
+        { id: '07', name: '孙悦' }
+    ];
+
+    // *** 图片路径配置 (已根据你的截图修正文件名) ***
+    const imageUris = {
+        // 数量图片
+        '3 Items': 'img/num_03.png',
+        '4 Items': 'img/num_04.png',
+        '5 Items': 'img/num_05.png',
+        '9 Items': 'img/num_09.png',
+        '10 Items': 'img/num_10.png',
+        '2 Items': 'img/num_02.png',
+        '1 Item': 'img/num_01.png',
+        '6 Items': 'img/num_06.png',
+
+        // 题干用的图片
+        '4 Pencils': 'img/num_04.png',
+
+        // *** 注意：这里改为 cene_park.png 以匹配你截图中的文件名 ***
+        'Park Scene': 'img/cene_park.png', 
+
+        // 奖章图片
+        'Great Sign': 'img/badge_great.png',
+
+        // Q15 显示数字 5
+        'Number 5': 'img/num_05.png'
+    };
+
+    // 测验题目数据
+    const quizData = [
+        // Part A: 听力 (Listening)
+        { qNum: 1, part: 'A', type: 'select',
+          text: '请点击小喇叭听录音，然后选择与录音内容匹配的图片。',
+          audioText: 'I have five ice creams.',
+          options: [imageUris['3 Items'], imageUris['5 Items'], imageUris['9 Items'], imageUris['4 Items']],
+          correct: imageUris['5 Items'],
+          hint: '注意数字 five 对应哪个数量。'
+        },
+        { qNum: 2, part: 'A', type: 'select',
+          text: '请点击小喇叭听录音，然后选择与录音内容匹配的图片。',
+          audioText: 'Count the number to ten.',
+          options: [imageUris['4 Items'], imageUris['5 Items'], imageUris['10 Items'], imageUris['2 Items']],
+          correct: imageUris['10 Items'],
+          hint: '仔细听数字词 ten 的发音。'
+        },
+        { qNum: 3, part: 'A', type: 'select',
+          text: '请点击小喇叭听录音，然后选择与录音内容匹配的中文意思。',
+          audioText: "Let's play a game!",
+          options: ['让我们玩游戏！', '你叫什么名字？', '这是我的朋友。', '很高兴见到你！'],
+          correct: '让我们玩游戏！',
+          hint: "句型 Let's ... 表示“让我们……”的意思。"
+        },
+        { qNum: 4, part: 'A', type: 'fill',
+          text: '请点击小喇叭听录音，然后输入单词拼写。',
+          audioText: 'The number is three.',
+          correct: 'three',
+          hint: '这个数字词以 t 开头。'
+        },
+        { qNum: 5, part: 'A', type: 'fill',
+          text: '请点击小喇叭听录音，然后输入单词拼写。',
+          audioText: "OK, Let's play!",
+          correct: 'play',
+          hint: '这个单词是表示“玩耍”的动词。'
+        },
+
+        // Part B: 阅读 (Reading)
+        { qNum: 6, part: 'B', type: 'drag-sort',
+          text: '请将下列词块拖拽排序，组成一个正确的句子。',
+          words: ['apple', 'is', 'This', 'an', '.'],
+          correct: 'This is an apple.',
+          hint: '句型 This is an...'
+        },
+        { qNum: 7, part: 'B', type: 'drag-sort',
+          text: '请将下列词块拖拽排序，组成一个正确的句子。',
+          words: ['park.', "Let's", 'in the', 'play'],
+          correct: "Let's play in the park.",
+          hint: "句子 Let's 开头。"
+        },
+        { qNum: 8, part: 'B', type: 'select',
+          text: '请选择与英文数字词汇 "six" 对应的数量图片。',
+          options: [imageUris['1 Item'], imageUris['9 Items'], imageUris['6 Items'], imageUris['2 Items']],
+          correct: imageUris['6 Items'],
+          hint: '数字 six 是几？'
+        },
+        { qNum: 9, part: 'B', type: 'fill',
+          text: '看图回答问题，用一个英文单词作答：How many ice creams?',
+          imageUri: imageUris['4 Pencils'],
+          correct: 'four',
+          hint: '图片中是 4 个冰激凌。'
+        },
+        { qNum: 10, part: 'B', type: 'select',
+          text: '看图，选出这个场景对应的英文单词。',
+          imageUri: imageUris['Park Scene'],
+          options: ['school', 'park', 'home', 'zoo'],
+          correct: 'park',
+          hint: '这个单词是 Unit 2 学习的场景词。'
+        },
+
+        // Part C: 写作 (Writing)
+        { qNum: 11, part: 'C', type: 'select',
+          text: '请选择数字 7 对应的正确英文拼写。',
+          options: ['seven', 'sevan', 'sewen', 'seve'],
+          correct: 'seven',
+          hint: '请回忆 seven 的元音字母。'
+        },
+        { qNum: 12, part: 'C', type: 'drag-sort',
+          text: '请拖拽词块，完成句子：I can ___ the ___ from one to ten.',
+          words: ['say', 'numbers', 'play', 'go'],
+          correct: 'I can say the numbers from one to ten.',
+          hint: '“说数字”的英文是什么？'
+        },
+        { qNum: 13, part: 'C', type: 'fill',
+          text: '请拼写出数字 8 的英文单词。',
+          correct: 'eight',
+          hint: '这个单词以 e 开头。'
+        },
+        { qNum: 14, part: 'C', type: 'fill',
+          text: '看图，当你说“太棒了”时，对应的英文单词是什么？',
+          imageUri: imageUris['Great Sign'],
+          correct: 'great',
+          hint: '这是一个表示赞扬的单词，以 g 开头。'
+        },
+        { qNum: 15, part: 'C', type: 'fill',
+          text: "根据图片 (数字 5)，请完成句子：It's number _____ .",
+          imageUri: imageUris['Number 5'],
+          correct: 'five',
+          hint: '这个数字是以 f 开头的。'
+        }
+    ];
+
+    // ------------------------- 2. 状态变量 -------------------------
+
+    let currentQuestionIndex = 1;
+    const TOTAL_QUESTIONS = quizData.length;
+    let timerInterval;
+    let timeLeft = 540; // 9 分钟
+    let currentAnswers = {};
+    let allStudentRecords = [];
+    let draggedItem = null;
+
+    // ------------------------- 3. 核心功能函数 -------------------------
+
+    // 初始化学生下拉菜单
+    function populateStudents() {
+        const selector = document.getElementById('studentSelector');
+        studentList.forEach(student => {
+            const option = document.createElement('option');
+            option.value = student.id;
+            option.textContent = `${student.id.padStart(2, '0')} ${student.name}`;
+            selector.appendChild(option);
+        });
+        document.getElementById('exportButton').style.display = 'none';
+    }
+
+    // 启用开始按钮
+    function enableStartButton() {
+        const selector = document.getElementById('studentSelector');
+        const startButton = document.getElementById('startButton');
+        if (selector.value) {
+            startButton.disabled = false;
+            startButton.style.backgroundColor = '#007bff';
+        } else {
+            startButton.disabled = true;
+            startButton.style.backgroundColor = '#ccc';
+        }
+    }
+
+    // 启动测验
+    function startQuiz() {
+        const studentId = document.getElementById('studentSelector').value;
+        if (!studentId) {
+            alert('请先选择你的姓名！');
+            return;
+        }
+
+        renderAllQuestions();
+
+        document.getElementById('coverPage').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('scoreCard').style.display = 'none';
+
+        currentAnswers = {};
+        timeLeft = 540;
+        currentQuestionIndex = 1;
+
+        const selectedStudent = studentList.find(s => s.id === studentId);
+        document.getElementById('studentDisplay').textContent = `同学：${selectedStudent.name}`;
+        document.getElementById('fixedHeader').style.display = 'flex';
+
+        startTimer();
+        changeQuestion(1);
+    }
+
+    // 计时器函数
+    function startTimer() {
+        clearInterval(timerInterval);
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = '00:00';
+                alert('时间到！系统将自动提交答卷。');
+                submitAnswers();
+                return;
+            }
+
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    // 切换题目分页
+    function changeQuestion(newIndex) {
+        if (newIndex < 1 || newIndex > TOTAL_QUESTIONS) return;
+
+        document.querySelectorAll('.question-page').forEach(el => el.style.display = 'none');
+        currentQuestionIndex = newIndex;
+
+        const newElement = document.getElementById(`question_page_${currentQuestionIndex}`);
+        if (newElement) {
+            newElement.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // 渲染所有题目到 DOM 中
+    function renderAllQuestions() {
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = ''; // 清除旧题目
+
+        // 逐题生成
+        quizData.forEach(q => {
+            const qDiv = document.createElement('div');
+            qDiv.id = `question_page_${q.qNum}`;
+            qDiv.className = 'question-page';
+            qDiv.style.display = 'none';
+
+            let html = `<h3>Part ${q.part} - Q${q.qNum} (5分)</h3>`;
+            html += `<div class="question-content" style="margin-bottom: 20px;">${q.text}</div>`;
+
+            // 题干图片
+            if (q.imageUri) {
+                html += `<img src="${q.imageUri}" alt="题目插图" class="question-image-style" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\\'color:red\\'>[图片加载失败，请检查img文件夹和文件名]</span>')">`;
+            }
+
+            if (q.type === 'select') {
+                if (q.audioText) {
+                    const safeText = q.audioText.replace(/'/g, "\\'");
+                    html += `<button class="speaker-button" onclick="speakText('${safeText}')">🔊 播放语音</button>`;
+                }
+
+                q.options.forEach(option => {
+                    const isImage = (typeof option === 'string') &&
+                        (option.indexOf('img/') === 0 || option.indexOf('data:image') === 0);
+
+                    const displayContent = isImage
+                        ? `<img src="${option}" alt="选项图" class="option-image-style" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHRleHQgeT0iNTAlIiB4PSI1MCUiIGR5PSIuM2VtIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4/PC90ZXh0Pjwvc3ZnPg=='">`
+                        : `<span class="answer-option-text">${option}</span>`;
+
+                    const valueForData = option.toString().replace(/"/g, "&quot;");
+                    const valueForClick = option.toString().replace(/'/g, "\\'");
+
+                    html += `
+                        <div class="answer-option" data-qnum="${q.qNum}" data-value="${valueForData}"
+                             onclick="collectSelectAnswer(${q.qNum}, '${valueForClick}', this)">
+                            ${displayContent}
+                        </div>
+                    `;
+                });
+
+            } else if (q.type === 'fill') {
+                if (q.audioText) {
+                    const safeText = q.audioText.replace(/'/g, "\\'");
+                    html += `<button class="speaker-button" onclick="speakText('${safeText}')">🔊 播放语音</button>`;
+                }
+                html += `<input type="text" id="answer_Q${q.qNum}" class="fill-in-input"
+                               oninput="collectFillAnswer(${q.qNum})"
+                               placeholder="在此输入英文单词 (限小写)">`;
+
+            } else if (q.type === 'drag-sort') {
+                html += `<div id="sort_target_Q${q.qNum}" class="drag-target"
+                             ondrop="dropSort(event, ${q.qNum})" ondragover="allowDrop(event)">
+                             <span style="color:#999; width:100%; text-align:center;">将下方词块拖拽到此处</span>
+                          </div>`;
+                html += `<h4>可选词块:</h4><div id="sort_source_Q${q.qNum}" style="margin-top: 10px;">`;
+                q.words.forEach((item, index) => {
+                    html += `<div id="sort_item_Q${q.qNum}_${index}" class="drag-item" draggable="true"
+                                  data-value="${item.trim()}" ondragstart="dragStart(event)">${item}</div>`;
+                });
+                html += `</div>`;
+            }
+
+            // 分页按钮
+            html += `<div class="navigation-buttons">`;
+            if (q.qNum > 1) {
+                html += `<button class="prev-button" onclick="changeQuestion(${q.qNum - 1})">上一题</button>`;
+            }
+            if (q.qNum < TOTAL_QUESTIONS) {
+                html += `<button class="next-button" onclick="changeQuestion(${q.qNum + 1})">下一题</button>`;
+            } else {
+                html += `<button class="submit-button" onclick="submitAnswers()">提交答卷</button>`;
+            }
+            html += `</div>`;
+
+            qDiv.innerHTML = html;
+            container.appendChild(qDiv);
+        });
+    }
+
+    // ------------------------- 4. 答案收集与评分 -------------------------
+
+    function collectSelectAnswer(qNum, value, element) {
+        document.querySelectorAll(`.answer-option[data-qnum="${qNum}"]`).forEach(opt => {
+            opt.classList.remove('selected-option');
+        });
+        element.classList.add('selected-option');
+        currentAnswers[`Q${qNum}`] = value;
+    }
+
+    function collectFillAnswer(qNum) {
+        const inputElement = document.getElementById(`answer_Q${qNum}`);
+        if (inputElement) {
+            const value = inputElement.value.trim().toLowerCase();
+            currentAnswers[`Q${qNum}`] = value;
+        }
+    }
+
+    function collectDragSortAnswer(qNum) {
+        const target = document.getElementById(`sort_target_Q${qNum}`);
+        let sortedAnswer = '';
+        Array.from(target.children).forEach(item => {
+            if (item.classList.contains('drag-item')) {
+                sortedAnswer += item.getAttribute('data-value') + ' ';
+            }
+        });
+        currentAnswers[`Q${qNum}`] = sortedAnswer.trim();
+    }
+
+    function gradeQuiz(answers) {
+        let score = 0;
+        let correctness = {};
+        let listeningScore = 0;
+        let readingScore = 0;
+        let writingScore = 0;
+
+        quizData.forEach(q => {
+            const qKey = `Q${q.qNum}`;
+            let isCorrect = false;
+            const studentAnswer = answers[qKey] || '';
+
+            if (q.type === 'select' || q.type === 'fill') {
+                isCorrect = (studentAnswer.toLowerCase() === q.correct.toLowerCase());
+            } else if (q.type === 'drag-sort') {
+                const cleanedStudent = studentAnswer.toLowerCase().replace(/[.,?!]/g, '').replace(/\s+/g, ' ');
+                const cleanedCorrect = q.correct.toLowerCase().replace(/[.,?!]/g, '').replace(/\s+/g, ' ');
+                isCorrect = (cleanedStudent === cleanedCorrect);
+            }
+
+            if (isCorrect) {
+                score += 5;
+                if (q.part === 'A') listeningScore += 5;
+                else if (q.part === 'B') readingScore += 5;
+                else if (q.part === 'C') writingScore += 5;
+            }
+            correctness[qKey] = isCorrect;
+        });
+
+        return { score, correctness, listeningScore, readingScore, writingScore };
+    }
+
+    // ------------------------- 5. 写入 Google Sheet + 提交逻辑 -------------------------
+
+    function sendSummaryToGoogleSheet(summary) {
+        try {
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // 重要：绕过跨域限制，只发送不读取
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(summary)
+            }).catch(function (err) {
+                console.error('Fetch error:', err);
+            });
+        } catch (err) {
+            console.error('Try-catch error:', err);
+        }
+    }
+
+    function submitAnswers() {
+        clearInterval(timerInterval);
+        quizData.filter(q => q.type === 'drag-sort').forEach(q => {
+            collectDragSortAnswer(q.qNum);
+        });
+
+        const result = gradeQuiz(currentAnswers);
+        const score = result.score;
+        const totalPercent = Math.round(score / (TOTAL_QUESTIONS * 5) * 100);
+
+        const studentId = document.getElementById('studentSelector').value;
+        const selector = document.getElementById('studentSelector');
+        const optionText = selector.options[selector.selectedIndex].textContent; 
+        const parts = optionText.split(' ');
+        const studentName = parts[1] || optionText; 
+        const studentLabel = (parts[0] || '') + (parts[1] || '');
+
+        const record = {
+            studentId,
+            name: studentName,
+            score,
+            answers: { ...currentAnswers },
+            correctness: result.correctness,
+            listeningScore: result.listeningScore,
+            readingScore: result.readingScore,
+            writingScore: result.writingScore,
+            totalPercent
+        };
+        allStudentRecords.push(record);
+
+        const summaryForSheet = {
+            studentLabel: studentLabel,
+            totalScore: score,
+            totalPercent: totalPercent,
+            listeningScore: result.listeningScore,
+            readingScore: result.readingScore,
+            writingScore: result.writingScore
+        };
+        sendSummaryToGoogleSheet(summaryForSheet);
+
+        displayScoreCard(score, studentName);
+
+        if (allStudentRecords.length > 0) {
+            document.getElementById('exportButton').style.display = 'block';
+        }
+    }
+
+    function displayScoreCard(score, name) {
+        document.getElementById('fixedHeader').style.display = 'none';
+        document.querySelectorAll('.question-page').forEach(el => el.style.display = 'none');
+
+        const scoreCard = document.getElementById('scoreCard');
+        scoreCard.style.display = 'block';
+
+        let grade = '';
+        let feedback = '';
+
+        if (score >= 60) {
+            grade = 'A (Excellent!)';
+            feedback = `🎉 Great job, ${name}! You are doing amazing!`;
+        } else if (score >= 40) {
+            grade = 'B (Good Job)';
+            feedback = `🌟 ${name}, well done! Keep practicing your numbers.`;
+        } else {
+            grade = 'C (Keep Trying)';
+            feedback = `💡 ${name}, keep trying! Listen to the audio more.`;
+        }
+
+        document.getElementById('finalScore').innerHTML =
+            `Your Score: <span style="color: #dc3545; font-size: 1.5em; font-weight: bold;">${score}</span> / 75 (${grade})`;
+        document.getElementById('gradeFeedback').textContent = feedback;
+    }
+
+    function resetForNextStudent() {
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('coverPage').style.display = 'flex';
+        document.getElementById('scoreCard').style.display = 'none';
+        document.getElementById('studentSelector').value = '';
+        document.getElementById('startButton').disabled = true;
+        document.getElementById('startButton').style.backgroundColor = '#ccc';
+        window.scrollTo(0, 0);
+    }
+
+    // ------------------------- 6. 辅助功能 -------------------------
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Browser does not support text-to-speech.');
+        }
+    }
+
+    function dragStart(event) {
+        draggedItem = event.target;
+        event.dataTransfer.setData('text/plain', draggedItem.id);
+        setTimeout(() => { draggedItem.style.opacity = '0.5'; }, 0);
+    }
+
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    function dropSort(event, qNum) {
+        event.preventDefault();
+        if (!draggedItem) return;
+        draggedItem.style.opacity = '1';
+        
+        const target = event.currentTarget; 
+        if (target.id.startsWith('sort_target_Q') || target.classList.contains('drag-item') || target.id.startsWith('sort_source_Q')) {
+             if(target.classList.contains('drag-item')){
+                 target.parentNode.insertBefore(draggedItem, target);
+             } else {
+                 target.appendChild(draggedItem);
+             }
+            collectDragSortAnswer(qNum);
+        }
+    }
+
+    function exportToCSV() {
+        if (allStudentRecords.length === 0) {
+            alert('No records yet!');
+            return;
+        }
+        const headerFields = ['ID', 'Name', 'Total Score'];
+        for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
+            headerFields.push(`Q${i} Answer`);
+            headerFields.push(`Q${i} Correct`);
+        }
+
+        let csvContent = headerFields.join(',') + '\n';
+
+        allStudentRecords.forEach(record => {
+            let row = [`"${record.studentId}"`, `"${record.name}"`, record.score];
+            for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
+                const qKey = `Q${i}`;
+                let answer = record.answers[qKey] ? record.answers[qKey].toString().replace(/"/g, '""') : '';
+                row.push(`"${answer}"`);
+                row.push(record.correctness[qKey] ? 'Yes' : 'No');
+            }
+            csvContent += row.join(',') + '\n';
+        });
+
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `quiz_results_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        populateStudents();
+    });
+</script>
+
 </body>
 </html>
