@@ -1,191 +1,115 @@
-// ------------------------- 0. Google Sheet 配置 -------------------------
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaw5ooQdBTpcD0io6zDzWEzxhw9v7y1cr0cMkIqydaqXEtoIQrvuwJizKkzYkjEPI/exec';
-
-// ------------------------- 1. 数据定义 -------------------------
-
-// 示例学生名单
-const studentList = [
-    { id: '01', name: '李明' },
-    { id: '02', name: '王芳' },
-    { id: '03', name: '张小华' },
-    { id: '04', name: '刘洋' },
-    { id: '05', name: '陈思思' },
-    { id: '06', name: '赵俊' },
-    { id: '07', name: '孙悦' }
-];
-
-// 图片路径配置
-const imageUris = {
-    '3 Items': 'img/num_03.png',
-    '4 Items': 'img/num_04.png',
-    '5 Items': 'img/num_05.png',
-    '9 Items': 'img/num_09.png',
-    '10 Items': 'img/num_10.png',
-    '2 Items': 'img/num_02.png',
-    '1 Item': 'img/num_01.png',
-    '6 Items': 'img/num_06.png',
-    '4 Pencils': 'img/num_04.png',
-    'Park Scene': 'img/cene_park.png', 
-    'Great Sign': 'img/badge_great.png',
-    'Number 5': 'img/num_05.png'
+// =================================================================
+// 📌 老师配置区 (Teacher Configuration)
+// =================================================================
+const QUIZ_CONFIG = {
+    // 1. 单元标题 (会显示在首页任务卡片，也会填入表格的"知识模块"列)
+    title: "Unit 2 Lesson 2 \"How many ducks\"", 
+    
+    // 2. Google Script 新链接 (已更新为你刚刚生成的 Version 1 链接)
+    scriptUrl: "https://script.google.com/macros/s/AKfycbxc8c4prsZZLY9vp-te4gH5twQNO1A8Ek3yROTNZeNs-7YhL60UojvMsQoceJUZ7LUP/exec"
 };
 
-// 测验题目数据
-const quizData = [
-    // Part A: 听力 (Listening)
-    { qNum: 1, part: 'A', type: 'select',
-      text: '请点击小喇叭听录音，然后选择与录音内容匹配的图片。',
-      audioText: 'I have five ice creams.',
-      options: [imageUris['3 Items'], imageUris['5 Items'], imageUris['9 Items'], imageUris['4 Items']],
-      correct: imageUris['5 Items'],
-      hint: '注意数字 five 对应哪个数量。'
-    },
-    { qNum: 2, part: 'A', type: 'select',
-      text: '请点击小喇叭听录音，然后选择与录音内容匹配的图片。',
-      audioText: 'Count the number to ten.',
-      options: [imageUris['4 Items'], imageUris['5 Items'], imageUris['10 Items'], imageUris['2 Items']],
-      correct: imageUris['10 Items'],
-      hint: '仔细听数字词 ten 的发音。'
-    },
-    { qNum: 3, part: 'A', type: 'select',
-      text: '请点击小喇叭听录音，然后选择与录音内容匹配的中文意思。',
-      audioText: "Let's play a game!",
-      options: ['让我们玩游戏！', '你叫什么名字？', '这是我的朋友。', '很高兴见到你！'],
-      correct: '让我们玩游戏！',
-      hint: "句型 Let's ... 表示“让我们……”的意思。"
-    },
-    { qNum: 4, part: 'A', type: 'fill',
-      text: '请点击小喇叭听录音，然后输入单词拼写。',
-      audioText: 'The number is three.',
-      correct: 'three',
-      hint: '这个数字词以 t 开头。'
-    },
-    { qNum: 5, part: 'A', type: 'fill',
-      text: '请点击小喇叭听录音，然后输入单词拼写。',
-      audioText: "OK, Let's play!",
-      correct: 'play',
-      hint: '这个单词是表示“玩耍”的动词。'
-    },
-
-    // Part B: 阅读 (Reading)
-    { qNum: 6, part: 'B', type: 'drag-sort',
-      text: '请将下列词块拖拽排序，组成一个正确的句子。',
-      words: ['apple', 'is', 'This', 'an', '.'],
-      correct: 'This is an apple.',
-      hint: '句型 This is an...'
-    },
-    { qNum: 7, part: 'B', type: 'drag-sort',
-      text: '请将下列词块拖拽排序，组成一个正确的句子。',
-      words: ['park.', "Let's", 'in the', 'play'],
-      correct: "Let's play in the park.",
-      hint: "句子 Let's 开头。"
-    },
-    { qNum: 8, part: 'B', type: 'select',
-      text: '请选择与英文数字词汇 "six" 对应的数量图片。',
-      options: [imageUris['1 Item'], imageUris['9 Items'], imageUris['6 Items'], imageUris['2 Items']],
-      correct: imageUris['6 Items'],
-      hint: '数字 six 是几？'
-    },
-    { qNum: 9, part: 'B', type: 'fill',
-      text: '看图回答问题，用一个英文单词作答：How many ice creams?',
-      imageUri: imageUris['4 Pencils'],
-      correct: 'four',
-      hint: '图片中是 4 个冰激凌。'
-    },
-    { qNum: 10, part: 'B', type: 'select',
-      text: '看图，选出这个场景对应的英文单词。',
-      imageUri: imageUris['Park Scene'],
-      options: ['school', 'park', 'home', 'zoo'],
-      correct: 'park',
-      hint: '这个单词是 Unit 2 学习的场景词。'
-    },
-
-    // Part C: 写作 (Writing)
-    { qNum: 11, part: 'C', type: 'select',
-      text: '请选择数字 7 对应的正确英文拼写。',
-      options: ['seven', 'sevan', 'sewen', 'seve'],
-      correct: 'seven',
-      hint: '请回忆 seven 的元音字母。'
-    },
-    { qNum: 12, part: 'C', type: 'drag-sort',
-      text: '请拖拽词块，完成句子：I can ___ the ___ from one to ten.',
-      words: ['say', 'numbers', 'play', 'go'],
-      correct: 'I can say the numbers from one to ten.',
-      hint: '“说数字”的英文是什么？'
-    },
-    { qNum: 13, part: 'C', type: 'fill',
-      text: '请拼写出数字 8 的英文单词。',
-      correct: 'eight',
-      hint: '这个单词以 e 开头。'
-    },
-    { qNum: 14, part: 'C', type: 'fill',
-      text: '看图，当你说“太棒了”时，对应的英文单词是什么？',
-      imageUri: imageUris['Great Sign'],
-      correct: 'great',
-      hint: '这是一个表示赞扬的单词，以 g 开头。'
-    },
-    { qNum: 15, part: 'C', type: 'fill',
-      text: "根据图片 (数字 5)，请完成句子：It's number _____ .",
-      imageUri: imageUris['Number 5'],
-      correct: 'five',
-      hint: '这个数字是以 f 开头的。'
-    }
+// -----------------------------------------------------------------
+// 1. 学生名单 (27人)
+// -----------------------------------------------------------------
+const studentList = [
+    { id: '1', name: '张宇豪' }, { id: '2', name: '张佳寒' }, { id: '3', name: '张睿渊' },
+    { id: '4', name: '张羽韬' }, { id: '5', name: '张美茹' }, { id: '6', name: '张嘉钦' },
+    { id: '7', name: '卢梦婷' }, { id: '8', name: '张悦萱' }, { id: '9', name: '张语涵' },
+    { id: '10', name: '张英豪' }, { id: '11', name: '张志鹏' }, { id: '12', name: '张智杰' },
+    { id: '13', name: '张梓婷' }, { id: '14', name: '张品琪' }, { id: '15', name: '张诺依' },
+    { id: '16', name: '张雨泽' }, { id: '17', name: '张依彤' }, { id: '18', name: '张艺楠' },
+    { id: '19', name: '张思彤' }, { id: '20', name: '张子豪' }, { id: '21', name: '张梓亦' },
+    { id: '22', name: '张皓鑫' }, { id: '23', name: '张雨欣' }, { id: '24', name: '张如欣' },
+    { id: '25', name: '张柏涵' }, { id: '26', name: '张梓纯' }, { id: '27', name: '张泽鑫' }
 ];
 
-// ------------------------- 2. 状态变量 -------------------------
+// -----------------------------------------------------------------
+// 2. 题目与资源
+// -----------------------------------------------------------------
+const imageUris = {
+    '3 Items': 'img/num_03.png', '4 Items': 'img/num_04.png', '5 Items': 'img/num_05.png',
+    '9 Items': 'img/num_09.png', '10 Items': 'img/num_10.png', '2 Items': 'img/num_02.png',
+    '1 Item': 'img/num_01.png', '6 Items': 'img/num_06.png', '4 Pencils': 'img/num_04.png',
+    'Park Scene': 'img/cene_park.png', 'Great Sign': 'img/badge_great.png', 'Number 5': 'img/num_05.png'
+};
 
+const quizData = [
+    // Part A: Listening (听力)
+    { qNum: 1, part: 'A', type: 'select', text: '听录音，选出正确的图片。', audioText: 'I have five ice creams.', options: [imageUris['3 Items'], imageUris['5 Items'], imageUris['9 Items'], imageUris['4 Items']], correct: imageUris['5 Items'] },
+    { qNum: 2, part: 'A', type: 'select', text: '听录音，选出正确的图片。', audioText: 'Count the number to ten.', options: [imageUris['4 Items'], imageUris['5 Items'], imageUris['10 Items'], imageUris['2 Items']], correct: imageUris['10 Items'] },
+    { qNum: 3, part: 'A', type: 'select', text: '听录音，选出中文意思。', audioText: "Let's play a game!", options: ['让我们玩游戏！', '你叫什么名字？', '这是我的朋友。', '很高兴见到你！'], correct: '让我们玩游戏！' },
+    { qNum: 4, part: 'A', type: 'fill', text: '听录音，写出单词。', audioText: 'The number is three.', correct: 'three' },
+    { qNum: 5, part: 'A', type: 'fill', text: '听录音，写出单词。', audioText: "OK, Let's play!", correct: 'play' },
+    // Part B: Reading (阅读)
+    { qNum: 6, part: 'B', type: 'drag-sort', text: '点击单词，组成句子。', words: ['apple', 'is', 'This', 'an', '.'], correct: 'This is an apple.' },
+    { qNum: 7, part: 'B', type: 'drag-sort', text: '点击单词，组成句子。', words: ['park.', "Let's", 'in the', 'play'], correct: "Let's play in the park." },
+    { qNum: 8, part: 'B', type: 'select', text: '选择 "six" 对应的图片。', options: [imageUris['1 Item'], imageUris['9 Items'], imageUris['6 Items'], imageUris['2 Items']], correct: imageUris['6 Items'] },
+    { qNum: 9, part: 'B', type: 'fill', text: '看图，用英文回答数量：How many ice creams?', imageUri: imageUris['4 Pencils'], correct: 'four' },
+    { qNum: 10, part: 'B', type: 'select', text: '这是哪里？选出对应的单词。', imageUri: imageUris['Park Scene'], options: ['school', 'park', 'home', 'zoo'], correct: 'park' },
+    // Part C: Writing (写作)
+    { qNum: 11, part: 'C', type: 'select', text: '选择数字 7 的拼写。', options: ['seven', 'sevan', 'sewen', 'seve'], correct: 'seven' },
+    { qNum: 12, part: 'C', type: 'drag-sort', text: '点击单词，完成句子：I can ___ the ___ from one to ten.', words: ['say', 'numbers', 'play', 'go'], correct: 'I can say the numbers from one to ten.' },
+    { qNum: 13, part: 'C', type: 'fill', text: '写出数字 8 的英文。', correct: 'eight' },
+    { qNum: 14, part: 'C', type: 'fill', text: '看图，“太棒了”用英文怎么说？', imageUri: imageUris['Great Sign'], correct: 'great' },
+    { qNum: 15, part: 'C', type: 'fill', text: '看图完成句子：It\'s number _____ .', imageUri: imageUris['Number 5'], correct: 'five' }
+];
+
+// -----------------------------------------------------------------
+// 3. 全局状态
+// -----------------------------------------------------------------
 let currentQuestionIndex = 1;
 const TOTAL_QUESTIONS = quizData.length;
 let timerInterval;
-let timeLeft = 540; // 9 分钟
+let timeLeft = 540; 
 let currentAnswers = {};
 let allStudentRecords = [];
-let draggedItem = null;
+let quizStartTime = null; // 记录开始时间点
 
-// ------------------------- 3. 核心功能函数 -------------------------
+// -----------------------------------------------------------------
+// 4. 核心功能
+// -----------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. 自动填入配置的标题
+    document.getElementById('missionTitle').textContent = QUIZ_CONFIG.title;
+    populateStudents();
+});
 
 function populateStudents() {
     const selector = document.getElementById('studentSelector');
     studentList.forEach(student => {
         const option = document.createElement('option');
+        const displayId = student.id.toString().padStart(2, '0');
         option.value = student.id;
-        option.textContent = `${student.id.padStart(2, '0')} ${student.name}`;
+        option.textContent = `${displayId} ${student.name}`;
         selector.appendChild(option);
     });
-    document.getElementById('exportButton').style.display = 'none';
 }
 
 function enableStartButton() {
-    const selector = document.getElementById('studentSelector');
-    const startButton = document.getElementById('startButton');
-    if (selector.value) {
-        startButton.disabled = false;
-        startButton.style.backgroundColor = '#007bff';
-    } else {
-        startButton.disabled = true;
-        startButton.style.backgroundColor = '#ccc';
+    if (document.getElementById('studentSelector').value) {
+        document.getElementById('startButton').disabled = false;
     }
 }
 
 function startQuiz() {
     const studentId = document.getElementById('studentSelector').value;
-    if (!studentId) {
-        alert('请先选择你的姓名！');
-        return;
-    }
+    if (!studentId) return;
 
     renderAllQuestions();
 
     document.getElementById('coverPage').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
-    document.getElementById('scoreCard').style.display = 'none';
-
+    
     currentAnswers = {};
-    timeLeft = 540;
+    timeLeft = 540; 
     currentQuestionIndex = 1;
+    
+    // 记录开始时间
+    quizStartTime = new Date();
 
     const selectedStudent = studentList.find(s => s.id === studentId);
-    document.getElementById('studentDisplay').textContent = `同学：${selectedStudent.name}`;
+    document.getElementById('studentDisplay').textContent = selectedStudent.name;
     document.getElementById('fixedHeader').style.display = 'flex';
 
     startTimer();
@@ -195,16 +119,13 @@ function startQuiz() {
 function startTimer() {
     clearInterval(timerInterval);
     const timerDisplay = document.getElementById('timerDisplay');
-
     timerInterval = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerDisplay.textContent = '00:00';
-            alert('时间到！系统将自动提交答卷。');
-            submitAnswers();
+            forceSubmit(); 
             return;
         }
-
         timeLeft--;
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
@@ -212,92 +133,66 @@ function startTimer() {
     }, 1000);
 }
 
-function changeQuestion(newIndex) {
-    if (newIndex < 1 || newIndex > TOTAL_QUESTIONS) return;
-
-    document.querySelectorAll('.question-page').forEach(el => el.style.display = 'none');
-    currentQuestionIndex = newIndex;
-
-    const newElement = document.getElementById(`question_page_${currentQuestionIndex}`);
-    if (newElement) {
-        newElement.style.display = 'block';
-        window.scrollTo(0, 0);
-    }
-}
-
+// 渲染题目（含中文进度标题）
 function renderAllQuestions() {
     const container = document.getElementById('quizContainer');
-    container.innerHTML = ''; 
+    container.innerHTML = '';
 
     quizData.forEach(q => {
         const qDiv = document.createElement('div');
         qDiv.id = `question_page_${q.qNum}`;
         qDiv.className = 'question-page';
-        qDiv.style.display = 'none';
+        
+        // 自动生成标题：听力挑战 第1题 (共5题)
+        let partTitle = "", partIcon = "";
+        const indexInPart = (q.qNum - 1) % 5 + 1; 
 
-        let html = `<h3>Part ${q.part} - Q${q.qNum} (5分)</h3>`;
-        html += `<div class="question-content" style="margin-bottom: 20px;">${q.text}</div>`;
+        if (q.part === 'A') { partTitle = "听力挑战"; partIcon = "👂"; }
+        else if (q.part === 'B') { partTitle = "阅读挑战"; partIcon = "👀"; }
+        else if (q.part === 'C') { partTitle = "写作挑战"; partIcon = "✍️"; }
 
-        if (q.imageUri) {
-            html += `<img src="${q.imageUri}" alt="题目插图" class="question-image-style" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=\\'color:red\\'>[图片加载失败，请检查img文件夹和文件名]</span>')">`;
+        let html = `<div class="section-header">
+                        ${partIcon} ${partTitle}：第 ${indexInPart} 题 <small>(共 5 题)</small>
+                    </div>`;
+        html += `<div class="question-text">${q.text}</div>`;
+
+        if (q.imageUri) html += `<img src="${q.imageUri}" class="question-image-style" onerror="this.style.display='none'">`;
+        if (q.audioText) {
+            const safeText = q.audioText.replace(/'/g, "\\'");
+            html += `<div style="text-align:center"><button class="speaker-button" onclick="speakText('${safeText}')">🔊 点击播放录音</button></div>`;
         }
 
+        // 渲染交互控件
         if (q.type === 'select') {
-            if (q.audioText) {
-                const safeText = q.audioText.replace(/'/g, "\\'");
-                html += `<button class="speaker-button" onclick="speakText('${safeText}')">🔊 播放语音</button>`;
-            }
-
+            html += `<div class="options-container">`; 
             q.options.forEach(option => {
-                const isImage = (typeof option === 'string') &&
-                    (option.indexOf('img/') === 0 || option.indexOf('data:image') === 0);
-
-                const displayContent = isImage
-                    ? `<img src="${option}" alt="选项图" class="option-image-style" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHRleHQgeT0iNTAlIiB4PSI1MCUiIGR5PSIuM2VtIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4/PC90ZXh0Pjwvc3ZnPg=='">`
-                    : `<span class="answer-option-text">${option}</span>`;
-
-                const valueForData = option.toString().replace(/"/g, "&quot;");
-                const valueForClick = option.toString().replace(/'/g, "\\'");
-
-                html += `
-                    <div class="answer-option" data-qnum="${q.qNum}" data-value="${valueForData}"
-                         onclick="collectSelectAnswer(${q.qNum}, '${valueForClick}', this)">
-                        ${displayContent}
-                    </div>
-                `;
+                const isImage = (typeof option === 'string') && (option.indexOf('img/') === 0);
+                const displayContent = isImage 
+                    ? `<img src="${option}" class="option-image-style">` 
+                    : `<span>${option}</span>`;
+                const safeValue = option.toString().replace(/'/g, "\\'");
+                html += `<div class="answer-option" data-qnum="${q.qNum}" onclick="selectOption(${q.qNum}, '${safeValue}', this)">
+                            ${displayContent}
+                         </div>`;
             });
-
+            html += `</div>`;
         } else if (q.type === 'fill') {
-            if (q.audioText) {
-                const safeText = q.audioText.replace(/'/g, "\\'");
-                html += `<button class="speaker-button" onclick="speakText('${safeText}')">🔊 播放语音</button>`;
-            }
-            html += `<input type="text" id="answer_Q${q.qNum}" class="fill-in-input"
-                           oninput="collectFillAnswer(${q.qNum})"
-                           placeholder="在此输入英文单词 (限小写)">`;
-
+            html += `<input type="text" id="answer_Q${q.qNum}" class="fill-in-input" placeholder="点击输入答案..." oninput="saveFillAnswer(${q.qNum})">`;
         } else if (q.type === 'drag-sort') {
-            html += `<div id="sort_target_Q${q.qNum}" class="drag-target"
-                         ondrop="dropSort(event, ${q.qNum})" ondragover="allowDrop(event)">
-                         <span style="color:#999; width:100%; text-align:center;">将下方词块拖拽到此处</span>
-                      </div>`;
-            html += `<h4>可选词块:</h4><div id="sort_source_Q${q.qNum}" style="margin-top: 10px;">`;
-            q.words.forEach((item, index) => {
-                html += `<div id="sort_item_Q${q.qNum}_${index}" class="drag-item" draggable="true"
-                              data-value="${item.trim()}" ondragstart="dragStart(event)">${item}</div>`;
+            html += `<div class="sort-area-label">↓ 点一下单词，它就会飞到横线上 ↓</div>`;
+            html += `<div id="target_Q${q.qNum}" class="drag-target"></div>`;
+            html += `<div id="source_Q${q.qNum}" class="drag-source">`;
+            q.words.forEach((word, idx) => {
+                html += `<div class="word-chip" id="word_${q.qNum}_${idx}" onclick="moveWord(${q.qNum}, this)">${word}</div>`;
             });
             html += `</div>`;
         }
 
+        // 导航按钮
         html += `<div class="navigation-buttons">`;
-        if (q.qNum > 1) {
-            html += `<button class="prev-button" onclick="changeQuestion(${q.qNum - 1})">上一题</button>`;
-        }
-        if (q.qNum < TOTAL_QUESTIONS) {
-            html += `<button class="next-button" onclick="changeQuestion(${q.qNum + 1})">下一题</button>`;
-        } else {
-            html += `<button class="submit-button" onclick="submitAnswers()">提交答卷</button>`;
-        }
+        if (q.qNum > 1) html += `<button class="prev-button" onclick="changeQuestion(${q.qNum - 1})">上一题</button>`;
+        if (q.qNum < TOTAL_QUESTIONS) html += `<button class="next-button" onclick="changeQuestion(${q.qNum + 1})">下一题</button>`;
+        else html += `<button class="submit-button" onclick="submitAnswers()">交卷啦</button>`;
         html += `</div>`;
 
         qDiv.innerHTML = html;
@@ -305,9 +200,17 @@ function renderAllQuestions() {
     });
 }
 
-// ------------------------- 4. 答案收集与评分 -------------------------
+// -----------------------------------------------------------------
+// 5. 交互逻辑
+// -----------------------------------------------------------------
+function changeQuestion(index) {
+    document.querySelectorAll('.question-page').forEach(el => el.style.display = 'none');
+    currentQuestionIndex = index;
+    document.getElementById(`question_page_${index}`).style.display = 'block';
+    window.scrollTo(0, 0);
+}
 
-function collectSelectAnswer(qNum, value, element) {
+function selectOption(qNum, value, element) {
     document.querySelectorAll(`.answer-option[data-qnum="${qNum}"]`).forEach(opt => {
         opt.classList.remove('selected-option');
     });
@@ -315,232 +218,143 @@ function collectSelectAnswer(qNum, value, element) {
     currentAnswers[`Q${qNum}`] = value;
 }
 
-function collectFillAnswer(qNum) {
-    const inputElement = document.getElementById(`answer_Q${qNum}`);
-    if (inputElement) {
-        const value = inputElement.value.trim().toLowerCase();
-        currentAnswers[`Q${qNum}`] = value;
-    }
+function saveFillAnswer(qNum) {
+    const val = document.getElementById(`answer_Q${qNum}`).value.trim().toLowerCase();
+    currentAnswers[`Q${qNum}`] = val;
 }
 
-function collectDragSortAnswer(qNum) {
-    const target = document.getElementById(`sort_target_Q${qNum}`);
-    let sortedAnswer = '';
-    Array.from(target.children).forEach(item => {
-        if (item.classList.contains('drag-item')) {
-            sortedAnswer += item.getAttribute('data-value') + ' ';
-        }
-    });
-    currentAnswers[`Q${qNum}`] = sortedAnswer.trim();
+function moveWord(qNum, element) {
+    const sourceBox = document.getElementById(`source_Q${qNum}`);
+    const targetBox = document.getElementById(`target_Q${qNum}`);
+    if (element.parentElement === sourceBox) targetBox.appendChild(element);
+    else sourceBox.appendChild(element);
+    
+    let ans = '';
+    Array.from(targetBox.children).forEach(chip => ans += chip.textContent + ' ');
+    currentAnswers[`Q${qNum}`] = ans.trim();
 }
 
-function gradeQuiz(answers) {
-    let score = 0;
-    let correctness = {};
-    let listeningScore = 0;
-    let readingScore = 0;
-    let writingScore = 0;
+// -----------------------------------------------------------------
+// 6. 提交与评分 (核心)
+// -----------------------------------------------------------------
+function gradeQuiz() {
+    let score = 0, correctness = {};
+    let l_score = 0, r_score = 0, w_score = 0;
 
     quizData.forEach(q => {
         const qKey = `Q${q.qNum}`;
-        let isCorrect = false;
-        const studentAnswer = answers[qKey] || '';
+        const studentAns = (currentAnswers[qKey] || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        const correctAns = q.correct.toLowerCase().replace(/\s+/g, ' ').trim();
+        let isRight = false;
+        
+        if (q.type === 'drag-sort') isRight = (studentAns.replace(/[.,?!]/g,'') === correctAns.replace(/[.,?!]/g,''));
+        else isRight = (studentAns === correctAns);
 
-        if (q.type === 'select' || q.type === 'fill') {
-            isCorrect = (studentAnswer.toLowerCase() === q.correct.toLowerCase());
-        } else if (q.type === 'drag-sort') {
-            const cleanedStudent = studentAnswer.toLowerCase().replace(/[.,?!]/g, '').replace(/\s+/g, ' ');
-            const cleanedCorrect = q.correct.toLowerCase().replace(/[.,?!]/g, '').replace(/\s+/g, ' ');
-            isCorrect = (cleanedStudent === cleanedCorrect);
-        }
-
-        if (isCorrect) {
+        if (isRight) {
             score += 5;
-            if (q.part === 'A') listeningScore += 5;
-            else if (q.part === 'B') readingScore += 5;
-            else if (q.part === 'C') writingScore += 5;
+            if (q.part === 'A') l_score += 5;
+            if (q.part === 'B') r_score += 5;
+            if (q.part === 'C') w_score += 5;
         }
-        correctness[qKey] = isCorrect;
+        correctness[qKey] = isRight;
     });
-
-    return { score, correctness, listeningScore, readingScore, writingScore };
+    return { score, correctness, l_score, r_score, w_score };
 }
 
-// ------------------------- 5. 写入 Google Sheet + 提交逻辑 -------------------------
-
-function sendSummaryToGoogleSheet(summary) {
-    try {
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(summary)
-        }).catch(function (err) {
-            console.error('Fetch error:', err);
-        });
-    } catch (err) {
-        console.error('Try-catch error:', err);
-    }
+function forceSubmit() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    setTimeout(submitAnswers, 2000);
 }
 
 function submitAnswers() {
     clearInterval(timerInterval);
-    quizData.filter(q => q.type === 'drag-sort').forEach(q => {
-        collectDragSortAnswer(q.qNum);
-    });
+    document.getElementById('loadingOverlay').style.display = 'none';
 
-    const result = gradeQuiz(currentAnswers);
-    const score = result.score;
-    const totalPercent = Math.round(score / (TOTAL_QUESTIONS * 5) * 100);
-
+    // 1. 评分
+    const result = gradeQuiz();
     const studentId = document.getElementById('studentSelector').value;
-    const selector = document.getElementById('studentSelector');
-    const optionText = selector.options[selector.selectedIndex].textContent; 
-    const parts = optionText.split(' ');
-    const studentName = parts[1] || optionText; 
-    const studentLabel = (parts[0] || '') + (parts[1] || '');
+    const studentName = studentList.find(s => s.id === studentId).name;
+    const totalPercent = Math.round((result.score / 75) * 100);
 
+    // 2. 时间计算
+    const now = new Date();
+    // 提交时间 (年/月/日 时:分:秒)
+    const timestamp = now.getFullYear() + '/' + (now.getMonth() + 1).toString().padStart(2, '0') + '/' + now.getDate().toString().padStart(2, '0') + ' ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
+    // 答题耗时 (分:秒)
+    const durationSeconds = Math.floor((now - quizStartTime) / 1000);
+    const timeTaken = Math.floor(durationSeconds / 60) + "分" + (durationSeconds % 60) + "秒";
+
+    // 3. 构建记录
     const record = {
-        studentId,
-        name: studentName,
-        score,
-        answers: { ...currentAnswers },
-        correctness: result.correctness,
-        listeningScore: result.listeningScore,
-        readingScore: result.readingScore,
-        writingScore: result.writingScore,
-        totalPercent
+        timestamp, 
+        module: QUIZ_CONFIG.title, 
+        timeTaken,
+        studentId, name: studentName, score: result.score,
+        answers: currentAnswers, correctness: result.correctness
     };
     allStudentRecords.push(record);
 
-    const summaryForSheet = {
-        studentLabel: studentLabel,
-        totalScore: score,
+    // 4. 发送给 Google Sheet
+    const payload = {
+        timestamp: timestamp,
+        module: QUIZ_CONFIG.title,
+        timeTaken: timeTaken,
+        studentLabel: `${studentId} ${studentName}`,
+        totalScore: result.score,
         totalPercent: totalPercent,
-        listeningScore: result.listeningScore,
-        readingScore: result.readingScore,
-        writingScore: result.writingScore
+        listeningScore: result.l_score,
+        readingScore: result.r_score,
+        writingScore: result.w_score
     };
-    sendSummaryToGoogleSheet(summaryForSheet);
+    
+    try {
+        fetch(QUIZ_CONFIG.scriptUrl, {
+            method: 'POST', mode: 'no-cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+    } catch(e) { console.error(e); }
 
-    displayScoreCard(score, studentName);
-
-    if (allStudentRecords.length > 0) {
-        document.getElementById('exportButton').style.display = 'block';
-    }
-}
-
-function displayScoreCard(score, name) {
+    // 5. 显示结果UI
     document.getElementById('fixedHeader').style.display = 'none';
-    document.querySelectorAll('.question-page').forEach(el => el.style.display = 'none');
-
-    const scoreCard = document.getElementById('scoreCard');
-    scoreCard.style.display = 'block';
-
-    let grade = '';
-    let feedback = '';
-
-    if (score >= 60) {
-        grade = 'A (Excellent!)';
-        feedback = `🎉 Great job, ${name}! You are doing amazing!`;
-    } else if (score >= 40) {
-        grade = 'B (Good Job)';
-        feedback = `🌟 ${name}, well done! Keep practicing your numbers.`;
-    } else {
-        grade = 'C (Keep Trying)';
-        feedback = `💡 ${name}, keep trying! Listen to the audio more.`;
-    }
-
-    document.getElementById('finalScore').innerHTML =
-        `Your Score: <span style="color: #dc3545; font-size: 1.5em; font-weight: bold;">${score}</span> / 75 (${grade})`;
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('scoreCard').style.display = 'block';
+    
+    document.getElementById('finalScore').textContent = result.score;
+    document.getElementById('timeTakenDisplay').textContent = "本次用时: " + timeTaken;
+    
+    let feedback = "";
+    if (result.score >= 70) feedback = "🎉 太棒了！你是英语小天才！";
+    else if (result.score >= 50) feedback = "🌟 做得不错！继续加油哦！";
+    else feedback = "💪 别灰心，下次一定能行！";
     document.getElementById('gradeFeedback').textContent = feedback;
 }
 
 function resetForNextStudent() {
-    document.getElementById('quizContainer').style.display = 'none';
-    document.getElementById('coverPage').style.display = 'flex';
-    document.getElementById('scoreCard').style.display = 'none';
-    document.getElementById('studentSelector').value = '';
-    document.getElementById('startButton').disabled = true;
-    document.getElementById('startButton').style.backgroundColor = '#ccc';
-    window.scrollTo(0, 0);
+    location.reload(); 
 }
-
-// ------------------------- 6. 辅助功能 -------------------------
 
 function speakText(text) {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 0.9;
-        utterance.pitch = 1.0;
-        utterance.lang = 'en-US';
-        window.speechSynthesis.speak(utterance);
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; u.rate = 0.8; 
+        window.speechSynthesis.speak(u);
     } else {
-        alert('Browser does not support text-to-speech.');
+        alert('抱歉，你的手机不支持朗读功能');
     }
 }
 
-function dragStart(event) {
-    draggedItem = event.target;
-    event.dataTransfer.setData('text/plain', draggedItem.id);
-    setTimeout(() => { draggedItem.style.opacity = '0.5'; }, 0);
-}
-
-function allowDrop(event) {
-    event.preventDefault();
-}
-
-function dropSort(event, qNum) {
-    event.preventDefault();
-    if (!draggedItem) return;
-    draggedItem.style.opacity = '1';
-    
-    const target = event.currentTarget; 
-    if (target.id.startsWith('sort_target_Q') || target.classList.contains('drag-item') || target.id.startsWith('sort_source_Q')) {
-         if(target.classList.contains('drag-item')){
-             target.parentNode.insertBefore(draggedItem, target);
-         } else {
-             target.appendChild(draggedItem);
-         }
-        collectDragSortAnswer(qNum);
-    }
-}
-
+// 老师导出 (含新字段)
 function exportToCSV() {
-    if (allStudentRecords.length === 0) {
-        alert('No records yet!');
-        return;
-    }
-    const headerFields = ['ID', 'Name', 'Total Score'];
-    for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
-        headerFields.push(`Q${i} Answer`);
-        headerFields.push(`Q${i} Correct`);
-    }
-
-    let csvContent = headerFields.join(',') + '\n';
-
-    allStudentRecords.forEach(record => {
-        let row = [`"${record.studentId}"`, `"${record.name}"`, record.score];
-        for (let i = 1; i <= TOTAL_QUESTIONS; i++) {
-            const qKey = `Q${i}`;
-            let answer = record.answers[qKey] ? record.answers[qKey].toString().replace(/"/g, '""') : '';
-            row.push(`"${answer}"`);
-            row.push(record.correctness[qKey] ? 'Yes' : 'No');
-        }
-        csvContent += row.join(',') + '\n';
+    if (allStudentRecords.length === 0) { alert('还没有成绩哦'); return; }
+    let csv = '提交时间,知识模块,答题用时,学号,姓名,总分\n';
+    allStudentRecords.forEach(r => {
+        csv += `${r.timestamp},"${r.module}","${r.timeTaken}",${r.studentId},${r.name},${r.score}\n`;
     });
-
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\ufeff'+csv], {type: 'text/csv;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.setAttribute('href', url);
-    a.setAttribute('download', `quiz_results_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = '成绩单.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    populateStudents();
-});
