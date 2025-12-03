@@ -22,7 +22,7 @@
             <p class="instruction-text">👋 小勇士，请先找到你的名字：</p>
             <select id="studentSelector" onchange="enableStartButton()">
                 <option value="" disabled selected>-- 点这里选择姓名 --</option>
-                </select>
+            </select>
         </div>
 
         <button id="startButton" disabled onclick="startQuiz()">🚀 准备好了，开始！</button>
@@ -38,7 +38,7 @@
     </div>
 
     <div id="quizContainer">
-        </div>
+    </div>
 
     <div id="scoreCard">
         <div class="result-icon">🎉</div>
@@ -63,6 +63,37 @@
     <p>时间到啦！正在自动交卷...</p>
 </div>
 
-<script src="script.js"></script>
+<script>
+  // 1. 设置默认加载的文件
+  // 如果网址后面没有东西，默认加载 script.js (通常放本周最新的题)
+  const defaultQuiz = "script.js"; 
+
+  // 2. 自动检测网址后面有没有 "?id=..."
+  const urlParams = new URLSearchParams(window.location.search);
+  const quizId = urlParams.get('id');
+
+  // 3. 决定最终加载哪个文件
+  let scriptToLoad = defaultQuiz;
+  
+  if (quizId) {
+      // 如果网址是 index.html?id=u3_lesson1
+      // 这里就会变成 u3_lesson1.js
+      scriptToLoad = quizId + ".js"; 
+  }
+
+  // 4. 动态创建脚本标签并插入页面
+  const script = document.createElement('script');
+  script.src = scriptToLoad;
+  
+  // 添加错误处理：如果文件名写错或文件不存在，弹窗提示
+  script.onerror = function() {
+      alert("⚠️ 找不到测验文件：\n" + scriptToLoad + "\n\n请检查网址链接是否正确，或者文件是否已上传到 GitHub！");
+  };
+
+  document.body.appendChild(script);
+  
+  console.log("系统正在加载测验文件: " + scriptToLoad);
+</script>
+
 </body>
 </html>
