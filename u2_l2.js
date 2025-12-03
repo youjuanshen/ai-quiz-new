@@ -2,10 +2,10 @@
 // 📌 老师配置区 (Teacher Configuration)
 // =================================================================
 const QUIZ_CONFIG = {
-    // 1. 单元标题 (显示在首页任务卡片，也会填入表格的"知识模块"列)
+    // 1. 单元标题
     title: "Unit 2 Lesson 2 \"How many ducks\"", 
     
-    // 2. Google Script 新链接 (已更新为你刚刚生成的 Version 2 链接)
+    // 2. Google Script 链接
     scriptUrl: "https://script.google.com/macros/s/AKfycbxc8c4prsZZLY9vp-te4gH5twQNO1A8Ek3yROTNZeNs-7YhL60UojvMsQoceJUZ7LUP/exec"
 };
 
@@ -64,19 +64,21 @@ let timerInterval;
 let timeLeft = 540; 
 let currentAnswers = {};
 let allStudentRecords = [];
-let quizStartTime = null; // 记录开始时间点
+let quizStartTime = null;
 
 // -----------------------------------------------------------------
 // 4. 核心功能
 // -----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. 自动填入配置的标题
-    document.getElementById('missionTitle').textContent = QUIZ_CONFIG.title;
-    populateStudents();
-});
+// ⚠️ 注意：这里移除了原本的 document.addEventListener('DOMContentLoaded'...)
+// 改为在文件底部统一使用“强制启动逻辑”
 
 function populateStudents() {
     const selector = document.getElementById('studentSelector');
+    if (!selector) return; // 防止找不到元素报错
+    
+    // 清空现有选项，只保留默认提示
+    selector.innerHTML = '<option value="" disabled selected>-- 点这里选择姓名 --</option>';
+
     studentList.forEach(student => {
         const option = document.createElement('option');
         const displayId = student.id.toString().padStart(2, '0');
@@ -133,7 +135,7 @@ function startTimer() {
     }, 1000);
 }
 
-// 渲染题目（含中文进度标题）
+// 渲染题目
 function renderAllQuestions() {
     const container = document.getElementById('quizContainer');
     container.innerHTML = '';
@@ -143,7 +145,6 @@ function renderAllQuestions() {
         qDiv.id = `question_page_${q.qNum}`;
         qDiv.className = 'question-page';
         
-        // 自动生成标题：听力挑战 第1题 (共5题)
         let partTitle = "", partIcon = "";
         const indexInPart = (q.qNum - 1) % 5 + 1; 
 
@@ -235,7 +236,7 @@ function moveWord(qNum, element) {
 }
 
 // -----------------------------------------------------------------
-// 6. 提交与评分 (核心)
+// 6. 提交与评分
 // -----------------------------------------------------------------
 function gradeQuiz() {
     let score = 0, correctness = {};
@@ -292,7 +293,7 @@ function submitAnswers() {
     };
     allStudentRecords.push(record);
 
-    // 4. 发送给 Google Sheet (使用新配置的 URL)
+    // 4. 发送给 Google Sheet
     const payload = {
         timestamp: timestamp,
         module: QUIZ_CONFIG.title,
@@ -343,7 +344,7 @@ function speakText(text) {
     }
 }
 
-// 老师导出 (含新字段)
+// 老师导出
 function exportToCSV() {
     if (allStudentRecords.length === 0) { alert('还没有成绩哦'); return; }
     let csv = '提交时间,知识模块,答题用时,学号,姓名,总分\n';
@@ -355,4 +356,41 @@ function exportToCSV() {
     const a = document.createElement('a');
     a.href = url; a.download = '成绩单.csv';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// =================================================================
+// 🔥 核心启动逻辑 (强制加载)
+// =================================================================
+
+// 1. 定义初始化任务
+function initQuizSystem() {
+    console.log("🚀 系统正在启动...");
+    
+    // 设置标题
+    const titleEl = document.getElementById('missionTitle');
+    if (titleEl) {
+        titleEl.textContent = QUIZ_CONFIG.title;
+        console.log("标题已更新");
+    } else {
+        console.error("❌ 找不到标题元素 (missionTitle)");
+    }
+
+    // 加载名单
+    const selector = document.getElementById('studentSelector');
+    if (selector) {
+        populateStudents();
+        console.log("名单已加载");
+    } else {
+        console.error("❌ 找不到名单元素 (studentSelector)");
+    }
+}
+
+// 2. 强制执行 (双重保险)
+// 这里的逻辑是：不管网页是刚打开还是已经打开很久了，都尝试运行
+if (document.readyState === 'loading') {
+    // 情况A: 网页还在加载中，排队等待
+    document.addEventListener('DOMContentLoaded', initQuizSystem);
+} else {
+    // 情况B: 网页已经加载完了，直接运行！
+    setTimeout(initQuizSystem, 100);
 }
