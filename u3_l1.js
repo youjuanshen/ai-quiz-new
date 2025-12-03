@@ -180,7 +180,7 @@ const quizData = [
 ];
 
 // -----------------------------------------------------------------
-// 3. 全局状态 (保持原有逻辑)
+// 3. 全局状态 (无需修改)
 // -----------------------------------------------------------------
 let currentQuestionIndex = 1;
 const TOTAL_QUESTIONS = quizData.length;
@@ -191,7 +191,7 @@ let allStudentRecords = [];
 let quizStartTime = null;
 
 // -----------------------------------------------------------------
-// 4. 核心功能 (保持原有逻辑)
+// 4. 核心功能 (无需修改)
 // -----------------------------------------------------------------
 // ⚠️ 注意：这里移除了原本的 document.addEventListener
 // 改为在文件底部统一使用“强制启动逻辑”
@@ -361,7 +361,7 @@ function moveWord(qNum, element) {
 }
 
 // -----------------------------------------------------------------
-// 6. 提交与评分
+// 6. 提交与评分 (🔥 核心修改：显示姓名)
 // -----------------------------------------------------------------
 function gradeQuiz() {
     let score = 0, correctness = {};
@@ -399,7 +399,7 @@ function submitAnswers() {
     // 1. 评分
     const result = gradeQuiz();
     const studentId = document.getElementById('studentSelector').value;
-    const studentName = studentList.find(s => s.id === studentId).name;
+    const studentName = studentList.find(s => s.id === studentId).name; // 获取名字
     const totalPercent = Math.round((result.score / 75) * 100);
 
     // 2. 时间计算
@@ -439,10 +439,16 @@ function submitAnswers() {
         });
     } catch(e) { console.error(e); }
 
-    // 5. 显示结果UI
+    // 5. 显示结果UI (🔥 关键修改：插入名字)
     document.getElementById('fixedHeader').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('scoreCard').style.display = 'block';
+    
+    // ✅ 找到标题元素，修改为 "张宇豪 挑战完成！"
+    const resultTitle = document.querySelector('#scoreCard h2');
+    if(resultTitle) {
+        resultTitle.innerHTML = `<span style="color:#0277BD">${studentName}</span> 挑战完成！`;
+    }
     
     document.getElementById('finalScore').textContent = result.score;
     document.getElementById('timeTakenDisplay').textContent = "本次用时: " + timeTaken;
