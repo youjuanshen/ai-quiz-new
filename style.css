@@ -1,6 +1,8 @@
 @charset "UTF-8";
 
-/* 全局设置：圆润字体，护眼背景 */
+/* =========================================
+   全局设置：圆润字体，护眼背景
+   ========================================= */
 body {
     font-family: "Rounded Mplus 1c", "YouYuan", "Microsoft YaHei", sans-serif;
     background-color: #E0F7FA;
@@ -19,7 +21,7 @@ body {
     max-width: 600px;
     margin: 0 auto;
     position: relative;
-    padding-top: 70px; /* 给固定顶部栏留位置 */
+    padding-top: 20px; /* 默认内边距 */
 }
 
 /* --- 封面页 --- */
@@ -30,7 +32,7 @@ body {
 
 .main-title { color: #0277BD; font-size: 30px; margin: 5px 0 20px 0; }
 
-/* 任务卡片 (新) */
+/* 任务卡片 */
 .mission-box {
     background: #E3F2FD;
     border: 3px dashed #2196F3;
@@ -70,7 +72,7 @@ button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; }
 
 .teacher-btn { margin-top: 20px; background: #90A4AE; box-shadow: 0 5px 0 #607D8B; font-size: 16px; }
 
-/* --- 顶部固定栏 --- */
+/* --- 顶部固定栏 (修复遮挡问题) --- */
 #fixedHeader {
     display: none; position: fixed;
     top: 10px; left: 10px; right: 10px; height: 50px;
@@ -83,7 +85,13 @@ button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; }
 .student-badge { font-weight: bold; color: #0277BD; font-size: 16px; }
 #timerDisplay { font-family: monospace; font-size: 20px; color: #D32F2F; font-weight: bold; }
 
-/* --- 题目区域 --- */
+/* --- 题目区域 (关键修复：增加顶部间距) --- */
+#quizContainer {
+    padding-top: 80px !important; /* 🔥 关键修改：让出顶部空间，防止被蓝条遮挡 */
+    padding-bottom: 20px;
+    display: none; /* 默认隐藏 */
+}
+
 .question-page { display: none; animation: slideIn 0.3s ease-out; }
 @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
@@ -147,7 +155,7 @@ button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; }
 .submit-button { background: linear-gradient(180deg, #66BB6A 0%, #43A047 100%); box-shadow: 0 5px 0 #2E7D32; flex: 1.5; }
 
 /* 成绩单 */
-#scoreCard { display: none; text-align: center; padding: 20px; }
+#scoreCard { display: none; text-align: center; padding: 20px; margin-top: 60px; }
 .result-icon { font-size: 80px; margin-bottom: 10px; }
 .score-box { background: #fff; padding: 20px; border-radius: 20px; display: inline-block; border: 3px solid #A5D6A7; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 #finalScore { font-size: 50px; color: #2E7D32; font-weight: bold; line-height: 1; }
@@ -157,77 +165,72 @@ button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; }
 #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; }
 .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #03A9F4; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
 /* =========================================
    📱 针对手机屏幕的深度优化 (iPhone 6/7/8/Plus)
-   把这段代码加到 style.css 的最下面
+   ⚠️ 包含遮挡修复与双列排版
    ========================================= */
-
-@media (max-width: 480px) {
-    /* 1. 缩小页面边距，利用屏幕宽度 */
+@media screen and (max-width: 600px) {
+    /* 1. 强制缩小页面边距 */
     .container {
-        padding: 10px;
-        margin: 0;
-        max-width: 100%;
-        min-height: 100vh;
+        padding: 5px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
     }
 
-    /* 2. 限制题目大图的高度 (核心！) 
-       防止图片把题目撑得太高 */
+    /* 2. 限制大图高度，防止霸屏 */
     .question-image-style {
-        max-height: 120px; /* iPhone上图片最高120像素 */
-        width: auto;       /* 宽度自动，保持比例 */
+        max-height: 100px !important; /* 强制变矮 */
+        width: auto !important;
         display: block;
-        margin: 5px auto;  /* 居中 */
+        margin: 0 auto 10px auto;
     }
 
-    /* 3. 选项改成“田字格” (2x2) 排列 
-       这是最省空间的方法，不用滑屏 */
+    /* 3. 选项强制改为“田字格” (2列) */
     .options-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* 两列等宽 */
-        gap: 8px; /* 选项之间的间距 */
-        margin-top: 10px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* 强制分两列 */
+        gap: 8px !important;
+        width: 100% !important;
     }
 
-    /* 4. 调整单个选项的样式 */
+    /* 4. 选项卡片样式调整 */
     .answer-option {
-        margin-bottom: 0 !important; /* 去掉旧的下边距 */
-        padding: 8px 4px;
-        font-size: 14px; /* 字体稍微改小一点点 */
-        display: flex;
-        flex-direction: column; /* 图片和文字垂直排列 */
-        align-items: center;
+        margin: 0 !important;
+        padding: 5px !important;
+        min-height: 70px !important; /* 稍微改矮一点 */
+        display: flex !important;
+        flex-direction: column;
         justify-content: center;
-        min-height: 90px; /* 保证点击区域够大 */
-        text-align: center;
+        align-items: center;
+        font-size: 13px !important;
     }
 
-    /* 5. 缩小选项里的图片 */
+    /* 5. 选项里的小图也缩小 */
     .option-image-style {
-        height: 50px; /* 选项图变小 */
-        width: auto;
-        margin-bottom: 5px;
+        height: 40px !important;
+        width: auto !important;
     }
 
-    /* 6. 播放按钮紧凑化 */
-    .speaker-button {
-        padding: 8px 15px;
-        font-size: 14px;
-        margin: 5px auto;
-    }
-
-    /* 7. 题目文字调整 */
-    .question-text {
-        font-size: 16px;
-        margin-bottom: 5px;
+    /* 6. 隐藏不必要的留白 */
+    .welcome-card, .score-box {
+        padding: 10px !important;
     }
     
-    /* 8. 顶部区域压缩 */
-    #fixedHeader {
-        padding: 5px 10px;
-        height: 40px;
+    /* 7. 调整标题字号 */
+    .main-title {
+        font-size: 18px !important;
+        margin-bottom: 10px !important;
     }
-    .question-page {
-        padding-top: 5px; /* 减少顶部留白 */
+
+    /* 8. 修复遮挡：为题目容器增加更大的顶部间距 */
+    #quizContainer {
+        padding-top: 90px !important; /* 🔥 关键：比电脑端再多加10px，确保完全露出 */
+    }
+    
+    #fixedHeader {
+        height: 50px; /* 确保顶部栏高度固定 */
     }
 }
