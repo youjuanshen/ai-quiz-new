@@ -1,12 +1,11 @@
 @charset "UTF-8";
 
 /* =========================================
-   全局基础：圆润、护眼、游戏感
+   1. 全局设置：清爽蓝色风格 (保持您喜欢的原味)
    ========================================= */
 body {
     font-family: "Rounded Mplus 1c", "YouYuan", "Microsoft YaHei", sans-serif;
-    /* 背景色改为更活泼的淡蓝色 */
-    background-color: #B3E5FC; 
+    background-color: #E0F7FA; /* 经典的浅蓝背景 */
     margin: 0;
     padding: 10px;
     color: #333;
@@ -16,79 +15,57 @@ body {
 
 .container {
     background-color: #fff;
-    min-height: 95vh; /* 占满屏幕高度 */
-    border-radius: 25px; /* 更圆的角 */
-    /* 给容器加一个厚底边，像卡片一样 */
-    border-bottom: 8px solid #E1F5FE; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    padding: 15px; /* 减小内边距，利用空间 */
+    min-height: 90vh;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    padding: 15px;
     max-width: 600px;
     margin: 0 auto;
     position: relative;
-    /* 关键：给顶部留出空间，防止被名字栏遮挡 */
-    padding-top: 80px !important; 
 }
 
 /* =========================================
-   🦁 封面页 (选择名字区域) - 重点优化
+   2. 封面页与大号选择框 (重点优化)
    ========================================= */
 #coverPage { 
     text-align: center; 
-    padding-top: 5px; 
+    padding-top: 20px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    min-height: 80vh; /* 让内容垂直居中，更好看 */
 }
 
-.hero-icon { 
-    font-size: 80px; 
-    margin-bottom: 5px; 
-    animation: float 3s ease-in-out infinite; 
-    text-shadow: 0 5px 0 rgba(0,0,0,0.1);
-}
+.hero-icon { font-size: 80px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-.main-title { 
-    color: #0277BD; 
-    font-size: 28px; 
-    font-weight: 900; /* 超粗字体 */
-    margin: 5px 0 15px 0; 
-    letter-spacing: 1px;
-}
+.main-title { color: #0277BD; font-size: 28px; margin: 10px 0 30px 0; font-weight: bold; }
 
-/* 任务卡片：设计成“任务通告”样式 */
+/* 任务卡片 */
 .mission-box {
     background: #E3F2FD;
-    border: 3px dashed #2196F3; /* 虚线边框 */
-    border-radius: 18px;
-    padding: 12px;
-    margin-bottom: 20px;
+    border: 2px dashed #2196F3;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 25px;
 }
 .mission-label { font-size: 14px; color: #1565C0; font-weight: bold; margin-bottom: 5px; opacity: 0.8; }
-.mission-content { font-size: 18px; color: #0D47A1; font-weight: bold; }
+.mission-content { font-size: 20px; color: #0D47A1; font-weight: bold; }
 
-/* 👋 欢迎卡片：设计成暖色调，像一张票 */
+/* 欢迎卡片区域 */
 .welcome-card {
-    background: #FFF9C4; /* 暖黄色背景 */
+    background: #FFF9C4;
     padding: 20px 15px;
     border-radius: 20px;
-    margin-bottom: 25px;
-    border: 4px solid #FFF59D; /* 厚边框 */
-    box-shadow: 0 5px 0 #FBC02D; /* 立体投影 */
+    margin-bottom: 30px;
+    border: 3px solid #FFF59D;
 }
+.instruction-text { font-size: 18px; font-weight: bold; color: #F57F17; margin-bottom: 15px; }
 
-.instruction-text { 
-    font-size: 18px; 
-    font-weight: bold; 
-    color: #F57F17; 
-    margin-bottom: 15px; 
-}
-
-/* 🔥 核心修改：超级大的名字选择框 */
+/* 🔥 核心优化：超大号名字选择框 */
 select {
     width: 100%; 
-    height: 65px; /* 增高！ */
+    height: 60px; /* 高度加倍！手指容易点 */
     padding: 0 15px; 
     font-size: 22px; /* 字号加大！ */
     font-weight: bold;
@@ -96,98 +73,65 @@ select {
     background-color: #fff; 
     
     /* 样式美化 */
-    border: 3px solid #29B6F6; 
+    border: 3px solid #4FC3F7; 
     border-radius: 15px;
     outline: none; 
     text-align: center; 
-    text-align-last: center; /* 让文字居中 */
+    text-align-last: center; /* 文字居中 */
     
     /* 立体感 */
     box-shadow: 0 4px 0 #0288D1;
     transition: all 0.2s;
     
-    /* 去掉默认丑陋箭头 (iOS兼容) */
+    /* 修复 iOS 默认样式 */
     -webkit-appearance: none;
+    appearance: none;
+    /* 加一个小箭头图标 */
     background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: right 15px top 50%;
-    background-size: 15px auto;
+    background-size: 16px auto;
 }
+select:active { transform: translateY(4px); box-shadow: 0 0 0 #0288D1; }
 
-select:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 #0288D1;
-}
+/* 关卡选择器组 (平时隐藏) */
+.selector-group { margin-bottom: 20px; text-align: center; }
+.selector-label { display: block; margin-bottom: 8px; font-size: 15px; color: #F9A825; font-weight: bold; }
 
-/* 关卡选择器组 */
-.selector-group {
-    margin-bottom: 20px;
-    text-align: center;
-}
-.selector-label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 15px;
-    color: #F9A825;
-    font-weight: bold;
-}
-
-/* --- 按钮系统：更加Q弹 --- */
+/* 按钮 */
 button {
-    width: 100%; 
-    padding: 18px; /* 更大的点击区域 */
-    font-size: 22px; 
-    border: none; 
-    border-radius: 20px;
-    
-    /* 渐变色背景 */
-    background: linear-gradient(180deg, #4FC3F7 0%, #039BE5 100%);
-    color: white; 
-    
-    /* 厚重的立体阴影 */
-    box-shadow: 0 6px 0 #01579B;
-    
-    cursor: pointer; 
-    font-weight: 900; 
-    transition: all 0.1s;
+    width: 100%; padding: 18px; font-size: 22px;
+    border: none; border-radius: 50px;
+    background: linear-gradient(180deg, #29B6F6 0%, #039BE5 100%);
+    color: white; box-shadow: 0 6px 0 #0277BD;
+    cursor: pointer; font-weight: bold; transition: all 0.1s;
     margin-bottom: 15px;
-    letter-spacing: 1px;
 }
-button:active { 
-    transform: translateY(6px); /* 按下去的效果 */
-    box-shadow: 0 0 0 #01579B; 
-}
-button:disabled { 
-    background: #E0E0E0; 
-    box-shadow: none; 
-    color: #9E9E9E; 
-    transform: none;
-}
+button:active { transform: translateY(6px); box-shadow: none; }
+button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; transform: none; }
 
-.teacher-btn { margin-top: 20px; background: #CFD8DC; color: #546E7A; box-shadow: 0 5px 0 #90A4AE; font-size: 16px; }
+.teacher-btn { margin-top: 20px; background: #90A4AE; box-shadow: 0 5px 0 #607D8B; font-size: 16px; padding: 12px; }
 
-/* --- 顶部固定栏 (修复遮挡) --- */
+/* =========================================
+   3. 答题区域 (防遮挡核心)
+   ========================================= */
 #fixedHeader {
     display: none; position: fixed;
-    top: 10px; left: 10px; right: 10px; height: 55px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(5px);
-    border-radius: 30px; 
-    border: 3px solid #81D4FA;
-    box-shadow: 0 5px 15px rgba(2, 119, 189, 0.2);
+    top: 10px; left: 10px; right: 10px; height: 50px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 25px; border: 2px solid #B3E5FC;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     z-index: 1000; justify-content: space-between; align-items: center;
     padding: 0 20px;
 }
-.student-badge { font-weight: bold; color: #0277BD; font-size: 18px; }
-#timerDisplay { font-family: "Courier New", monospace; font-size: 22px; color: #D32F2F; font-weight: bold; }
+.student-badge { font-weight: bold; color: #0277BD; font-size: 16px; }
+#timerDisplay { font-family: monospace; font-size: 20px; color: #D32F2F; font-weight: bold; }
 
-/* --- 题目区域 --- */
+/* 🔥 关键：给题目留出 110px 的头顶空间，确保不被名字栏挡住 */
 #quizContainer {
-    display: none;
-    width: 100%;
+    padding-top: 110px !important; 
     padding-bottom: 50px;
-    /* 🔥 手机端适配：确保题目不被顶部栏挡住 */
-    padding-top: 20px; 
+    display: none; width: 100%;
 }
 
 .question-page { display: none; animation: slideIn 0.3s ease-out; }
@@ -195,103 +139,77 @@ button:disabled {
 
 .section-header {
     background: #E1F5FE; color: #0277BD;
-    padding: 8px 15px; border-radius: 12px;
+    padding: 8px 15px; border-radius: 10px;
     font-size: 15px; font-weight: bold;
-    display: inline-block; margin-bottom: 10px;
-    border: 2px solid #B3E5FC;
+    display: inline-block; margin-bottom: 15px;
+    border-left: 5px solid #039BE5;
 }
 
-.question-text { 
-    font-size: 20px; 
-    line-height: 1.4; 
-    margin-bottom: 15px; 
-    color: #263238; 
-    font-weight: bold; 
-}
-.question-image-style { 
-    width: auto; 
-    height: 120px; /* 固定高度，防止太高 */
-    max-width: 100%;
-    border-radius: 15px; 
-    border: 3px solid #fff; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    margin: 5px auto 15px auto; 
-    display: block; 
-}
+.question-text { font-size: 20px; line-height: 1.4; margin-bottom: 15px; color: #37474F; font-weight: bold; }
+.question-image-style { width: 100%; max-width: 320px; border-radius: 15px; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 10px auto; display: block; }
 
 .speaker-button {
-    background: #FFF8E1 !important; color: #FF8F00 !important;
-    border: 2px solid #FFECB3;
-    box-shadow: 0 4px 0 #FFD54F !important;
+    background: #FFECB3 !important; color: #FF6F00 !important;
+    box-shadow: 0 4px 0 #FFCA28 !important;
     width: auto; padding: 10px 25px; font-size: 16px;
-    border-radius: 30px; display: inline-flex; align-items: center; gap: 8px;
-    margin: 0 auto 15px auto;
+    border-radius: 25px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px;
 }
 
-/* --- 选项 (田字格布局) --- */
-.options-container { 
-    counter-reset: option-counter; 
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 强制两列 */
-    gap: 10px;
-}
+/* =========================================
+   4. 选项样式 (防遮挡 + 双列布局)
+   ========================================= */
+.options-container { counter-reset: option-counter; }
 
 .answer-option {
     position: relative; background: #fff;
-    border: 3px solid #EEEEEE; 
-    border-radius: 18px;
-    padding: 10px 5px 10px 35px; /* 左边留出空间给字母 */
-    font-size: 16px;
-    cursor: pointer; transition: all 0.1s;
-    min-height: 70px; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start; /* 文字左对齐 */
+    border: 2px solid #EEEEEE; border-radius: 15px;
+    
+    /* 🔥 关键：左边留出 35px 给 A/B/C 圆圈，防止文字重叠 */
+    padding: 10px 5px 10px 35px; 
+    
+    margin-bottom: 12px; font-size: 18px;
+    cursor: pointer; transition: all 0.2s;
+    min-height: 60px; 
+    display: flex; align-items: center; /* 垂直居中 */
     text-align: left;
     line-height: 1.2;
 }
-/* 字母序号 (A/B/C/D) */
+
+/* 序号圆圈 (A/B/C/D) */
 .answer-option::before {
     counter-increment: option-counter;
     content: counter(option-counter, upper-alpha);
-    position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+    position: absolute; left: 8px; /* 靠左固定 */
     width: 24px; height: 24px;
-    background: #ECEFF1; color: #78909C;
+    background: #CFD8DC; color: #fff;
     border-radius: 50%; text-align: center; line-height: 24px;
     font-size: 14px; font-weight: bold;
 }
-/* 选中状态 */
-.selected-option { 
-    background-color: #FFFDE7; 
-    border-color: #FBC02D; 
-    box-shadow: 0 4px 0 #FFF176; 
-    transform: translateY(-2px); 
-}
-.selected-option::before { background: #FBC02D; color: #fff; }
-.option-image-style { height: 50px; width: auto; object-fit: contain; align-self: center; margin-bottom: 5px; }
+
+.selected-option { background-color: #FFFDE7; border-color: #FBC02D; box-shadow: 0 4px 0 #FBC02D; transform: translateY(-2px); }
+.selected-option::before { background: #FBC02D; }
+.option-image-style { height: 60px; width: auto; object-fit: contain; }
 
 /* 填空与排序 */
-.fill-in-input { width: 100%; padding: 12px; font-size: 22px; text-align: center; border: 3px solid #81D4FA; border-radius: 15px; background: #FAFAFA; font-family: monospace; color: #0277BD; outline: none; }
+.fill-in-input { width: 100%; padding: 12px; font-size: 22px; text-align: center; border: 3px solid #81D4FA; border-radius: 12px; background: #FAFAFA; font-family: monospace; color: #0277BD; }
 .sort-area-label { color: #90A4AE; text-align: center; margin-bottom: 5px; font-size: 14px; }
 .drag-target { min-height: 80px; padding: 10px; border: 3px dashed #4FC3F7; background: #E1F5FE; border-radius: 15px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin-bottom: 20px; }
 .drag-source { background: #F5F5F5; padding: 15px; border-radius: 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-.word-chip { background: #fff; border: 2px solid #0288D1; color: #0288D1; padding: 8px 12px; border-radius: 10px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 0 #0277BD; cursor: pointer; }
+.word-chip { background: #fff; border: 2px solid #0288D1; color: #0288D1; padding: 10px 15px; border-radius: 10px; font-size: 20px; font-weight: bold; box-shadow: 0 4px 0 #0277BD; cursor: pointer; }
 .word-chip:active { transform: translateY(4px); box-shadow: none; }
 
 /* 底部导航 */
-.navigation-buttons { display: flex; gap: 12px; margin-top: 20px; }
-.prev-button { background: #B0BEC5; box-shadow: 0 5px 0 #78909C; flex: 1; font-size: 16px; padding: 12px; }
-.next-button { flex: 2; font-size: 18px; padding: 12px; }
-.submit-button { background: linear-gradient(180deg, #66BB6A 0%, #43A047 100%); box-shadow: 0 5px 0 #2E7D32; flex: 2; }
+.navigation-buttons { display: flex; gap: 10px; margin-top: 30px; }
+.prev-button { background: #B0BEC5; box-shadow: 0 5px 0 #78909C; flex: 1; font-size: 18px; }
+.next-button { flex: 1.5; font-size: 20px; }
+.submit-button { background: linear-gradient(180deg, #66BB6A 0%, #43A047 100%); box-shadow: 0 5px 0 #2E7D32; flex: 1.5; }
 
 /* 成绩单 */
-#scoreCard { display: none; text-align: center; padding: 20px; margin-top: 20px; }
-.result-icon { font-size: 80px; margin-bottom: 5px; animation: pop 0.5s; }
-@keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-.score-box { background: #fff; padding: 15px 30px; border-radius: 25px; display: inline-block; border: 4px solid #A5D6A7; box-shadow: 0 8px 0 #81C784; margin-bottom: 15px; }
-#finalScore { font-size: 60px; color: #2E7D32; font-weight: 900; line-height: 1; }
-.restart-btn { margin-top: 15px; background: #FF7043; box-shadow: 0 5px 0 #D84315; }
+#scoreCard { display: none; text-align: center; padding: 20px; margin-top: 40px; }
+.result-icon { font-size: 80px; margin-bottom: 10px; }
+.score-box { background: #fff; padding: 20px; border-radius: 20px; display: inline-block; border: 3px solid #A5D6A7; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+#finalScore { font-size: 50px; color: #2E7D32; font-weight: bold; line-height: 1; }
+.restart-btn { margin-top: 20px; background: #FF7043; box-shadow: 0 5px 0 #D84315; }
 
 /* 遮罩 */
 #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; color: white; font-size: 20px; font-weight: bold; }
@@ -299,36 +217,70 @@ button:disabled {
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* =========================================
-   📱 针对手机屏幕的最终修正 (iPhone 6/Plus)
+   5. 手机端强制适配 (iPhone 6/Plus/7/8)
    ========================================= */
 @media screen and (max-width: 600px) {
-    /* 全屏卡片模式 */
+    /* 1. 强制缩小页面边距，利用全屏 */
     .container {
         padding: 10px !important;
         margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
         min-height: 100vh;
-        border-radius: 0;
+        border-radius: 0; /* 去掉圆角，像原生App */
         border: none;
     }
 
-    /* 题目顶部空间，防止被名字栏挡住 */
-    #quizContainer {
-        padding-top: 80px !important; 
+    /* 2. 限制大图高度，防止霸屏 */
+    .question-image-style {
+        max-height: 110px !important; 
+        width: auto !important;
+        display: block;
+        margin: 0 auto 10px auto;
+    }
+
+    /* 3. 核心：选项强制改为“田字格” (2列) */
+    .options-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* 强制分两列 */
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    /* 4. 选项卡片样式调整 */
+    .answer-option {
+        margin: 0 !important;
+        padding: 5px 5px 5px 35px !important; /* 左留白给序号 */
+        min-height: 70px !important; 
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start; /* 文字左对齐 */
+        font-size: 14px !important;
     }
     
-    /* 名字选择框稍微调小一点适配小屏 */
-    select {
-        height: 55px;
-        font-size: 20px;
+    /* 5. 调整 A/B/C 序号圆圈位置 */
+    .answer-option::before {
+        left: 5px !important;
+        top: 50% !important;
+        transform: translateY(-50%);
     }
-    
-    /* 封面标题 */
+
+    /* 6. 选项里的小图也缩小 */
+    .option-image-style {
+        height: 40px !important;
+        width: auto !important;
+        align-self: center;
+    }
+
+    /* 7. 调整标题字号 */
     .main-title {
         font-size: 24px !important;
+        margin-bottom: 15px !important;
     }
-    .hero-icon {
-        font-size: 60px !important;
+    
+    /* 8. 修复遮挡：确保题目在名字栏下方 */
+    #quizContainer {
+        padding-top: 90px !important; 
     }
 }
