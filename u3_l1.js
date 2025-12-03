@@ -180,7 +180,7 @@ const quizData = [
 ];
 
 // -----------------------------------------------------------------
-// 3. 全局状态 (无需修改)
+// 3. 全局状态 (保持原有逻辑)
 // -----------------------------------------------------------------
 let currentQuestionIndex = 1;
 const TOTAL_QUESTIONS = quizData.length;
@@ -191,18 +191,14 @@ let allStudentRecords = [];
 let quizStartTime = null;
 
 // -----------------------------------------------------------------
-// 4. 核心功能 (无需修改)
+// 4. 核心功能 (保持原有逻辑)
 // -----------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. 自动填入配置的标题
-    const titleEl = document.getElementById('missionTitle');
-    if(titleEl) titleEl.textContent = QUIZ_CONFIG.title;
-    populateStudents();
-});
+// ⚠️ 注意：这里移除了原本的 document.addEventListener
+// 改为在文件底部统一使用“强制启动逻辑”
 
 function populateStudents() {
     const selector = document.getElementById('studentSelector');
-    if(!selector) return;
+    if (!selector) return; 
     
     // 清空现有选项，只保留默认提示
     selector.innerHTML = '<option value="" disabled selected>-- 点这里选择姓名 --</option>';
@@ -485,4 +481,41 @@ function exportToCSV() {
     const a = document.createElement('a');
     a.href = url; a.download = '成绩单.csv';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// =================================================================
+// 🔥 核心启动逻辑 (强制加载)
+// =================================================================
+
+// 1. 定义初始化任务
+function initQuizSystem() {
+    console.log("🚀 系统正在启动...");
+    
+    // 设置标题
+    const titleEl = document.getElementById('missionTitle');
+    if (titleEl) {
+        titleEl.textContent = QUIZ_CONFIG.title;
+        console.log("标题已更新");
+    } else {
+        console.error("❌ 找不到标题元素 (missionTitle)");
+    }
+
+    // 加载名单
+    const selector = document.getElementById('studentSelector');
+    if (selector) {
+        populateStudents();
+        console.log("名单已加载");
+    } else {
+        console.error("❌ 找不到名单元素 (studentSelector)");
+    }
+}
+
+// 2. 强制执行 (双重保险)
+// 这里的逻辑是：不管网页是刚打开还是已经打开很久了，都尝试运行
+if (document.readyState === 'loading') {
+    // 情况A: 网页还在加载中，排队等待
+    document.addEventListener('DOMContentLoaded', initQuizSystem);
+} else {
+    // 情况B: 网页已经加载完了，直接运行！
+    setTimeout(initQuizSystem, 100);
 }
