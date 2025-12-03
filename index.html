@@ -2,47 +2,67 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade 3 English Quiz (Unit 1-2)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>三年级英语小挑战</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
     <div id="coverPage">
-        <h1>Grade 3 English Quiz (Unit 1-2)</h1>
-        <p>Before we start, please tell me who you are:</p>
+        <div class="hero-icon">🦁</div>
+        <h1 class="main-title">三年级英语闯关赛</h1>
         
-        <select id="studentSelector" onchange="enableStartButton()">
-            <option value="" disabled selected>-- Select Your Name --</option>
-            </select>
-
-        <div style="margin-top: 20px;">
-            <button id="startButton" disabled onclick="startQuiz()">Start Quiz (开始测验)</button>
+        <div class="mission-box">
+            <div class="mission-label">🔖 本次挑战主题</div>
+            <div id="missionTitle" class="mission-content">加载中...</div>
         </div>
         
-        <button id="exportButton" onclick="exportToCSV()" style="display:none; margin-top:30px; background-color: #17a2b8;">
-            📥 导出所有成绩 (老师用)
-        </button>
+        <div class="welcome-card">
+            <p class="instruction-text">👋 小勇士，请先找到你的名字：</p>
+            <select id="studentSelector" onchange="enableStartButton()">
+                <option value="" disabled selected>-- 点这里选择姓名 --</option>
+                </select>
+        </div>
+
+        <button id="startButton" disabled onclick="startQuiz()">🚀 准备好了，开始！</button>
     </div>
 
     <div id="fixedHeader">
-        <span id="studentDisplay">同学：未选择</span>
-        <span>剩余时间: <span id="timerDisplay">09:00</span></span>
+        <div class="header-left">
+            <span class="student-badge">👤 <span id="studentDisplay">同学</span></span>
+        </div>
+        <div class="header-right">
+            ⏳ <span id="timerDisplay">09:00</span>
+        </div>
     </div>
 
-    <div id="quizContainer" style="display: none;">
+    <div id="quizContainer">
         </div>
 
     <div id="scoreCard">
-        <h2>Quiz Completed!</h2>
-        <div id="finalScore" style="font-size: 1.2em; margin: 20px 0;"></div>
-        <p id="gradeFeedback" style="color: #666;"></p>
-        <button onclick="resetForNextStudent()" style="margin-top: 20px;">Next Student (下一位)</button>
+        <div class="result-icon">🎉</div>
+        <h2>挑战完成！</h2>
+        
+        <div class="score-box">
+            <div id="finalScore">?</div>
+            <div class="total-mark">/ 75 分</div>
+        </div>
+        
+        <div id="timeTakenDisplay" style="color:#888; margin:10px 0;">用时: --分--秒</div>
+        <p id="gradeFeedback">评价加载中...</p>
+        
+        <button class="restart-btn" onclick="resetForNextStudent()">下一位同学</button>
+        
+        <button id="exportButton" onclick="exportToCSV()" class="teacher-btn">📥 老师导出数据</button>
     </div>
 </div>
 
-<script src="script.js"></script>
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>时间到啦！正在自动交卷...</p>
+</div>
 
+<script src="script.js"></script>
 </body>
 </html>
