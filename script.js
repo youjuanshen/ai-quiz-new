@@ -2,10 +2,10 @@
 // 📌 老师配置区 (Teacher Configuration)
 // =================================================================
 const QUIZ_CONFIG = {
-    // 1. 单元标题 (会显示在首页任务卡片，也会填入表格的"知识模块"列)
+    // 1. 单元标题 (显示在首页任务卡片，也会填入表格的"知识模块"列)
     title: "Unit 2 Lesson 2 \"How many ducks\"", 
     
-    // 2. Google Script 新链接 (已更新为你刚刚生成的 Version 1 链接)
+    // 2. Google Script 新链接 (已更新为你刚刚生成的 Version 2 链接)
     scriptUrl: "https://script.google.com/macros/s/AKfycbxc8c4prsZZLY9vp-te4gH5twQNO1A8Ek3yROTNZeNs-7YhL60UojvMsQoceJUZ7LUP/exec"
 };
 
@@ -278,9 +278,7 @@ function submitAnswers() {
 
     // 2. 时间计算
     const now = new Date();
-    // 提交时间 (年/月/日 时:分:秒)
     const timestamp = now.getFullYear() + '/' + (now.getMonth() + 1).toString().padStart(2, '0') + '/' + now.getDate().toString().padStart(2, '0') + ' ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
-    // 答题耗时 (分:秒)
     const durationSeconds = Math.floor((now - quizStartTime) / 1000);
     const timeTaken = Math.floor(durationSeconds / 60) + "分" + (durationSeconds % 60) + "秒";
 
@@ -294,7 +292,7 @@ function submitAnswers() {
     };
     allStudentRecords.push(record);
 
-    // 4. 发送给 Google Sheet
+    // 4. 发送给 Google Sheet (使用新配置的 URL)
     const payload = {
         timestamp: timestamp,
         module: QUIZ_CONFIG.title,
