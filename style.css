@@ -234,3 +234,88 @@ button:disabled { background: #CFD8DC; box-shadow: none; color: #90A4AE; }
         height: 50px; /* 确保顶部栏高度固定 */
     }
 }
+/* =========================================
+   📱 手机端终极优化 (修复遮挡+选项重叠)
+   请复制并替换 style.css 最底部的 @media 代码
+   ========================================= */
+@media screen and (max-width: 600px) {
+    /* 1. 强制缩小页面边距 */
+    .container {
+        padding: 10px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    /* 2. 修复顶部遮挡：加大题目的头顶空间 */
+    #quizContainer {
+        /* 🔥 这里改成了 110px，确保绝对不会被名字栏挡住 */
+        padding-top: 110px !important; 
+        padding-bottom: 50px;
+    }
+    
+    /* 顶部栏高度固定 */
+    #fixedHeader {
+        height: 50px;
+        padding: 5px 15px;
+    }
+
+    /* 3. 限制大图高度 */
+    .question-image-style {
+        max-height: 110px !important; 
+        width: auto !important;
+        display: block;
+        margin: 0 auto 10px auto;
+    }
+
+    /* 4. 选项布局优化 (田字格) */
+    .options-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* 两列 */
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    /* 5. 修复选项遮挡 A/B/C (关键修改！) */
+    .answer-option {
+        margin: 0 !important;
+        min-height: 70px !important;
+        position: relative; /* 确保定位准确 */
+        
+        /* 🔥 关键：左边留出 40px 给圆圈，防止文字被盖住 */
+        padding: 5px 5px 5px 40px !important; 
+        
+        display: flex !important;
+        flex-direction: column; /* 图片文字垂直排 */
+        justify-content: center;
+        align-items: flex-start; /* 文字靠左对齐，更易读 */
+        text-align: left !important; /* 强制文字左对齐 */
+        font-size: 13px !important; /* 字体适中 */
+        line-height: 1.3 !important;
+    }
+
+    /* 6. 调整 A/B/C 圆圈的位置 */
+    .answer-option::before {
+        left: 5px !important; /* 靠左边 5px */
+        top: 50% !important;
+        transform: translateY(-50%); /* 垂直居中 */
+        width: 28px !important;
+        height: 28px !important;
+        line-height: 28px !important;
+        font-size: 14px !important;
+    }
+
+    /* 7. 选项里的小图也缩小 */
+    .option-image-style {
+        height: 45px !important;
+        width: auto !important;
+        margin-bottom: 3px;
+        align-self: center; /* 图片居中 */
+    }
+
+    /* 8. 调整标题字号 */
+    .main-title { font-size: 20px !important; margin: 10px 0 !important; }
+    .hero-icon { font-size: 50px !important; }
+}
