@@ -3,10 +3,10 @@ window.LOAD_QUIZ({
     mode: "speaking",
     
     // ✅ 图片资源 (请确保您的 img 文件夹里有这些图)
-    images: {
-        'Apple': 'img/apple.png',       // 课本P10 苹果
-        'Miss_Gao': 'img/miss_gao.png', // 课本P9 高老师
-        'Sally': 'img/sally.png'        // 课本P9 Sally
+  images: {
+        'Apple': 'img/u1_apple.png',
+        'Miss_Gao': 'img/u1_miss_gao.png',
+        'Sally': 'img/u1_sally.png'   // 👈 这里改成新上传的文件名
     },
 
     // ✅ 通用评分标准 (显示在每题答案下方)
