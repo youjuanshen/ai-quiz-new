@@ -3,7 +3,7 @@
 // =================================================================
 const QUIZ_CONFIG = {
     // 1. 单元标题 (Unit 1 Lesson 1)
-    title: "Unit 1 Lesson 1 Meeting Friends", 
+    title: "Unit 1 Lesson 1 Nice to meet you", 
     
     // 2. Google Script 链接 (您的专属数据库链接)
     scriptUrl: "https://script.google.com/macros/s/AKfycbxc8c4prsZZLY9vp-te4gH5twQNO1A8Ek3yROTNZeNs-7YhL60UojvMsQoceJUZ7LUP/exec"
