@@ -2,192 +2,76 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>三年级英语闯关赛</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三年级英语智能测验系统</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 增加关卡选择器的样式 */
-        .selector-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .selector-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-            display: block;
-            font-weight: bold;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            background-color: white;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
+        
+        /* 标题区 */
+        .header-banner { text-align: center; margin-bottom: 30px; }
+        .header-banner h1 { font-size: 24px; color: #333; margin-bottom: 5px; }
+        .header-banner p { color: #666; font-size: 14px; }
+
+        /* 模式卡片 */
+        .mode-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #2196f3; }
+        .mode-card h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; color: #333; font-size: 18px; }
+        
+        /* 课程列表区 */
+        .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+        
+        /* 课程按钮 */
+        .lesson-btn { display: block; width: 100%; padding: 15px; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; text-align: left; cursor: pointer; transition: all 0.2s; font-size: 16px; color: #333; font-weight: 500; }
+        .lesson-btn:hover { background-color: #e3f2fd; border-color: #2196f3; transform: translateX(5px); }
+        .empty-tip { color: #999; font-style: italic; text-align: center; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        
+        /* 测验界面顶部 */
+        .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .quiz-header h2 { font-size: 16px; margin: 0; color: #333; flex: 1; text-align: right; }
+        .back-btn { background: #607d8b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        
+        /* 题目卡片 */
+        .question-card { background: white; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #ff9800; }
+        .q-tag { display: inline-block; background: #ff9800; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 10px; font-weight: bold; }
+        .q-text { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #333; line-height: 1.5; }
+        
+        /* 图片容器 */
+        .img-box { text-align: center; margin: 15px 0; background: #f5f5f5; padding: 10px; border-radius: 8px; }
+        .img-box img { max-width: 100%; height: auto; border-radius: 4px; max-height: 200px; object-fit: contain; }
+        
+        /* 口语打分特定样式 */
+        .guide-box { background: #fff8e1; border: 1px solid #ffe0b2; padding: 12px; margin: 15px 0; font-size: 14px; color: #e65100; border-radius: 6px; line-height: 1.6; }
+        .guide-box p { margin: 0 0 5px 0; font-weight: bold; }
+        
+        .score-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+        .score-btn { flex: 1; padding: 12px 5px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; min-width: 50px; font-size: 14px; transition: transform 0.1s; }
+        .score-btn:active { transform: scale(0.95); }
+        
+        /* 分数颜色 */
+        .score-5 { background-color: #4caf50; }
+        .score-4 { background-color: #8bc34a; }
+        .score-3 { background-color: #ffc107; color: #333; }
+        .score-2 { background-color: #ff9800; }
+        .score-1 { background-color: #f44336; }
+        
+        .result-feedback { font-size: 16px; font-weight: bold; color: #2e7d32; padding: 12px; background: #e8f5e9; border-radius: 6px; margin-top: 15px; text-align: center; border: 1px solid #c8e6c9; }
+        
+        /* 底部固定栏 */
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #37474f; color: white; padding: 15px; text-align: center; font-size: 16px; font-weight: bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .print-btn { background: #00bcd4; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        
+        /* 加载动画 */
+        .loading { text-align: center; padding: 50px; color: #666; font-size: 16px; }
+        
+        /* 列表底部留白，防止被footer遮挡 */
+        .quiz-body { padding-bottom: 80px; }
     </style>
 </head>
 <body>
+    
+    <div id="app"></div>
 
-<div class="container">
-    <div id="coverPage">
-        <div class="hero-icon">🦁</div>
-        <h1 class="main-title">三年级英语闯关赛</h1>
-        
-        <div class="welcome-card">
-            <div class="selector-group">
-                <label class="selector-label">🗺️ 第一步：选择挑战关卡</label>
-                <select id="quizSelector" onchange="loadSelectedQuiz()">
-                    <option value="" disabled selected>-- 请选择单元 --</option>
-                    
-                    <optgroup label="Unit 1: Meeting Friends">
-                        <option value="u1_l1">U1 Lesson 1</option>
-                        <option value="u1_l2">U1 Lesson 2</option>
-                        <option value="u1_l3">U1 Lesson 3</option>
-                        <option value="u1_l4">U1 Lesson 4</option>
-                    </optgroup>
-
-                    <optgroup label="Unit 2: Fun Numbers">
-                        <option value="u2_l1">U2 Lesson 1</option>
-                        <option value="u2_l2">U2 Lesson 2</option>
-                        <option value="u2_l3">U2 Lesson 3</option>
-                        <option value="u2_l4">U2 Lesson 4</option>
-                    </optgroup>
-
-                    <optgroup label="Unit 3: Colors Around Us">
-                        <option value="u3_l1">U3 Lesson 1 (It's green)</option>
-                        <option value="u3_l2">U3 Lesson 2</option>
-                        <option value="u3_l3">U3 Lesson 3</option>
-                        <option value="u3_l4">U3 Lesson 4</option>
-                    </optgroup>
-
-                    <optgroup label="Unit 4: Loving My Family">
-                        <option value="u4_l1">U4 Lesson 1</option>
-                        <option value="u4_l2">U4 Lesson 2</option>
-                        <option value="u4_l3">U4 Lesson 3</option>
-                        <option value="u4_l4">U4 Lesson 4</option>
-                    </optgroup>
-                </select>
-            </div>
-
-            <div class="mission-box" id="statusBox" style="display:none; margin-top:10px;">
-                <div class="mission-label">当前加载：</div>
-                <div id="missionTitle" class="mission-content">等待选择...</div>
-            </div>
-
-            <div class="selector-group" style="margin-top: 20px;">
-                <label class="selector-label">👋 第二步：找到你的名字</label>
-                <select id="studentSelector" onchange="checkStartReady()" disabled>
-                    <option value="" disabled selected>-- (请先选择关卡) --</option>
-                </select>
-            </div>
-        </div>
-
-        <button id="startButton" disabled onclick="startQuiz()">🚀 准备好了，开始！</button>
-    </div>
-
-    <div id="fixedHeader">
-        <div class="header-left">
-            <span class="student-badge">👤 <span id="studentDisplay">同学</span></span>
-        </div>
-        <div class="header-right">
-            ⏳ <span id="timerDisplay">09:00</span>
-        </div>
-    </div>
-
-    <div id="quizContainer"></div>
-
-    <div id="scoreCard">
-        <div class="result-icon">🎉</div>
-        <h2>挑战完成！</h2>
-        <div class="score-box">
-            <div id="finalScore">?</div>
-            <div class="total-mark">/ 75 分</div>
-        </div>
-        <div id="timeTakenDisplay" style="color:#888; margin:10px 0;">用时: --分--秒</div>
-        <p id="gradeFeedback">评价加载中...</p>
-        <button class="restart-btn" onclick="resetForNextStudent()">下一位同学</button>
-        <button id="exportButton" onclick="exportToCSV()" class="teacher-btn">📥 老师导出数据</button>
-    </div>
-</div>
-
-<div id="loadingOverlay">
-    <div class="spinner"></div>
-    <p>正在处理...</p>
-</div>
-
-<script>
-    // 1. 检查网址是否有 ?id=...
-    // 如果有，就自动锁定那个单元；如果没有，就允许用户自己选。
-    const urlParams = new URLSearchParams(window.location.search);
-    const quizIdFromUrl = urlParams.get('id');
-    const quizSelector = document.getElementById('quizSelector');
-
-    window.onload = function() {
-        if (quizIdFromUrl) {
-            // 如果是老师发的指定链接 (例如 ?id=u3_l1)
-            quizSelector.value = quizIdFromUrl;
-            quizSelector.disabled = true; // 锁定下拉框，不让学生乱改
-            loadSelectedQuiz(quizIdFromUrl);
-        }
-    };
-
-    // 2. 动态加载 JS 文件的函数
-    function loadSelectedQuiz(manualId) {
-        const fileId = manualId || quizSelector.value;
-        if (!fileId) return;
-
-        // 显示加载状态
-        const statusBox = document.getElementById('statusBox');
-        const titleEl = document.getElementById('missionTitle');
-        statusBox.style.display = 'block';
-        titleEl.textContent = "正在读取题目...";
-        titleEl.style.color = "#999";
-
-        // 移除旧脚本（如果存在）
-        const oldScript = document.getElementById('dynamic-quiz-script');
-        if (oldScript) oldScript.remove();
-
-        // 创建新脚本标签
-        const script = document.createElement('script');
-        script.id = 'dynamic-quiz-script';
-        script.src = fileId + ".js"; // 例如 u3_l1.js
-        
-        script.onload = function() {
-            console.log("✅ 脚本加载成功: " + fileId);
-            titleEl.style.color = "#333";
-            // 此时 u3_l1.js 里的 initQuizSystem 会自动运行（前提是您用了刚才那个修复版JS）
-            // 或者我们可以手动触发一下界面更新：
-            document.getElementById('studentSelector').disabled = false;
-            // 重新填入学生名单（防止下拉框没刷新）
-            if (typeof populateStudents === 'function') {
-                populateStudents(); 
-            }
-            // 更新标题
-            if (typeof QUIZ_CONFIG !== 'undefined') {
-                titleEl.textContent = QUIZ_CONFIG.title;
-            }
-        };
-
-        script.onerror = function() {
-            titleEl.textContent = "❌ 找不到文件: " + fileId + ".js";
-            titleEl.style.color = "red";
-            alert("抱歉，这个单元的题目还没上传哦！\n文件名应该是: " + fileId + ".js");
-        };
-
-        document.body.appendChild(script);
-    }
-
-    // 3. 检查是否可以开始
-    function checkStartReady() {
-        const studentVal = document.getElementById('studentSelector').value;
-        const quizVal = document.getElementById('quizSelector').value;
-        if (studentVal && quizVal) {
-            document.getElementById('startButton').disabled = false;
-        }
-    }
-</script>
+    <script src="script_engine.js"></script>
 
 </body>
 </html>
