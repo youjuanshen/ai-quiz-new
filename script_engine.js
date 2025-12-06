@@ -1,3 +1,4 @@
+/**
  * 🚀 英语测验系统核心引擎
  */
 
@@ -6,14 +7,14 @@ const MENU_CONFIG = {
     "speaking": {
         label: "🗣️ 口语面试 (Speaking)",
         lessons: [
-            // 注意：这里的路径 data/speaking/u1_l1.js 必须和您刚创建的文件一模一样
+            // 请确保这个路径和您建立的文件夹路径一模一样
             { id: "u1_l1", name: "Unit 1 Lesson 1: Nice to meet you", file: "data/speaking/u1_l1.js" }
         ]
     },
     "written": {
         label: "✍️ 笔试练习 (Written)",
         lessons: [
-            // 暂时留空，以后加
+            // 暂时留空
         ]
     }
 };
@@ -22,12 +23,14 @@ const MENU_CONFIG = {
 let currentQuizData = null;
 let totalScore = 0;
 
-// 启动：加载菜单
+// 启动
 window.onload = initMenu;
 
 // 初始化菜单
 function initMenu() {
     const app = document.getElementById('app');
+    if (!app) return; // 防止找不到元素报错
+    
     let html = `
         <div class="header-banner">
             <h1>👩‍🏫 英语智能测验系统</h1>
@@ -57,11 +60,15 @@ function initMenu() {
 
 // 加载课程文件
 window.loadLesson = function(filePath) {
-    document.getElementById('app').innerHTML = `<div class="loading">正在加载题目...<br>${filePath}</div>`;
+    const app = document.getElementById('app');
+    app.innerHTML = `<div class="loading">正在加载题目...<br>${filePath}</div>`;
+    
     const script = document.createElement('script');
     script.src = filePath;
     script.onload = () => console.log("题目加载成功");
-    script.onerror = () => alert("❌ 找不到文件，请检查路径：" + filePath);
+    script.onerror = () => {
+        app.innerHTML = `<div class="loading" style="color:red">❌ 加载失败<br>找不到文件: ${filePath}<br>请检查 data 文件夹里有没有这个文件</div>`;
+    };
     document.body.appendChild(script);
 };
 
@@ -100,7 +107,7 @@ function renderQuiz() {
 
         if (isSpeaking) {
             html += `
-                <div class="guide-box"><p>👨‍🏫 参考答案：</p><div>${q.guide}</div></div>
+                <div class="guide-box"><p>👨‍🏫 参考答案：</p><div>${q.guide.replace(/\n/g, '<br>')}</div></div>
                 <div class="action-area" id="action-${index}">
                     <div class="score-buttons">
                         ${[5,4,3,2,1].map(s => `<button onclick="rateSpeaking(${index}, ${s})" class="score-btn score-${s}">${s}分</button>`).join('')}
