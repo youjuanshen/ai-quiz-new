@@ -9,46 +9,37 @@
         /* ==================== 样式区 ==================== */
         body { font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; background-color: #fff3e0; margin: 0; padding: 20px; color: #333; }
         
-        /* 返回按钮 */
         .home-link { position: fixed; top: 15px; left: 15px; z-index: 1000; background-color: #607d8b; color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .home-link:hover { background-color: #546e7a; }
 
-        /* 卡片容器 */
         .container { max-width: 800px; margin: 0 auto; padding-top: 40px; }
         
-        /* 候考室 */
         .welcome-card { background: white; border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 500px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 4px solid #fff; text-align: center; }
         .hero-icon { font-size: 60px; margin-bottom: 10px; animation: bounce 2s infinite; }
         .main-title { color: #fb8c00; margin: 0 0 20px 0; }
         
-        /* 选择器 */
         .selector-group { text-align: left; margin-bottom: 20px; }
         .selector-label { font-weight: bold; color: #555; display: block; margin-bottom: 8px; }
         select { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 10px; background: #fafafa; outline: none; }
         select:focus { border-color: #fb8c00; background: #fff; }
         
-        /* 开始按钮 */
         #startButton { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); transition: transform 0.1s; }
         #startButton:active { transform: scale(0.95); }
         #startButton:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
 
-        /* 顶部固定栏 */
         #fixedHeader { display: none; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 10px 20px; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 0 0 15px 15px; margin-bottom: 20px; }
         .student-badge { font-weight: bold; color: #333; font-size: 16px; }
         #timerDisplay { font-family: monospace; font-weight: bold; color: #e65100; background: #ffe0b2; padding: 5px 10px; border-radius: 15px; }
 
-        /* 题目样式 */
         .question-page { background: white; border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 6px solid #fb8c00; }
         .answer-option { padding: 12px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s; }
         .answer-option:hover { background-color: #fff3e0; }
         .selected-option { border-color: #fb8c00; background-color: #fff8e1; }
         
-        /* 拖拽题样式 */
         .drag-target { border: 2px dashed #fb8c00; padding: 15px; min-height: 60px; margin-bottom: 15px; border-radius: 10px; display: flex; gap: 8px; flex-wrap: wrap; background: #fffde7; }
         .drag-source { display: flex; gap: 8px; flex-wrap: wrap; }
         .word-chip { padding: 8px 15px; background: #e0f7fa; border: 1px solid #4dd0e1; border-radius: 20px; cursor: pointer; font-weight: bold; color: #006064; user-select: none; }
 
-        /* 结果页 */
         #scoreCard { display: none; text-align: center; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; margin: 20px auto; }
         .score-box { font-size: 60px; color: #fb8c00; font-weight: bold; margin: 20px 0; }
         .total-mark { font-size: 20px; color: #999; }
@@ -121,10 +112,10 @@
 
 <script>
     // ============================================================
-    // 🏛️ 1. 全局配置区 (Global Config)
+    // 🏛️ 1. 全局配置区
     // ============================================================
     
-    // 📋 笔试菜单配置 (已预设全书 Unit 1 - Unit 4 所有课程)
+    // 📋 笔试菜单 (完整预设 U1-U4)
     const WRITTEN_MENU = [
         // --- Unit 1 ---
         { label: "Unit 1 Lesson 1: Nice to meet you", path: "data/written/u1_l1.js" },
@@ -153,7 +144,7 @@
         { label: "♻️ Review 2: Unit 3 & Unit 4", path: "data/written/review2.js" }
     ];
 
-    // 📋 学生名单 (全校统一)
+    // 📋 学生名单 (27人真实名单)
     const STUDENT_LIST = [
         "1. 张宇豪", "2. 张佳寒", "3. 张睿渊", "4. 张羽韬", "5. 张美茹",
         "6. 张嘉钦", "7. 卢梦婷", "8. 张悦萱", "9. 张语涵", "10. 张英豪",
@@ -200,9 +191,11 @@
         script.src = filePath;
         script.onload = () => {
             console.log("Loaded: " + filePath);
-            document.getElementById('missionTitle').innerText = "✅ " + currentQuizData.title;
+            // 兼容性修正：优先读 currentQuizData，防止变量名冲突
+            const title = (currentQuizData && currentQuizData.title) ? currentQuizData.title : "笔试题目";
+            document.getElementById('missionTitle').innerText = "✅ " + title;
             document.getElementById('missionTitle').style.color = "#333";
-            populateStudents(); 
+            populateStudents(); // 加载名单
             document.getElementById('studentSelector').disabled = false;
         };
         script.onerror = () => {
@@ -213,20 +206,23 @@
         document.body.appendChild(script);
     }
 
-    // --- 接收数据 ---
+    // --- 接收数据 (window.LOAD_QUIZ) ---
     window.LOAD_QUIZ = function(data) {
         currentQuizData = data; 
         timeLeft = data.timeLimit || 540;
     };
 
-    // --- 填充学生名单 ---
+    // --- 填充学生名单 (兼容字符串和对象) ---
     function populateStudents() {
         const selector = document.getElementById('studentSelector');
         selector.innerHTML = '<option value="" disabled selected>-- 点这里选择姓名 --</option>';
-        STUDENT_LIST.forEach(name => {
+        
+        STUDENT_LIST.forEach(student => {
             const opt = document.createElement('option');
-            opt.value = name;
-            opt.innerText = name;
+            // 如果是对象 {id, name}，转成字符串；如果是字符串，直接用
+            const studentName = (typeof student === 'object') ? student.name : student;
+            opt.value = studentName;
+            opt.innerText = studentName;
             selector.appendChild(opt);
         });
     }
@@ -255,8 +251,17 @@
     function renderQuestions() {
         const container = document.getElementById('quizContainer');
         container.innerHTML = '';
+        
+        // 数据源兼容性检查
+        let questions = [];
+        if (currentQuizData && currentQuizData.questions) {
+            questions = currentQuizData.questions;
+        } else if (typeof quizData !== 'undefined') { // 兼容旧版 quizData 变量
+            questions = quizData;
+            currentQuizData = { images: (typeof imageUris !== 'undefined' ? imageUris : {}) }; // 补全图片资源
+        }
 
-        currentQuizData.questions.forEach(q => {
+        questions.forEach(q => {
             const qDiv = document.createElement('div');
             qDiv.className = 'question-page';
             
@@ -367,10 +372,19 @@
         document.getElementById('loadingOverlay').style.display = 'flex';
         
         let score = 0;
-        const totalQ = currentQuizData.questions.length;
+        let totalQ = 0;
+        let questions = [];
+
+        // 兼容性获取题目
+        if (currentQuizData && currentQuizData.questions) {
+            questions = currentQuizData.questions;
+        } else if (typeof quizData !== 'undefined') {
+            questions = quizData;
+        }
+        totalQ = questions.length;
         
         // 判分逻辑
-        currentQuizData.questions.forEach((q, idx) => {
+        questions.forEach((q, idx) => {
             const userAns = currentAnswers[`Q${q.qNum}`];
             let isCorrect = false;
             
@@ -383,22 +397,23 @@
             
             // 立即显示反馈
             const card = document.getElementById(`card-${idx}`);
-            const fbDiv = document.createElement('div');
-            fbDiv.style.marginTop = '10px';
-            fbDiv.style.padding = '10px';
-            fbDiv.style.borderRadius = '5px';
-            if (isCorrect) {
-                fbDiv.style.background = '#e8f5e9';
-                fbDiv.style.color = '#2e7d32';
-                fbDiv.innerText = "✅ 正确 (+5)";
-            } else {
-                fbDiv.style.background = '#ffebee';
-                fbDiv.style.color = '#c62828';
-                // 优化错误显示，把 image: 去掉
-                let showCorrect = q.correct.replace('image:', '');
-                fbDiv.innerHTML = `❌ 错误 <br><small>正确答案: ${showCorrect}</small>`;
+            if (card) { // 防止 card 找不到
+                const fbDiv = document.createElement('div');
+                fbDiv.style.marginTop = '10px';
+                fbDiv.style.padding = '10px';
+                fbDiv.style.borderRadius = '5px';
+                if (isCorrect) {
+                    fbDiv.style.background = '#e8f5e9';
+                    fbDiv.style.color = '#2e7d32';
+                    fbDiv.innerText = "✅ 正确 (+5)";
+                } else {
+                    fbDiv.style.background = '#ffebee';
+                    fbDiv.style.color = '#c62828';
+                    let showCorrect = q.correct.replace('image:', '');
+                    fbDiv.innerHTML = `❌ 错误 <br><small>正确答案: ${showCorrect}</small>`;
+                }
+                card.appendChild(fbDiv);
             }
-            card.appendChild(fbDiv);
         });
 
         // 上传 Google Sheet
@@ -406,9 +421,9 @@
         const payload = {
             studentName: studentName,
             examType: "Written",
-            lessonTitle: currentQuizData.title,
+            lessonTitle: currentQuizData ? currentQuizData.title : "笔试练习",
             score: score,
-            duration: `${Math.floor((currentQuizData.timeLimit - timeLeft)/60)}m`,
+            duration: `${Math.floor((540 - timeLeft)/60)}m`,
             details: JSON.stringify(currentAnswers)
         };
 
@@ -424,8 +439,7 @@
         // 切换到结果页
         setTimeout(() => {
             document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('quizContainer').style.display = 'none'; // 隐藏题目，只看分数
-            // 如果想让学生看错题，可以注释掉上面这一行，改为滚动到顶部
+            document.getElementById('quizContainer').style.display = 'none'; 
             document.getElementById('fixedHeader').style.display = 'none';
             document.getElementById('scoreCard').style.display = 'block';
             
