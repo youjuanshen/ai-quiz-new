@@ -2,69 +2,154 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>口语面试</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 🦁 狮子风格 - 口语版 */
-        body { font-family: 'Comic Sans MS', sans-serif; background: #e3f2fd; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
+        /* ==================== 样式区 (Lion Style) ==================== */
+        body { font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; background-color: #e3f2fd; margin: 0; padding: 20px; color: #333; }
         
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .home-btn { background: #90a4ae; color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+        /* 返回按钮 */
+        .home-link { position: fixed; top: 15px; left: 15px; z-index: 1000; background-color: #607d8b; color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .home-link:hover { background-color: #546e7a; }
+
+        /* 容器 */
+        .container { max-width: 600px; margin: 0 auto; padding-top: 40px; }
         
-        .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        /* 候考室卡片 */
+        .welcome-card { background: white; border-radius: 20px; padding: 30px; margin: 0 auto; max-width: 500px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); border: 4px solid #fff; text-align: center; }
+        .hero-icon { font-size: 60px; margin-bottom: 10px; animation: bounce 2s infinite; }
+        .main-title { color: #0288d1; margin: 0 0 20px 0; }
         
-        /* 菜单列表 */
-        .lesson-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #f1f8e9; border: 2px solid #c5e1a5; border-radius: 12px; text-align: left; cursor: pointer; font-size: 16px; font-weight: bold; color: #558b2f; }
+        /* 选择器 */
+        .selector-group { text-align: left; margin-bottom: 20px; }
+        .selector-label { font-weight: bold; color: #555; display: block; margin-bottom: 8px; }
+        select { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 10px; background: #fafafa; outline: none; }
+        select:focus { border-color: #0288d1; background: #fff; }
         
-        /* 题目样式 */
-        .q-tag { background: #29b6f6; color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; }
-        .q-text { font-size: 20px; font-weight: bold; margin: 15px 0; color: #333; }
+        /* 开始按钮 */
+        #startButton { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); transition: transform 0.1s; }
+        #startButton:active { transform: scale(0.95); }
+        #startButton:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        /* 顶部固定栏 */
+        #fixedHeader { display: none; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 10px 20px; z-index: 99; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 0 0 15px 15px; margin-bottom: 20px; }
+        .student-badge { font-weight: bold; color: #333; font-size: 16px; }
+        
+        /* 题目卡片 */
+        .question-page { background: white; border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 6px solid #29b6f6; }
+        .q-tag { background: #29b6f6; color: white; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .q-text { font-size: 20px; font-weight: bold; margin: 10px 0 20px 0; line-height: 1.4; color: #263238; }
         .img-box { text-align: center; margin: 15px 0; background: #fafafa; padding: 10px; border-radius: 12px; }
-        .img-box img { max-width: 100%; max-height: 200px; border-radius: 8px; }
+        .img-box img { max-width: 100%; max-height: 250px; border-radius: 8px; }
+
+        /* 老师参考区 */
+        .guide-box { background: #fff3e0; padding: 12px; border-radius: 8px; color: #e65100; margin: 15px 0; font-size: 15px; border: 1px solid #ffe0b2; }
         
-        /* 评分按钮 */
+        /* 评分按钮组 */
         .score-buttons { display: flex; gap: 5px; margin-top: 15px; }
-        .score-btn { flex: 1; padding: 10px 0; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
-        .s5{background:#4caf50} .s4{background:#8bc34a} .s3{background:#ffc107;color:#333} .s2{background:#ff9800} .s1{background:#f44336}
+        .score-btn { flex: 1; padding: 12px 0; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: transform 0.1s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-btn:active { transform: scale(0.95); }
+        .score-emoji { font-size: 18px; margin-bottom: 2px; }
         
-        .feedback { display: none; background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; text-align: center; margin-top: 10px; font-weight: bold; }
-        
-        /* 选人界面 */
-        select { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0 20px 0; }
+        .s5 { background: #4caf50; } 
+        .s4 { background: #8bc34a; } 
+        .s3 { background: #ffc107; color: #4e342e; } 
+        .s2 { background: #ff9800; } 
+        .s1 { background: #f44336; }
+
+        .feedback { display: none; background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; text-align: center; margin-top: 10px; font-weight: bold; border: 1px solid #c8e6c9; }
+
+        /* 底部总分 */
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #eee; padding: 15px; text-align: center; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); font-size: 18px; font-weight: bold; color: #333; z-index: 100; }
+        .quiz-container { padding-bottom: 80px; }
+
+        .loading { text-align: center; color: #999; margin-top: 10px; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
 
+<a href="index.html" class="home-link">🏠 返回大厅</a>
+
 <div class="container">
-    <div class="header-bar">
-        <a href="index.html" class="home-btn">🏠 返回大厅</a>
-        <h2 style="margin:0; color:#0277bd;">🗣️ 口语面试</h2>
-    </div>
-
-    <div id="menu-area">
-        <div class="card">
-            <h3>请选择课程：</h3>
-            <button onclick="loadLesson('data/speaking/u1_l1.js')" class="lesson-btn">📄 Unit 1 Lesson 1</button>
+    <div id="coverPage">
+        <div class="hero-icon">🗣️</div>
+        <h1 class="main-title">口语面试 (老师端)</h1>
+        
+        <div class="welcome-card">
+            <div class="selector-group">
+                <label class="selector-label">🗺️ 第一步：选择面试关卡</label>
+                <select id="quizSelector" onchange="loadSelectedQuiz()">
+                    <option value="" disabled selected>-- 请选择单元 --</option>
+                    </select>
             </div>
+
+            <div class="mission-box" id="statusBox" style="display:none;">
+                <div id="missionTitle" class="loading">等待选择...</div>
+            </div>
+
+            <div class="selector-group" style="margin-top: 20px;">
+                <label class="selector-label">👋 第二步：选择考生姓名</label>
+                <select id="studentSelector" onchange="checkStartReady()" disabled>
+                    <option value="" disabled selected>-- (请先选择关卡) --</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="startButton" disabled onclick="startQuiz()">🚀 开始面试</button>
     </div>
 
-    <div id="student-area" class="card" style="display:none; text-align:center; padding:40px 20px;">
-        <div style="font-size:50px;">🎓</div>
-        <h3>请选择考生</h3>
-        <select id="student-select">
-            <option value="" disabled selected>-- 点击选择 --</option>
-        </select>
-        <button onclick="startQuiz()" style="background:#0277bd; color:white; border:none; padding:12px 40px; border-radius:30px; font-size:18px; cursor:pointer;">开始</button>
+    <div id="fixedHeader">
+        <div class="header-left">
+            <span class="student-badge">👤 考生: <span id="studentDisplay" style="color:#0288d1"></span></span>
+        </div>
+        <div class="header-right">
+            <button onclick="location.reload()" style="background:#cfd8dc;border:none;padding:5px 10px;border-radius:15px;cursor:pointer;color:#546e7a;font-size:12px">重置</button>
+        </div>
     </div>
 
-    <div id="quiz-area" style="display:none;"></div>
+    <div id="quizContainer" class="quiz-container" style="display:none;"></div>
+
+    <div id="footerBar" class="footer-bar" style="display:none;">
+        🌟 总分: <span id="totalScoreDisplay">0</span>
+    </div>
 </div>
 
 <script>
-    // 📋 27人真实名单
-    const STUDENTS = [
+    // ============================================================
+    // 🏛️ 1. 全局配置区
+    // ============================================================
+    
+    // 📋 口语菜单配置 (预设 Unit 1 - Unit 4)
+    const SPEAKING_MENU = [
+        // --- Unit 1 ---
+        { label: "Unit 1 Lesson 1: Nice to meet you", path: "data/speaking/u1_l1.js" },
+        { label: "Unit 1 Lesson 2: What's your name?", path: "data/speaking/u1_l2.js" },
+        { label: "Unit 1 Lesson 3: How are you?", path: "data/speaking/u1_l3.js" },
+        { label: "Unit 1 Lesson 4: Have a good day!", path: "data/speaking/u1_l4.js" },
+        
+        // --- Unit 2 ---
+        { label: "Unit 2 Lesson 1: Let's play!", path: "data/speaking/u2_l1.js" },
+        { label: "Unit 2 Lesson 2: How many ducks?", path: "data/speaking/u2_l2.js" },
+        { label: "Unit 2 Lesson 3: How old are you?", path: "data/speaking/u2_l3.js" },
+        { label: "Unit 2 Lesson 4: Phone number", path: "data/speaking/u2_l4.js" },
+
+        // --- Unit 3 ---
+        { label: "Unit 3 Lesson 1: It's green", path: "data/speaking/u3_l1.js" },
+        { label: "Unit 3 Lesson 2: What color is it?", path: "data/speaking/u3_l2.js" },
+        { label: "Unit 3 Lesson 3: Show me red", path: "data/speaking/u3_l3.js" },
+        { label: "Unit 3 Lesson 4: Colorful flowers", path: "data/speaking/u3_l4.js" },
+
+        // --- Unit 4 ---
+        { label: "Unit 4 Lesson 1: My father", path: "data/speaking/u4_l1.js" },
+        { label: "Unit 4 Lesson 2: Who is he?", path: "data/speaking/u4_l2.js" },
+        { label: "Unit 4 Lesson 3: Who are they?", path: "data/speaking/u4_l3.js" },
+        { label: "Unit 4 Lesson 4: I love my family", path: "data/speaking/u4_l4.js" }
+    ];
+
+    // 📋 学生名单 (全校统一 27人)
+    const STUDENT_LIST = [
         "1. 张宇豪", "2. 张佳寒", "3. 张睿渊", "4. 张羽韬", "5. 张美茹",
         "6. 张嘉钦", "7. 卢梦婷", "8. 张悦萱", "9. 张语涵", "10. 张英豪",
         "11. 张志鹏", "12. 张智杰", "13. 张梓婷", "14. 张品琪", "15. 张诺依",
@@ -73,80 +158,187 @@
         "26. 张梓纯", "27. 张泽鑫"
     ];
 
-    // 初始化名单
-    const sel = document.getElementById('student-select');
-    STUDENTS.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s; opt.innerText = s;
-        sel.appendChild(opt);
-    });
+    // 📋 Google Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc8c4prsZZLY9vp-te4gH5twQNO1A8Ek3yROTNZeNs-7YhL60UojvMsQoceJUZ7LUP/exec";
 
-    let currentData = null;
-    let currentStudent = "";
+    // ============================================================
+    // ⚙️ 2. 核心逻辑
+    // ============================================================
+    
+    let currentQuizData = null;
     let totalScore = 0;
 
-    // 加载试卷
-    function loadLesson(path) {
+    // 初始化菜单
+    window.onload = function() {
+        const selector = document.getElementById('quizSelector');
+        SPEAKING_MENU.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.path;
+            opt.innerText = item.label;
+            selector.appendChild(opt);
+        });
+    };
+
+    // 加载文件
+    function loadSelectedQuiz() {
+        const filePath = document.getElementById('quizSelector').value;
+        if (!filePath) return;
+
+        document.getElementById('statusBox').style.display = 'block';
+        document.getElementById('missionTitle').innerText = "⏳ 正在读取题库...";
+        document.getElementById('missionTitle').style.color = "#999";
+
         const script = document.createElement('script');
-        script.src = path;
+        script.src = filePath;
+        script.onload = () => {
+            console.log("Loaded: " + filePath);
+            document.getElementById('missionTitle').innerText = "✅ " + currentQuizData.title;
+            document.getElementById('missionTitle').style.color = "#333";
+            populateStudents();
+            document.getElementById('studentSelector').disabled = false;
+        };
+        script.onerror = () => {
+            document.getElementById('missionTitle').innerText = "❌ 暂无此课题库";
+            document.getElementById('missionTitle').style.color = "red";
+            alert("老师还没上传这节课的口语题哦！\n(文件未找到: " + filePath + ")");
+        };
         document.body.appendChild(script);
     }
 
-    // 数据回调
+    // 接收数据
     window.LOAD_QUIZ = function(data) {
-        currentData = data;
-        document.getElementById('menu-area').style.display = 'none';
-        document.getElementById('student-area').style.display = 'block';
+        currentQuizData = data;
+    };
+
+    // 填充名单
+    function populateStudents() {
+        const selector = document.getElementById('studentSelector');
+        selector.innerHTML = '<option value="" disabled selected>-- 点击选择 --</option>';
+        STUDENT_LIST.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.innerText = name;
+            selector.appendChild(opt);
+        });
     }
 
-    // 开始
+    function checkStartReady() {
+        if (document.getElementById('studentSelector').value) {
+            document.getElementById('startButton').disabled = false;
+        }
+    }
+
+    // 开始面试
     function startQuiz() {
-        if(!sel.value) return alert('请选人');
-        currentStudent = sel.value;
+        document.getElementById('coverPage').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('fixedHeader').style.display = 'flex';
+        document.getElementById('footerBar').style.display = 'block';
+        
         totalScore = 0;
-        document.getElementById('student-area').style.display = 'none';
-        document.getElementById('quiz-area').style.display = 'block';
+        document.getElementById('studentDisplay').textContent = document.getElementById('studentSelector').value;
+        document.getElementById('totalScoreDisplay').innerText = "0";
+        
         renderQuestions();
     }
 
     // 渲染题目
     function renderQuestions() {
-        const div = document.getElementById('quiz-area');
-        div.innerHTML = `<div style="background:white;padding:10px;position:sticky;top:0;z-index:99;border-bottom:1px solid #eee;">👤 考生：<b>${currentStudent}</b></div>`;
-        
-        currentData.questions.forEach((q, idx) => {
-            let img = q.imageKey && currentData.images[q.imageKey] ? `<div class="img-box"><img src="${currentData.images[q.imageKey]}"></div>` : '';
-            div.innerHTML += `
-                <div class="card" id="q-${idx}">
-                    <span class="q-tag">Q${q.qNum}</span>
-                    <div class="q-text">${q.text}</div>
-                    ${img}
-                    <div style="background:#fff3e0;padding:10px;border-radius:8px;color:#e65100;margin:10px 0;">💡 参考：${q.guide}</div>
-                    <div id="btn-${idx}" class="score-buttons">
-                        <button onclick="rate(${idx},5)" class="score-btn s5">5分</button>
-                        <button onclick="rate(${idx},4)" class="score-btn s4">4分</button>
-                        <button onclick="rate(${idx},3)" class="score-btn s3">3分</button>
-                        <button onclick="rate(${idx},2)" class="score-btn s2">2分</button>
-                        <button onclick="rate(${idx},1)" class="score-btn s1">1分</button>
-                    </div>
-                    <div id="fb-${idx}" class="feedback"></div>
-                </div>
-            `;
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = '';
+
+        currentQuizData.questions.forEach((q, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-page';
+            qDiv.id = `card-${index}`;
+            
+            // 题干
+            let html = `<div class="q-tag">Q${q.qNum}</div>`;
+            html += `<div class="q-text">${q.text}</div>`;
+
+            // 图片
+            let imgSrc = q.imageUri;
+            if (q.imageKey && currentQuizData.images) { 
+                imgSrc = currentQuizData.images[q.imageKey];
+            }
+            if (imgSrc) {
+                html += `<div class="img-box"><img src="${imgSrc}" alt="Image"></div>`;
+            }
+
+            // 参考答案
+            html += `<div class="guide-box">
+                        <div style="font-weight:bold;margin-bottom:5px">💡 参考答案：</div>
+                        ${q.guide.replace(/\n/g, '<br>')}
+                     </div>`;
+
+            // 打分按钮
+            html += `<div id="action-${index}" class="score-buttons">
+                        <button onclick="rate(${index}, 5)" class="score-btn s5"><span class="score-emoji">🤩</span>5分</button>
+                        <button onclick="rate(${index}, 4)" class="score-btn s4"><span class="score-emoji">😃</span>4分</button>
+                        <button onclick="rate(${index}, 3)" class="score-btn s3"><span class="score-emoji">🤔</span>3分</button>
+                        <button onclick="rate(${index}, 2)" class="score-btn s2"><span class="score-emoji">😟</span>2分</button>
+                        <button onclick="rate(${index}, 1)" class="score-btn s1"><span class="score-emoji">😶</span>1分</button>
+                     </div>`;
+            
+            // 结果显示区
+            html += `<div id="fb-${index}" class="feedback"></div>`;
+
+            qDiv.innerHTML = html;
+            container.appendChild(qDiv);
         });
-        div.innerHTML += `<div class="card" style="text-align:center;font-size:20px;font-weight:bold;">🌟 总分：<span id="score">0</span></div>`;
     }
 
-    // 打分
-    window.rate = function(idx, score) {
-        document.getElementById(`btn-${idx}`).style.display = 'none';
-        const fb = document.getElementById(`fb-${idx}`);
+    // 打分与提交逻辑
+    window.rate = function(index, score) {
+        document.getElementById(`action-${index}`).style.display = 'none';
+        const fb = document.getElementById(`fb-${index}`);
         fb.style.display = 'block';
-        fb.innerText = `✅ 得分：${score}`;
+        
+        let comment = "";
+        if(score===5) comment="Perfect! 🎉";
+        else if(score===4) comment="Good! 👍";
+        else if(score===3) comment="Keep trying! 💪";
+        else comment="Fight! 🔥";
+
+        fb.innerHTML = `✅ 得分：${score} <span style="font-size:12px;color:#666">(${comment})</span>`;
+        
         totalScore += score;
-        document.getElementById('score').innerText = totalScore;
-        const next = document.getElementById(`q-${idx+1}`);
-        if(next) setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'center'}), 300);
+        document.getElementById('totalScoreDisplay').innerText = totalScore;
+        
+        // 自动滚动到下一题
+        const nextCard = document.getElementById(`card-${index+1}`);
+        if(nextCard) {
+            setTimeout(() => nextCard.scrollIntoView({behavior:'smooth', block:'center'}), 400);
+        }
+
+        // 如果是最后一题，自动上传
+        const totalQ = currentQuizData.questions.length;
+        if (index === totalQ - 1) {
+            submitDataToGoogle('Speaking', totalScore, "Teacher Rated");
+            setTimeout(() => alert("🎉 面试结束！分数已上传！"), 1000);
+        }
+    }
+
+    // 上传数据
+    function submitDataToGoogle(type, score, details) {
+        const studentName = document.getElementById('studentSelector').value;
+        const payload = {
+            studentName: studentName,
+            examType: type,
+            lessonTitle: currentQuizData.title,
+            score: score,
+            duration: "N/A", // 口语暂不计时
+            details: details
+        };
+        
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        }).then(() => console.log("Uploaded"));
     }
 </script>
+
 </body>
 </html>
