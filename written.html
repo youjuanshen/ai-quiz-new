@@ -6,7 +6,6 @@
     <title>笔试挑战赛</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 保持原有样式不变 */
         body { font-family: 'Comic Sans MS', sans-serif; background-color: #fff3e0; margin: 0; padding: 20px; color: #333; }
         .home-link { position: fixed; top: 15px; left: 15px; z-index: 1000; background-color: #607d8b; color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
         .container { max-width: 800px; margin: 0 auto; padding-top: 40px; }
@@ -15,19 +14,19 @@
         .main-title { color: #fb8c00; margin: 0 0 20px 0; }
         .selector-group { text-align: left; margin-bottom: 20px; }
         select { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 10px; background: #fafafa; outline: none; }
-        #startButton { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top:10px; }
+        #startButton { background: #4caf50; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
         #startButton:disabled { background: #ccc; cursor: not-allowed; }
         #fixedHeader { display: none; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 10px 20px; z-index: 99; border-radius: 0 0 15px 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .question-page { background: white; border-radius: 16px; padding: 20px; margin-bottom: 25px; border-left: 6px solid #fb8c00; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .question-page { background: white; border-radius: 16px; padding: 20px; margin-bottom: 25px; border-left: 6px solid #fb8c00; }
         .answer-option { padding: 12px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; background: white; transition: all 0.2s; }
         .selected-option { border-color: #fb8c00; background-color: #fff8e1; }
         .drag-target { border: 2px dashed #fb8c00; padding: 15px; min-height: 60px; margin-bottom: 15px; border-radius: 10px; display: flex; gap: 8px; flex-wrap: wrap; background: #fffde7; }
         .drag-source { display: flex; gap: 8px; flex-wrap: wrap; }
-        .word-chip { padding: 8px 15px; background: #e0f7fa; border: 1px solid #4dd0e1; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .word-chip { padding: 8px 15px; background: #e0f7fa; border: 1px solid #4dd0e1; border-radius: 20px; cursor: pointer; font-weight: bold; color: #006064; user-select: none; }
         #scoreCard { display: none; text-align: center; background: white; padding: 40px; border-radius: 20px; margin: 20px auto; }
         .score-box { font-size: 60px; color: #fb8c00; font-weight: bold; margin: 20px 0; }
         .restart-btn { background: #2196f3; color: white; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-size: 16px; }
-        .loading-text { color: #999; font-size: 14px; margin-top: 5px; }
+        .loading { text-align: center; color: #999; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -48,7 +47,7 @@
             </div>
             
             <div id="statusBox" style="display:none; margin:10px 0;">
-                <div id="missionTitle" class="loading-text">等待加载...</div>
+                <div id="missionTitle" class="loading">等待加载...</div>
             </div>
 
             <div class="selector-group">
@@ -71,8 +70,14 @@
     <div id="scoreCard">
         <h2>挑战完成！</h2>
         <div class="score-box"><span id="finalScore">?</span> <span style="font-size:20px;color:#999">分</span></div>
+        <p id="gradeFeedback"></p>
         <button class="restart-btn" onclick="location.reload()">下一位</button>
     </div>
+</div>
+
+<div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:2000; justify-content:center; align-items:center; flex-direction:column;">
+    <div style="font-size:40px;">🔄</div>
+    <p>正在提交试卷...</p>
 </div>
 
 <script>
@@ -80,7 +85,6 @@
     const WRITTEN_MENU = [
         { label: "Unit 1 Lesson 1: Nice to meet you", path: "data/written/u1_l1.js" },
         { label: "Unit 3 Lesson 1: It's green", path: "data/written/u3_l1.js" }
-        // ⚠️ 如果您还没创建 u1_l2.js，千万不要把它们加到这里，否则点了会报错！
     ];
 
     const STUDENT_LIST = [
@@ -110,7 +114,7 @@
         });
     };
 
-    // 2. 加载文件
+    // 2. 加载文件 (带错误检测)
     function loadSelectedQuiz() {
         const filePath = document.getElementById('quizSelector').value;
         if(!filePath) return;
@@ -120,18 +124,18 @@
         titleEl.innerText = "⏳ 正在读取...";
         titleEl.style.color = "#999";
 
-        // 清除旧数据，防止干扰
+        // 清除旧数据
         currentQuizData = null;
 
         const script = document.createElement('script');
         script.src = filePath;
         
         script.onload = () => {
-            // 🚨 关键检查：文件加载了，但数据进来了吗？
+            // 🚨 自动诊断：如果加载了文件但 currentQuizData 还是空的，说明文件里没写 window.LOAD_QUIZ
             if (!currentQuizData) {
-                titleEl.innerText = "❌ 文件格式错误！(未检测到 window.LOAD_QUIZ)";
+                titleEl.innerText = "❌ 文件内容格式错误";
                 titleEl.style.color = "red";
-                alert("这个文件好像是旧格式，或者内容为空！\n请检查: " + filePath);
+                alert(`⚠️ 严重错误：\n文件 ${filePath} 加载了，但没有包含 window.LOAD_QUIZ 数据包。\n\n请检查该文件是否有语法错误！`);
                 return;
             }
             titleEl.innerText = "✅ " + currentQuizData.title;
@@ -141,22 +145,20 @@
         };
         
         script.onerror = () => {
-            titleEl.innerText = "❌ 找不到文件";
+            titleEl.innerText = "❌ 找不到文件 (404)";
             titleEl.style.color = "red";
-            alert("文件不存在！请去 GitHub 检查 data/written/ 下有没有这个文件。\n路径: " + filePath);
+            alert(`⚠️ 错误：找不到文件\n${filePath}\n\n请去 GitHub 检查：\n1. 文件路径是不是 data/written/...\n2. 文件名有没有多空格？`);
         };
         
         document.body.appendChild(script);
     }
 
-    // 3. 接收数据 (这是文件 u3_l1.js 调用的入口)
+    // 3. 接收数据
     window.LOAD_QUIZ = function(data) {
-        console.log("数据已接收:", data);
         currentQuizData = data;
         if(data.timeLimit) timeLeft = data.timeLimit;
     };
 
-    // 4. 填充名单
     function populateStudents() {
         const sel = document.getElementById('studentSelector');
         sel.innerHTML = '<option value="" disabled selected>-- 选择姓名 --</option>';
@@ -171,11 +173,10 @@
         if(document.getElementById('studentSelector').value) document.getElementById('startButton').disabled = false;
     }
 
-    // 5. 开始考试
+    // 5. 开始考试 (带错误检测)
     function startQuiz() {
-        // 🚨 双重检查：有没有题目？
         if (!currentQuizData || !currentQuizData.questions || currentQuizData.questions.length === 0) {
-            alert("❌ 出错了：这套试卷里没有题目！\n请检查 JS 文件里的 questions 数组。");
+            alert("❌ 这套试卷里没有题目数据 (questions为空)！请检查 JS 文件。");
             return;
         }
 
@@ -188,7 +189,7 @@
         startTimer();
     }
 
-    // 6. 渲染题目 (修复图片显示)
+    // 6. 渲染题目
     function renderQuestions() {
         const container = document.getElementById('quizContainer');
         container.innerHTML = '';
@@ -200,35 +201,37 @@
             let html = `<div style="color:#fb8c00;font-size:12px;font-weight:bold">Q${q.qNum}</div>`;
             html += `<div style="font-size:18px;font-weight:bold;margin:10px 0">${q.text}</div>`;
 
-            // 图片处理 (兼容 imageKey 和 imageUri)
             let imgSrc = q.imageUri;
             if (q.imageKey && currentQuizData.images) imgSrc = currentQuizData.images[q.imageKey];
             
             if (imgSrc) {
-                // 防止路径错误，如果不是 http 开头，确保 img/ 前缀
+                // 自动补全路径
                 if (!imgSrc.startsWith('http') && !imgSrc.startsWith('img/')) imgSrc = 'img/' + imgSrc;
                 html += `<div style="text-align:center"><img src="${imgSrc}" style="max-width:100%;max-height:150px;border-radius:8px" onerror="this.style.display='none'"></div>`;
             }
 
-            // 听力
             if (q.audioText) {
                 html += `<div style="text-align:center;margin:10px 0"><button onclick="speak('${q.audioText.replace(/'/g, "\\'")}')" style="background:#e1f5fe;color:#0288d1;border:none;padding:5px 15px;border-radius:15px;cursor:pointer">🔊 播放</button></div>`;
             }
 
-            // 选项
             if (q.type === 'select') {
                 html += `<div style="display:grid;gap:10px">`;
                 q.options.forEach(opt => {
                     let disp = opt;
                     let val = opt;
-                    // 处理 image: 前缀
                     if (opt.startsWith('image:')) {
                         let key = opt.split(':')[1];
-                        let src = currentQuizData.images[key];
+                        let src = currentQuizData.images ? currentQuizData.images[key] : '';
+                        if(src && !src.startsWith('img/')) src = 'img/' + src;
                         disp = `<img src="${src}" style="height:50px">`;
                         val = 'image:'+key;
                     }
-                    html += `<div class="answer-option" onclick="selectOption(${q.qNum}, '${val}', this)">${disp}</div>`;
+                    else if (opt.includes('.png')) {
+                        let src = opt;
+                        if(!src.startsWith('img/')) src = 'img/' + src;
+                         disp = `<img src="${src}" style="height:50px">`;
+                    }
+                    html += `<div class="answer-option" onclick="selectOption(${q.qNum}, '${val.replace(/'/g,"\\'")}', this)">${disp}</div>`;
                 });
                 html += `</div>`;
             } 
@@ -289,7 +292,6 @@
 
             if(right) score += 5;
             
-            // 反馈
             const card = document.getElementsByClassName('question-page')[i];
             const div = document.createElement('div');
             div.style.padding = "10px"; div.style.borderRadius = "5px"; div.style.marginTop = "10px";
@@ -298,13 +300,12 @@
             card.appendChild(div);
         });
 
-        // 上传
         const payload = {
             studentName: document.getElementById('studentSelector').value,
             examType: "Written",
             lessonTitle: currentQuizData.title,
             score: score,
-            duration: "N/A", // 简化时间计算
+            duration: "N/A",
             details: JSON.stringify(currentAnswers)
         };
         fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
@@ -315,6 +316,10 @@
             document.getElementById('fixedHeader').style.display = 'none';
             document.getElementById('scoreCard').style.display = 'block';
             document.getElementById('finalScore').innerText = score;
+            
+            let feedback = "加油！";
+            if (score >= currentQuizData.questions.length * 5 * 0.9) feedback = "太棒了！🎉";
+            document.getElementById('gradeFeedback').innerText = feedback;
         }, 1000);
     }
 
