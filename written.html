@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>笔试挑战赛</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 增加关卡选择器的样式 */
+        .selector-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .selector-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+        }
+        
+        /* 返回按钮样式 */
+        .home-link {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background-color: #607d8b;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .home-link:hover {
+            background-color: #546e7a;
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="home-link">🏠 返回大厅</a>
+
+<div class="container">
+    <div id="coverPage">
+        <div class="hero-icon">📝</div>
+        <h1 class="main-title">三年级笔试挑战</h1>
+        
+        <div class="welcome-card">
+            <div class="selector-group">
+                <label class="selector-label">🗺️ 第一步：选择挑战关卡</label>
+                <select id="quizSelector" onchange="loadSelectedQuiz()">
+                    <option value="" disabled selected>-- 请选择单元 --</option>
+                    
+                    <optgroup label="Unit 1: Meeting Friends">
+                        <option value="data/written/u1_l1">U1 Lesson 1</option>
+                        </optgroup>
+                </select>
+            </div>
+
+            <div class="mission-box" id="statusBox" style="display:none; margin-top:10px;">
+                <div class="mission-label">当前加载：</div>
+                <div id="missionTitle" class="mission-content">等待选择...</div>
+            </div>
+
+            <div class="selector-group" style="margin-top: 20px;">
+                <label class="selector-label">👋 第二步：找到你的名字</label>
+                <select id="studentSelector" onchange="checkStartReady()" disabled>
+                    <option value="" disabled selected>-- (请先选择关卡) --</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="startButton" disabled onclick="startQuiz()">🚀 准备好了，开始！</button>
+    </div>
+
+    <div id="fixedHeader">
+        <div class="header-left">
+            <span class="student-badge">👤 <span id="studentDisplay">同学</span></span>
+        </div>
+        <div class="header-right">
+            ⏳ <span id="timerDisplay">09:00</span>
+        </div>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div id="scoreCard">
+        <div class="result-icon">🎉</div>
+        <h2>挑战完成！</h2>
+        <div class="score-box">
+            <div id="finalScore">?</div>
+            <div class="total-mark">/ 75 分</div>
+        </div>
+        <div id="timeTakenDisplay" style="color:#888; margin:10px 0;">用时: --分--秒</div>
+        <p id="gradeFeedback">评价加载中...</p>
+        <button class="restart-btn" onclick="resetForNextStudent()">下一位同学</button>
+        </div>
+</div>
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>正在处理...</p>
+</div>
+
+<script>
+    // ============================================================
+    // ⚠️ 关键设置：这里控制笔试去哪里找题目文件
+    // ============================================================
+    
+    // 1. 动态加载 JS 文件的函数
+    function loadSelectedQuiz() {
+        const selector = document.getElementById('quizSelector');
+        const fileId = selector.value; // 例如 data/written/u1_l1
+        if (!fileId) return;
+
+        // 显示加载状态
+        const statusBox = document.getElementById('statusBox');
+        const titleEl = document.getElementById('missionTitle');
+        statusBox.style.display = 'block';
+        titleEl.textContent = "正在读取题目...";
+        titleEl.style.color = "#999";
+
+        // 移除旧脚本
+        const oldScript = document.getElementById('dynamic-quiz-script');
+        if (oldScript) oldScript.remove();
+
+        // 创建新脚本标签
+        const script = document.createElement('script');
+        script.id = 'dynamic-quiz-script';
+        script.src = fileId + ".js"; // 最终加载 data/written/u1_l1.js
+        
+        script.onload = function() {
+            console.log("✅ 脚本加载成功: " + fileId);
+            titleEl.style.color = "#333";
+            
+            // 启用学生选择框
+            document.getElementById('studentSelector').disabled = false;
+            
+            // 如果题目文件里有 QUIZ_CONFIG，更新标题
+            if (typeof QUIZ_CONFIG !== 'undefined') {
+                titleEl.textContent = QUIZ_CONFIG.title;
+            }
+            
+            // 加载学生名单 (如果题目文件里提供了 studentList，或者用默认的)
+            if (typeof studentList !== 'undefined') {
+                populateStudents();
+            }
+        };
+
+        script.onerror = function() {
+            titleEl.textContent = "❌ 找不到文件";
+            titleEl.style.color = "red";
+            alert("抱歉，这个单元的题目还没上传哦！\n请检查路径: " + fileId + ".js");
+        };
+
+        document.body.appendChild(script);
+    }
+
+    // 2. 填充学生名单
+    function populateStudents() {
+        const selector = document.getElementById('studentSelector');
+        selector.innerHTML = '<option value="" disabled selected>-- 点这里选择姓名 --</option>';
+        
+        // 这里的 studentList 应该来自加载的题目JS文件
+        if (typeof studentList !== 'undefined') {
+            studentList.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = student.name; // 直接显示名字
+                selector.appendChild(option);
+            });
+        }
+    }
+
+    // 3. 检查是否可以开始
+    function checkStartReady() {
+        const studentVal = document.getElementById('studentSelector').value;
+        const quizVal = document.getElementById('quizSelector').value;
+        if (studentVal && quizVal) {
+            document.getElementById('startButton').disabled = false;
+        }
+    }
+
+    // ============================================================
+    // 🎮 考试核心逻辑 (复用您之前的代码)
+    // ============================================================
+    
+    // 全局变量
+    let currentQuestionIndex = 1;
+    let timerInterval;
+    let timeLeft = 540; 
+    let currentAnswers = {};
+    let quizStartTime = null;
+
+    function startQuiz() {
+        const studentId = document.getElementById('studentSelector').value;
+        if (!studentId) return;
+
+        // 渲染题目
+        renderAllQuestions();
+
+        // 切换界面
+        document.getElementById('coverPage').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('fixedHeader').style.display = 'flex';
+        
+        // 初始化状态
+        currentAnswers = {};
+        timeLeft = 540; // 9分钟
+        currentQuestionIndex = 1;
+        quizStartTime = new Date();
+
+        // 显示名字
+        const selectedStudent = studentList.find(s => s.id === studentId);
+        document.getElementById('studentDisplay').textContent = selectedStudent.name;
+
+        // 开始计时
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        const timerDisplay = document.getElementById('timerDisplay');
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.textContent = '00:00';
+                submitAnswers(); 
+                return;
+            }
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    function renderAllQuestions() {
+        const container = document.getElementById('quizContainer');
+        container.innerHTML = '';
+
+        if (typeof quizData === 'undefined') {
+            container.innerHTML = '<p style="text-align:center;padding:20px;">❌ 数据加载错误，请刷新重试</p>';
+            return;
+        }
+
+        quizData.forEach(q => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-page'; // 这里复用样式
+            qDiv.style.display = 'block'; // 笔试通常一次显示所有题目，或者您可以做分页
+            qDiv.style.marginBottom = '20px';
+            qDiv.style.background = 'white';
+            qDiv.style.padding = '15px';
+            qDiv.style.borderRadius = '10px';
+            qDiv.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+            
+            // 题干
+            let html = `<div style="font-weight:bold;color:#ff9800;font-size:12px;margin-bottom:5px;">Q${q.qNum} (${q.part})</div>`;
+            html += `<div style="font-size:18px;font-weight:bold;margin-bottom:15px;color:#333;">${q.text}</div>`;
+
+            // 图片
+            if (q.imageUri) {
+                html += `<div style="text-align:center;margin:10px 0;"><img src="${q.imageUri}" style="max-width:100%;max-height:150px;border-radius:8px;"></div>`;
+            }
+            
+            // 听力播放器
+            if (q.audioText) {
+                const safeText = q.audioText.replace(/'/g, "\\'");
+                html += `<div style="text-align:center;margin-bottom:15px;"><button onclick="speakText('${safeText}')" style="background:#e1f5fe;color:#0288d1;border:none;padding:8px 15px;border-radius:20px;font-weight:bold;cursor:pointer;">🔊 播放录音</button></div>`;
+            }
+
+            // 选项
+            if (q.type === 'select') {
+                html += `<div style="display:grid;gap:10px;">`; 
+                q.options.forEach(option => {
+                    // 判断是否是图片选项
+                    let displayContent = option;
+                    let val = option;
+                    // 简单的图片判断逻辑，如果option字符串包含 img/
+                    if (typeof option === 'string' && (option.includes('img/') || option.startsWith('http'))) {
+                        displayContent = `<img src="${option}" style="height:50px;vertical-align:middle">`;
+                    }
+                    
+                    const safeValue = option.toString().replace(/'/g, "\\'");
+                    html += `<div class="answer-option" id="opt_${q.qNum}_${safeValue.replace(/\W/g,'')}" 
+                             onclick="selectOption(${q.qNum}, '${safeValue}', this)"
+                             style="padding:12px;border:2px solid #eee;border-radius:8px;cursor:pointer;background:white;">
+                                ${displayContent}
+                             </div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'drag-sort') {
+                // 简单的拖拽占位，笔试逻辑复杂点，这里先简化
+                html += `<div style="padding:20px;text-align:center;background:#f5f5f5;border-radius:8px;color:#999;">(拖拽题暂不支持，请直接口头作答)</div>`;
+            }
+
+            qDiv.innerHTML = html;
+            container.appendChild(qDiv);
+        });
+
+        // 底部交卷按钮
+        const submitBtn = document.createElement('button');
+        submitBtn.innerText = '交卷 (Submit)';
+        submitBtn.style = 'display:block;width:100%;padding:15px;background:#4caf50;color:white;font-size:18px;font-weight:bold;border:none;border-radius:12px;margin-top:20px;cursor:pointer;';
+        submitBtn.onclick = submitAnswers;
+        container.appendChild(submitBtn);
+    }
+
+    // 选择选项逻辑
+    function selectOption(qNum, value, element) {
+        // 清除该题其他选项样式
+        const parent = element.parentElement;
+        Array.from(parent.children).forEach(child => {
+            child.style.borderColor = '#eee';
+            child.style.backgroundColor = 'white';
+        });
+        // 选中样式
+        element.style.borderColor = '#2196f3';
+        element.style.backgroundColor = '#e3f2fd';
+        currentAnswers[`Q${qNum}`] = value;
+    }
+
+    // 提交逻辑
+    function submitAnswers() {
+        clearInterval(timerInterval);
+        
+        let score = 0;
+        // 简单算分
+        if (typeof quizData !== 'undefined') {
+            quizData.forEach(q => {
+                const userAns = currentAnswers[`Q${q.qNum}`];
+                if (userAns === q.correct) {
+                    score += 5; // 每题5分
+                }
+            });
+        }
+
+        // 显示结果
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('fixedHeader').style.display = 'none';
+        document.getElementById('scoreCard').style.display = 'block';
+        document.getElementById('finalScore').textContent = score;
+    }
+
+    function resetForNextStudent() {
+        location.reload(); 
+    }
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8; 
+            window.speechSynthesis.speak(u);
+        } else {
+            alert('抱歉，不支持朗读');
+        }
+    }
+</script>
+
+</body>
+</html>
